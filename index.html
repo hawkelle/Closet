@@ -87,13 +87,11 @@ img{max-width:100%}
 .arc .count{font-size:12px;color:var(--muted);margin-top:3px;display:block}
 .arc .chips{justify-content:safe center;padding-top:8px;padding-bottom:6px}
 .rack-stage{position:relative;margin-top:30px}
-.arch-win{position:absolute;left:50%;top:-30px;transform:translateX(-50%);background:var(--surface-2);border-radius:999px 999px 22px 22px;pointer-events:none}
+.arch-win{position:absolute;left:50%;top:-30px;transform:translateX(-50%);background:var(--surface-2);border-radius:999px 999px 22px 22px;pointer-events:none;overflow:hidden}
 .rail{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 19%;margin-top:0;scrollbar-width:none;outline:none}
 .rail::-webkit-scrollbar{display:none}
-.slide{flex:0 0 100%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;transform-origin:50% 64px;padding-top:58px}
-.rail-bar{position:absolute;left:50%;transform:translateX(-50%);top:63px;height:3px;border-radius:3px;background:var(--ink);pointer-events:none}
-.rail-bar::before,.rail-bar::after{content:"";position:absolute;top:-3.5px;width:10px;height:10px;border-radius:50%;background:var(--ink)}
-.rail-bar::before{left:-4px}.rail-bar::after{right:-4px}
+.slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;display:flex;flex-direction:column;align-items:center;transform-origin:50% 12px;padding-top:4px}
+.rail-bar{position:absolute;left:0;right:0;top:41.5px;height:3px;background:var(--ink);pointer-events:none}
 .swing{}
 @keyframes swing{0%,100%{transform:rotate(-.9deg) translateZ(0)}50%{transform:rotate(.9deg) translateZ(0)}}
 .slide.flipping .hang{animation:flipin .45s ease}
@@ -102,7 +100,7 @@ img{max-width:100%}
 .hang .hk{position:absolute;top:0;color:var(--ink);z-index:0;display:block}
 .hang .hk svg{display:block;width:100%;height:auto;overflow:visible}
 .hang img{position:absolute;left:0;z-index:1;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
-.tag{margin:-12px auto 0;z-index:2;width:min(84%,360px);background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:20px 18px 14px;text-align:center;position:relative;box-shadow:var(--shadow);animation:tagin .25s ease}
+.tag{margin:10px auto 0;z-index:2;width:min(84%,360px);background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:20px 18px 14px;text-align:center;position:relative;box-shadow:var(--shadow);animation:tagin .25s ease}
 @keyframes tagin{from{opacity:.4;transform:translateY(4px)}}
 .tag .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--surface-2);color:#141414;font-size:12.5px;padding:4px 13px;border-radius:999px;font-weight:500;white-space:nowrap}
 .tag h3{font-weight:500;font-size:18px;margin:0;display:flex;align-items:center;justify-content:center;gap:8px}
@@ -327,6 +325,32 @@ img{max-width:100%}
 .fx-btn.on{background:var(--ink);color:var(--mauve-ink)}
 .fx-panel{width:100%;max-width:420px;margin:10px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:8px 14px 8px}
 .fx-panel .slider.adj span{width:62px;font-size:12.5px}
+.dress-body{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding-top:0}
+.dress-body>*{flex-shrink:0}
+.dress-steps{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:0 18px}
+.dress-steps::-webkit-scrollbar{display:none}
+.dress-steps button{flex:none;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:13px;color:var(--muted)}
+.dress-steps button.done{color:var(--ink)}
+.dress-steps button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--mauve-ink)}
+.dress-canvas{position:relative;align-self:center;background:var(--surface-2);border-radius:999px 999px 26px 26px;overflow:hidden;touch-action:pan-y;flex:none}
+.dress-layers{position:absolute;inset:0}
+.dl{position:absolute;object-fit:contain;pointer-events:none;transition:transform .18s ease,opacity .18s ease}
+.dl.active{filter:drop-shadow(0 0 0 transparent)}
+.dl.in-r{animation:dlinr .26s ease}.dl.in-l{animation:dlinl .26s ease}
+@keyframes dlinr{from{transform:translateX(46px);opacity:0}to{transform:none;opacity:1}}
+@keyframes dlinl{from{transform:translateX(-46px);opacity:0}to{transform:none;opacity:1}}
+.dress-arrow{position:absolute;top:38%;width:38px;height:38px;border-radius:50%;background:var(--surface);color:var(--ink);display:grid;place-items:center;box-shadow:0 6px 14px -8px rgba(0,0,0,.4);z-index:20}
+.dress-arrow.l{left:8px}.dress-arrow.r{right:8px;transform:scaleX(-1)}
+.dress-name{position:absolute;left:0;right:0;bottom:8px;margin:0;text-align:center;font-size:13px;font-weight:500;z-index:20}
+.dress-name:empty{display:none}
+.dress-hint{text-align:center;color:var(--muted);font-size:13px;margin:0}
+.dress-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:2px 18px 4px}
+.dress-strip::-webkit-scrollbar{display:none}
+.dthumb2{flex:none;width:58px;height:70px;border-radius:29px 29px 12px 12px;background:var(--surface-2);display:grid;place-items:center;padding:7px;font-size:12px;color:var(--muted)}
+.dthumb2 img{max-width:100%;max-height:100%;object-fit:contain}
+.dthumb2.none{border:1.5px dashed var(--line);background:transparent}
+.dthumb2.on{box-shadow:inset 0 0 0 2.5px var(--ink);color:var(--ink)}
+.dress-nav .btn{flex:1}
 #toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
@@ -405,6 +429,7 @@ const P = {
   heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.5 4.5 0 0 1 12 7.2 4.5 4.5 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10Z"/>',
   rotate:'<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20.5 4v4.5H16"/>',
   gift:'<rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5V20h14v-7.5M12 8.5V20"/><path d="M12 8.5S10.5 4 8 4.5 7 8.5 12 8.5ZM12 8.5S13.5 4 16 4.5 17 8.5 12 8.5Z"/>',
+  shuffle:'<path d="M4 7h3.5c4.5 0 4.5 10 9 10H20M4 17h3.5c1.6 0 2.6-1.2 3.4-2.7M13.1 9.7C13.9 8.2 14.9 7 16.5 7H20"/><path d="m17.5 4.5 2.5 2.5-2.5 2.5M17.5 14.5l2.5 2.5-2.5 2.5"/>',
   upload:'<path d="M12 20V9M7.5 13.5 12 9l4.5 4.5M5 4h14"/>'
 };
 const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
@@ -413,9 +438,9 @@ const CLIP_SVG = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" st
 const HOOK_SVG = '<svg viewBox="0 0 40 60" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M14 9a6 6 0 1 1 6 6v25"/><path vector-effect="non-scaling-stroke" d="M20 40v7a7 7 0 0 1-14 0v-4"/></svg>';
 const HANGERS = { hanger: { svg: () => HANG_SVG, anchor: 0.905, front: false, ar: 52 / 120, ax: 0.5 }, clip: { svg: () => CLIP_SVG, anchor: 0.86, front: true, ar: 52 / 120, ax: 0.5 }, hook: { svg: () => HOOK_SVG, anchor: 0.88, front: true, ar: 1.5, ax: 0.33 } };
 const HOOK_RE = /bag|purse|tote|handbag|clutch|\btas/i;
-const NO_HANGER_RE = /shoe|sneaker|boot|heel|sandal|slipper|schoen|jewel|sieraad|ring|necklace|earring|bracelet|watch|horloge|accessor|hat|cap|sock|sok|belt|riem|sunglass|bril|scarf|sjaal/i;
+const NO_HANGER_RE = /shawl|omslagdoek|shoe|sneaker|boot|heel|sandal|slipper|schoen|jewel|sieraad|ring|necklace|earring|bracelet|watch|horloge|accessor|hat|cap|sock|sok|belt|riem|sunglass|bril|scarf|sjaal/i;
 const CLIP_RE = /bottom|pant|trouser|jean|short|skirt|legging|broek|rok/i;
-const defaultHanger = it => { const n = catName(catOf(it)); return HOOK_RE.test(n) ? 'hook' : NO_HANGER_RE.test(n) ? 'none' : CLIP_RE.test(n) ? 'clip' : 'hanger'; };
+const defaultHanger = it => { const ns = catsOf(it).map(catName), any = re => ns.some(n => re.test(n)); return any(HOOK_RE) ? 'hook' : any(NO_HANGER_RE) ? 'none' : any(CLIP_RE) ? 'clip' : 'hanger'; };
 const hangerType = it => ['hanger', 'clip', 'hook', 'none'].includes(it.hanger) ? it.hanger : defaultHanger(it);
 const MATERIALS = ['Cotton', 'Linen', 'Wool', 'Cashmere', 'Silk', 'Denim', 'Leather', 'Viscose', 'Polyester', 'Nylon', 'Elastane', 'Other'];
 const HANGER = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M53 11a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v4"/><path d="M60 25 12 45c-3 1.3-2.2 4.5 1 4.5h94c3.2 0 4-3.2 1-4.5Z"/></svg>';
@@ -457,6 +482,8 @@ const S = { items: [], outfits: [], cats: [], customMats: [], openChart: null, f
 const byId = id => S.items.find(i => i.id === id);
 const catOf = it => (it && S.cats.some(c => c.id === it.cat)) ? it.cat : 'none';
 const catName = id => id === 'none' ? 'Uncategorized' : (S.cats.find(c => c.id === id)?.name || 'Uncategorized');
+const catsOf = it => { const p = catOf(it), extra = (it?.cats || []).filter(c => c !== p && S.cats.some(x => x.id === c)); return [p, ...extra]; };
+const inCat = (it, id) => catsOf(it).includes(id);
 const itemName = it => (it.name && it.name.trim()) || catName(catOf(it));
 const saveCats = () => safe(store.put('meta', { id: 'categories', list: S.cats }));
 const saveMats = () => safe(store.put('meta', { id: 'materials', list: S.customMats }));
@@ -499,7 +526,7 @@ const catColor = id => { const i = catIdx(id); return i < 0 ? '#D6D6D6' : PASTEL
 const catLight = id => { const i = catIdx(id); return i < 0 ? '#EDEDED' : PASTEL_L[i]; };
 const tagLight = t => { if (SEASON_L[t]) return SEASON_L[t]; let h = 0; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return PASTEL_L[h % PASTEL_L.length]; };
 function chipRow(active, scope, withCounts = true) {
-  const counts = {}; S.items.forEach(i => { const c = catOf(i); counts[c] = (counts[c] || 0) + 1; });
+  const counts = {}; S.items.forEach(i => catsOf(i).forEach(c => { counts[c] = (counts[c] || 0) + 1; }));
   const n = c => withCounts ? `<span class="n">${counts[c] || 0}</span>` : '';
   let h = `<button class="chip" data-cat="all" aria-pressed="${active === 'all'}">All${withCounts ? `<span class="n">${S.items.length}</span>` : ''}</button>`;
   h += S.cats.map(c => `<button class="chip" data-cat="${c.id}" aria-pressed="${active === c.id}"><span class="cdot" style="background:${catColor(c.id)}"></span>${esc(c.name)}${n(c.id)}</button>`).join('');
@@ -558,40 +585,61 @@ function hangHTML(it, maxW, maxH) {
   const over = Math.max(0, hh * H.anchor - g.ty * ih);
   return `<div class="hang swing" style="width:${iw.toFixed(1)}px;height:${(ih + over).toFixed(1)}px;transform-origin:${pivot.toFixed(1)}px 2px;animation-delay:-${(Math.random() * 7).toFixed(2)}s"><span class="hk" style="left:${left.toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img src="${it.img}" alt="" style="top:${over.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px"></div>`;
 }
+
+/* the back hangs on exactly the same hanger as the front: same size, same spot; the back photo is scaled and moved to fit it */
+function hangSideHTML(it, side, maxW, maxH) {
+  const type = hangerType(it);
+  if (side !== 'back' || !it.back?.img) return hangHTML(it, maxW, maxH);
+  if (type === 'none') return hangHTML(sideOf(it, 'back'), maxW, maxH);
+  const a = it.aspect || 0.75; let ih = maxH, iw = ih * a; if (iw > maxW) { iw = maxW; ih = iw / a; }
+  const H = HANGERS[type], g = hangNorm(it.hang, type);
+  const hw = type === 'hook' ? clamp(g.w * iw, 22, 56) : clamp(g.w * iw, 56, maxW * 1.1), hh = hw * H.ar, cx = g.cx * iw, left = cx - hw * H.ax;
+  const over = Math.max(0, hh * H.anchor - g.ty * ih), ax = cx, ay = over + g.ty * ih;
+  const gb = hangNorm(it.back.hang || it.hang, type), ab = it.back.aspect || a;
+  let biw = hw / Math.max(0.05, gb.w), bih = biw / ab;
+  const cap = Math.min(1, (maxH * 1.25) / bih, (maxW * 1.35) / biw); biw *= cap; bih *= cap;
+  const bl = ax - gb.cx * biw, bt = ay - gb.ty * bih;
+  return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${Math.max(ih + over, bt + bih).toFixed(1)}px"><span class="hk" style="left:${left.toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img src="${it.back.img}" alt="" style="left:${bl.toFixed(1)}px;top:${bt.toFixed(1)}px;width:${biw.toFixed(1)}px;height:${bih.toFixed(1)}px"></div>`;
+}
 const sideOf = (it, side) => side === 'back' && it.back?.img ? { ...it, img: it.back.img, aspect: it.back.aspect || it.aspect, hang: it.back.hang || it.hang } : it;
-const rackDims = () => { const vw = Math.min(window.innerWidth, 760), pad = vw >= 640 ? 0.27 : 0.19, vh = $('#view-rack')?.clientHeight || window.innerHeight, free = vh - 440, mh = clamp(free * 0.8, 180, 400); return [vw * (1 - 2 * pad), mh, clamp(free - mh, 0, 120)]; };
-const rackItems = () => S.items.filter(i => S.rackCat === 'all' || catOf(i) === S.rackCat);
+const rackDims = () => { const vw = Math.min(window.innerWidth, 760), pad = vw >= 640 ? 0.27 : 0.19, vh = $('#view-rack')?.clientHeight || window.innerHeight; return [vw * (1 - 2 * pad), clamp(vh - 430, 180, 560), 0]; };
+const rackItems = () => S.items.filter(i => S.rackCat === 'all' || inCat(i, S.rackCat));
 function renderRack() {
   const v = $('#view-rack'); const items = rackItems(); const total = S.items.length;
   let body;
   if (!total) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Your rack is empty</h2><p>Photograph a piece, frame it, and it'll hang here with the background removed.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add your first piece</button></div>`;
   else if (!items.length) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Nothing here yet</h2><p>No pieces in ${esc(catName(S.rackCat))} so far.</p><button class="btn primary" data-act="add">${ic('plus', 20)}Add a piece</button></div>`;
-  else { const [mw, mh, ex] = rackDims(); const top = 30 + ex, aw = Math.min(mw + 44, 340), ar = aw / 2, ry = 64.5 + top, half = ry < ar ? Math.sqrt(ar * ar - (ar - ry) * (ar - ry)) : ar; body = `<div class="rack-stage" style="margin-top:${Math.round(top)}px"><div class="arch-win" style="top:${-Math.round(top)}px;width:${Math.round(aw)}px;height:${Math.round(mh + 104 + top)}px"></div><div class="rail-bar" style="width:${Math.round(2 * (half - 10))}px"></div><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map(it => `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangHTML(sideOf(it, S.flip[it.id] ? 'back' : 'front'), mw, mh)}</button>`).join('')}</div></div><div id="rack-tag"></div><p class="rail-pos" id="rail-pos"></p>`; }
+  else { const [mw, mh] = rackDims(); const top = 32, aw = Math.min(mw + 44, 340), ar = aw / 2, ry = 26.5 + top, half = ry < ar ? Math.sqrt(ar * ar - (ar - ry) * (ar - ry)) : ar; body = `<div class="rack-stage" style="margin-top:${Math.round(top)}px"><div class="arch-win" style="top:${-Math.round(top)}px;width:${Math.round(aw)}px;height:${Math.round(mh + 70 + top)}px"><div class="rail-bar"></div></div><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map(it => `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangSideHTML(it, S.flip[it.id] ? 'back' : 'front', mw, mh)}</button>`).join('')}</div></div><div id="rack-tag"></div>`; }
   v.innerHTML = `<header class="arc"><h1>My closet</h1><span class="count">${total} ${total === 1 ? 'piece' : 'pieces'}</span>${total ? chipRow(S.rackCat, 'rack') : ''}</header>${body}`;
   if (items.length) wireRail(items);
 }
 function wireRail(items) {
   const rail = $('#rail'); if (!rail || $('#view-rack').hidden) return;
-  const slides = $$('.slide', rail); let raf = 0, shown = -1;
-  const update = () => {
-    raf = 0; const rc = rail.getBoundingClientRect(); const cx = rc.left + rc.width / 2; let best = 0, bd = 1e9;
-    slides.forEach((s, i) => {
-      const r = s.getBoundingClientRect(); const d = (r.left + r.width / 2 - cx) / (r.width || 1); const ad = Math.min(Math.abs(d), 1);
-      s.style.opacity = (1 - 0.6 * ad).toFixed(2);
-      if (Math.abs(d) < bd) { bd = Math.abs(d); best = i; }
-    });
-    if (best !== shown) { shown = best; S.rackIndex = best; renderTag(items[best]); $('#rail-pos').textContent = `${best + 1} of ${items.length}`; }
+  const slides = $$('.slide', rail); let raf = 0, shown = -1, best = 0, settleT = 0, touching = false;
+  const offsetFor = i => slides[i].offsetLeft - (rail.clientWidth - slides[i].offsetWidth) / 2;
+  const update = () => { // cheap: only fades neighbours and tracks the nearest piece while moving
+    raf = 0; const rc = rail.getBoundingClientRect(), cx = rc.left + rc.width / 2; let bd = 1e9;
+    slides.forEach((s, i) => { const r = s.getBoundingClientRect(), d = (r.left + r.width / 2 - cx) / (r.width || 1); s.style.opacity = (1 - 0.6 * Math.min(Math.abs(d), 1)).toFixed(2); if (Math.abs(d) < bd) { bd = Math.abs(d); best = i; } });
   };
-  rail.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
-  const centerOn = (i, smooth) => { const s = slides[i]; if (!s) return; rail.scrollTo({ left: s.offsetLeft - (rail.clientWidth - s.offsetWidth) / 2, behavior: smooth ? 'smooth' : 'auto' }); };
-  centerOn(Math.min(S.rackIndex, slides.length - 1), false); update();
+  const settle = () => { // once the swipe has stopped: finish the snap if the browser left it halfway, then update the card
+    if (touching) return;
+    const want = offsetFor(best);
+    if (Math.abs(rail.scrollLeft - want) > 2) { rail.scrollTo({ left: want, behavior: 'smooth' }); settleT = setTimeout(settle, 260); return; }
+    if (best !== shown) { shown = best; S.rackIndex = best; renderTag(items[best]); }
+  };
+  rail.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); clearTimeout(settleT); settleT = setTimeout(settle, 140); }, { passive: true });
+  rail.addEventListener('scrollend', () => { clearTimeout(settleT); update(); settle(); });
+  rail.addEventListener('touchstart', () => { touching = true; clearTimeout(settleT); }, { passive: true });
+  rail.addEventListener('touchend', () => { touching = false; clearTimeout(settleT); settleT = setTimeout(settle, 160); }, { passive: true });
+  const centerOn = (i, smooth) => { if (!slides[i]) return; rail.scrollTo({ left: offsetFor(i), behavior: smooth ? 'smooth' : 'auto' }); };
+  best = Math.min(S.rackIndex, slides.length - 1); centerOn(best, false); update(); shown = best; S.rackIndex = best; renderTag(items[best]);
   slides.forEach((s, i) => s.addEventListener('click', () => { if (i === S.rackIndex) openDetail(items[i]); else centerOn(i, true); }));
   rail.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { e.preventDefault(); centerOn(Math.min(S.rackIndex + 1, slides.length - 1), true); } if (e.key === 'ArrowLeft') { e.preventDefault(); centerOn(Math.max(S.rackIndex - 1, 0), true); } });
 }
 function metaTags(it) { return [...(it.seasons || []), ...(it.occasions || []), ...(it.materials || [])].map(t => `<span style="background:${tagLight(t)}">${esc(t)}</span>`).join(''); }
 function renderTag(it) {
   const el = $('#rack-tag'); if (!el || !it) return; const tags = metaTags(it);
-  el.innerHTML = `<article class="tag"><span class="badge" style="background:${catLight(catOf(it))}">${esc(catName(catOf(it)))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${it.color2 ? `<span class="dot" style="background:${esc(it.color2)};margin-left:-12px"></span>` : ''}${esc(itemName(it))}</h3>${it.brand || it.size ? `<p class="meta">${it.brand ? `<span>${esc(it.brand)}</span>` : ''}${it.size ? `<span class="size">Size ${esc(it.size)}</span>` : ''}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions">${it.back?.img ? `<button class="btn sm" data-act="flip" data-id="${it.id}" aria-label="Show the ${S.flip[it.id] ? 'front' : 'back'}">${ic('flip', 18)}${S.flip[it.id] ? 'Front' : 'Back'}</button>` : ''}<button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
+  el.innerHTML = `<article class="tag"><span class="badge" style="background:${catLight(catOf(it))}">${esc(catsOf(it).map(catName).join(', '))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${it.color2 ? `<span class="dot" style="background:${esc(it.color2)};margin-left:-12px"></span>` : ''}${esc(itemName(it))}</h3>${it.brand || it.size ? `<p class="meta">${it.brand ? `<span>${esc(it.brand)}</span>` : ''}${it.size ? `<span class="size">Size ${esc(it.size)}</span>` : ''}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions">${it.back?.img ? `<button class="btn sm" data-act="flip" data-id="${it.id}" aria-label="Show the ${S.flip[it.id] ? 'front' : 'back'}">${ic('flip', 18)}${S.flip[it.id] ? 'Front' : 'Back'}</button>` : ''}<button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
 }
 
 function renderCloset() {
@@ -611,8 +659,8 @@ function renderClosetResults() {
   const out = $('#closet-results'); const q = S.q.trim().toLowerCase();
   if (!S.items.length) { out.innerHTML = `<div class="empty"><h2>Start your closet</h2><p>Each piece you add shows up here, sorted by category.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add a piece</button></div>`; return; }
   let items = S.items;
-  if (q) items = items.filter(i => [i.name, i.brand, i.notes, i.price, i.size, catName(catOf(i)), colorFamily(i.color), colorFamily(i.color2), i.secondhand === true ? 'secondhand' : '', i.gift ? 'gift' : '', ...(i.seasons || []), ...(i.occasions || []), ...(i.materials || [])].join(' ').toLowerCase().includes(q));
-  if (S.closetCat !== 'all') items = items.filter(i => catOf(i) === S.closetCat);
+  if (q) items = items.filter(i => [i.name, i.brand, i.notes, i.price, i.size, catsOf(i).map(catName).join(' '), colorFamily(i.color), colorFamily(i.color2), i.secondhand === true ? 'secondhand' : '', i.gift ? 'gift' : '', ...(i.seasons || []), ...(i.occasions || []), ...(i.materials || [])].join(' ').toLowerCase().includes(q));
+  if (S.closetCat !== 'all') items = items.filter(i => inCat(i, S.closetCat));
   if (!items.length) { out.innerHTML = `<p class="muted" style="padding:24px 22px">No pieces match${q ? ` "${esc(S.q)}"` : ''}.</p>`; return; }
   if (S.closetCat === 'all' && !q) {
     const groups = [...S.cats.map(c => c.id), 'none'].map(id => [id, items.filter(i => catOf(i) === id)]).filter(g => g[1].length);
@@ -678,9 +726,9 @@ function openWish(w) {
 
 function renderOutfits() {
   const v = $('#view-outfits');
-  const head = `<div class="page-head"><h1>Outfits</h1>${S.outfits.length ? `<button class="btn sm primary" data-act="new-outfit">${ic('plus', 18)}New outfit</button>` : ''}</div>`;
+  const head = `<div class="page-head"><h1>Outfits</h1>${S.outfits.length ? `<div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-act="mix">${ic('sparkle', 18)}Dress up</button><button class="btn sm primary" data-act="new-outfit">${ic('plus', 18)}Board</button></div>` : ''}</div>`;
   if (!S.outfits.length) {
-    v.innerHTML = head + `<div class="empty"><h2>No outfits yet</h2><p>${S.items.length ? 'Drop pieces onto a board, move and resize them, and save the look.' : 'Add a few pieces first, then put them together here.'}</p><button class="btn primary" data-act="${S.items.length ? 'new-outfit' : 'add'}">${ic('plus', 20)}${S.items.length ? 'Create an outfit' : 'Add a piece'}</button></div>`;
+    v.innerHTML = head + `<div class="empty"><h2>No outfits yet</h2><p>${S.items.length ? 'Drop pieces onto a board, move and resize them, and save the look.' : 'Add a few pieces first, then put them together here.'}</p>${S.items.length ? `<button class="btn primary" data-act="mix" style="margin-bottom:8px">${ic('sparkle', 20)}Dress up</button><br>` : ''}<button class="btn${S.items.length ? '' : ' primary'}" data-act="${S.items.length ? 'new-outfit' : 'add'}">${ic('plus', 20)}${S.items.length ? 'Create an outfit' : 'Add a piece'}</button></div>`;
     return;
   }
   v.innerHTML = head + `<div class="grid">${S.outfits.map(o => { const n = o.pieces.filter(p => byId(p.itemId)).length; return `<button class="ocard" data-act="open-outfit" data-id="${o.id}">${miniBoard(o)}<p class="nm">${esc(o.name || 'Untitled outfit')}</p><p class="sub">${n} ${n === 1 ? 'piece' : 'pieces'}</p></button>`; }).join('')}</div>`;
@@ -689,7 +737,7 @@ function renderOutfits() {
 function getTheme() { try { return localStorage.getItem('closet-theme') || 'auto'; } catch { return 'auto'; } }
 function applyTheme(t) { const r = document.documentElement; if (t === 'light' || t === 'dark') r.dataset.theme = t; else delete r.dataset.theme; try { localStorage.setItem('closet-theme', t); } catch {} }
 function renderSettings() {
-  const v = $('#view-settings'); const counts = {}; S.items.forEach(i => { const c = catOf(i); counts[c] = (counts[c] || 0) + 1; }); const t = getTheme();
+  const v = $('#view-settings'); const counts = {}; S.items.forEach(i => catsOf(i).forEach(c => { counts[c] = (counts[c] || 0) + 1; })); const t = getTheme();
   v.innerHTML = `<div class="page-head"><h1>Settings</h1><button class="btn sm" data-go="insights">${ic('back', 18)}Insights</button></div>
   <section class="panel"><h2>Categories</h2><p>Rename, reorder, or remove. Pieces in a removed category move to Uncategorized.</p>
     <ul class="cat-list">${S.cats.map((c, i) => `<li><input type="text" value="${esc(c.name)}" data-rename="${c.id}" aria-label="Category name"><span class="n">${counts[c.id] || 0}</span><button class="icon-btn" data-catmove="-1" data-id="${c.id}" aria-label="Move up" ${i === 0 ? 'disabled' : ''}>${ic('up', 20)}</button><button class="icon-btn" data-catmove="1" data-id="${c.id}" aria-label="Move down" ${i === S.cats.length - 1 ? 'disabled' : ''}>${ic('down', 20)}</button><button class="icon-btn" data-catdel="${c.id}" aria-label="Delete ${esc(c.name)}">${ic('trash', 19)}</button></li>`).join('') || '<li class="muted" style="padding:12px 14px">No categories yet.</li>'}</ul>
@@ -1276,12 +1324,13 @@ const TOOL_HINT = {
   remove: 'Paint over leftover background, like the hanger or a door edge. Updates when you lift.',
   erase: 'Erases exactly where you paint. Pinch with two fingers to zoom.',
   restore: 'Paints back exactly where you paint. Removed areas show faintly.',
+  hangerBack: 'Put the hanger where the back hangs from. On the rack the back is resized to fit the front hanger exactly.',
   hanger: 'Pick a hanger, then drag it to where the piece hangs from: across the straps or shoulders, clips on the waistband, or a hook through a bag handle.'
 };
 async function openEditor({ item = null, file = null, pre = null, onSaved = null }) {
   const isNew = !item, v0 = item || pre || {};
   const defCat = S.rackCat !== 'all' && S.rackCat !== 'none' ? S.rackCat : (S.closetCat !== 'all' && S.closetCat !== 'none' ? S.closetCat : (S.cats[0]?.id || null));
-  const st = { cat: item ? (catOf(item) === 'none' ? null : item.cat) : (pre?.cat && S.cats.some(c => c.id === pre.cat) ? pre.cat : defCat), seasons: new Set(v0.seasons || []), occ: new Set(v0.occasions || []), colorTouched: !!v0.color, mats: new Set(v0.materials || []), second: v0.gift ? 'gift' : v0.secondhand === true ? true : v0.secondhand === false ? false : null, hManual: !!v0.hangerManual,
+  const st = { cats: item ? catsOf(item).filter(c => c !== 'none') : [(pre?.cat && S.cats.some(c => c.id === pre.cat) ? pre.cat : defCat)].filter(Boolean), get cat() { return this.cats[0] || null; }, seasons: new Set(v0.seasons || []), occ: new Set(v0.occasions || []), colorTouched: !!v0.color, mats: new Set(v0.materials || []), second: v0.gift ? 'gift' : v0.secondhand === true ? true : v0.secondhand === false ? false : null, hManual: !!v0.hangerManual,
     color2: v0.color2 || '', details: [...(v0.details || [])], side: 'front', states: { front: null, back: null } };
   let smoothPref = true; try { smoothPref = localStorage.getItem('closet-smooth') !== '0'; } catch {}
   st.smooth = item ? !!item.smooth : smoothPref;
@@ -1315,7 +1364,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       <p class="muted" style="font-size:12.5px;margin:4px 6px 0">Tip: tap with two fingers to undo.</p>
       <div class="form">
         <label class="field"><span>Name</span><input type="text" id="f-name" placeholder="Long fine-knit cardigan" value="${esc(v0.name || '')}"></label>
-        <div class="field"><span>Category</span><div class="chips wrap" id="f-cats"></div></div>
+        <div class="field"><span>Categories <span style="opacity:.7">(pick one or more, the first is the main one)</span></span><div class="chips wrap" id="f-cats"></div></div>
         <div class="field"><span>Color</span><div class="color-row"><input type="color" id="f-color" value="${esc(v0.color || '#c9b49b')}" aria-label="Main color"><button class="chip" data-pickc="1">${ic('drop', 16)}Pick from photo</button><span class="muted" id="f-color-note"></span></div></div>
         <div class="field" id="f-color2-field"></div>
         <div class="field"><span>Material</span><div class="chips wrap" id="f-mat"></div></div>
@@ -1332,7 +1381,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   ed.onChange = () => { $('[data-cmd="undo"]', el).disabled = !ed.stack.length; };
   ed.onTrim = v => { trim.value = v || 0; };
   ed.onTapUndo = () => toast('Undone');
-  const renderCats = () => { $('#f-cats', el).innerHTML = S.cats.map(c => `<button class="chip" data-fcat="${c.id}" aria-pressed="${st.cat === c.id}"><span class="cdot" style="background:${catColor(c.id)}"></span>${esc(c.name)}</button>`).join('') + `<button class="chip" data-newcat>${ic('plus', 16)}New category</button>`; };
+  const renderCats = () => { $('#f-cats', el).innerHTML = S.cats.map(c => `<button class="chip" data-fcat="${c.id}" aria-pressed="${st.cats.includes(c.id)}"><span class="cdot" style="background:${catColor(c.id)}"></span>${esc(c.name)}${st.cats.length > 1 && st.cats[0] === c.id ? '<span class="n">main</span>' : ''}</button>`).join('') + `<button class="chip" data-newcat>${ic('plus', 16)}New category</button>`; };
   const renderMats = () => {
     const list = [...allMaterials(), ...[...st.mats].filter(m => !allMaterials().includes(m))];
     $('#f-mat', el).innerHTML = list.map(m => `<button class="chip" data-mat="${esc(m)}" aria-pressed="${st.mats.has(m)}">${esc(m)}</button>`).join('') + `<button class="chip" data-newmat>${ic('plus', 16)}Add material</button>`;
@@ -1355,7 +1404,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     if (t === 'hanger') { if (!ed.hg) ed.autoHanger(); const b = ed.gBox(); $('#e-slabel', el).textContent = ed.htype === 'hook' ? 'Hook size' : 'Hanger size'; slider.min = ed.htype === 'hook' ? 6 : 15; slider.max = ed.htype === 'hook' ? 40 : 140; slider.value = b && ed.hg ? Math.round(ed.hg.w / (b.x1 - b.x0 + 1) * 100) : 80; }
     else { $('#e-slabel', el).textContent = 'Brush size'; slider.min = 6; slider.max = 70; slider.value = ed.brush; }
     cutBtn.hidden = t !== 'frame' || !sideHas(); cutBtn.textContent = ''; cutBtn.insertAdjacentHTML('beforeend', `${ic('sparkle', 20)}${ed.cut && ed.labels ? 'Cut out again' : 'Cut out'}`);
-    hint.textContent = sideHas() ? TOOL_HINT[t] : ''; ed.placeFrame(); ed.placeHanger(); ed.redraw();
+    hint.textContent = sideHas() ? (t === 'hanger' && st.side === 'back' ? TOOL_HINT.hangerBack : TOOL_HINT[t]) : ''; ed.placeFrame(); ed.placeHanger(); ed.redraw();
   };
   const showSide = () => {
     $$('[data-side]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.side === st.side));
@@ -1414,7 +1463,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     if (t.hasAttribute('data-dadd')) { const f = await choosePhoto('Add a detail photo', 'A close-up of the print, a label, buttons, the lining…'); if (f) { try { st.details.push(await compressPhoto(f)); renderDetails(); } catch { toast("Couldn't open that photo."); } } return; }
     if (t.dataset.drot != null) { const i = +t.dataset.drot; try { st.details[i] = await rotateDataURL(st.details[i]); renderDetails(); } catch {} return; }
     if (t.dataset.ddel != null) { st.details.splice(+t.dataset.ddel, 1); renderDetails(); return; }
-    if (t.dataset.fcat) { st.cat = t.dataset.fcat; renderCats(); if (!st.hManual) { const ht = defaultHanger({ cat: st.cat }); if (ht !== ed.htype) { ed.htype = ht; ed.hg = null; if (ed.cut) ed.autoHanger(); if (ed.tool === 'hanger') setTool('hanger'); } } return; }
+    if (t.dataset.fcat) { const id = t.dataset.fcat; st.cats = st.cats.includes(id) ? st.cats.filter(c => c !== id) : [...st.cats, id]; renderCats(); if (!st.hManual) { const ht = defaultHanger({ cat: st.cat }); if (ht !== ed.htype) { ed.htype = ht; ed.hg = null; if (ed.cut) ed.autoHanger(); if (ed.tool === 'hanger') setTool('hanger'); } } return; }
     if (t.dataset.htype) { st.hManual = true; ed.htype = t.dataset.htype; ed.hg = null; ed.autoHanger(); setTool('hanger'); return; }
     if (t.dataset.mat) { const m = t.dataset.mat; st.mats.has(m) ? st.mats.delete(m) : st.mats.add(m); t.setAttribute('aria-pressed', st.mats.has(m)); return; }
     if (t.dataset.src) { const map = { new: false, second: true, gift: 'gift' }, v = map[t.dataset.src]; st.second = st.second === v ? null : v; $$('[data-src]', el).forEach(b => b.setAttribute('aria-pressed', st.second === map[b.dataset.src])); return; }
@@ -1440,7 +1489,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     }
     if (t.hasAttribute('data-addcat')) {
       const name = $('.newcat input', el)?.value.trim(); if (!name) { renderCats(); return; }
-      const c = { id: uid(), name }; S.cats.push(c); await saveCats(); st.cat = c.id; renderCats(); renderAll(); return;
+      const c = { id: uid(), name }; S.cats.push(c); await saveCats(); st.cats.push(c.id); renderCats(); renderAll(); return;
     }
     if (t.dataset.e === 'cancel') {
       if (isNew && (ed.src || st.states.front) && !(await confirmDanger('Discard this piece?', "The photo and details won't be saved.", 'Discard'))) return;
@@ -1454,7 +1503,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       if (front === 'uncut') { if (st.side !== 'front') switchSide('front'); toast('Frame the front and tap Cut out first.'); return; }
       if (back === 'uncut') { if (st.side !== 'back') switchSide('back'); toast('Cut out the back too, or remove it.'); return; }
       const now = Date.now();
-      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: front.img, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 6, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.pop, adj: { ...st.adj }, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
+      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: front.img, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 6, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.pop, adj: { ...st.adj }, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
         back: back ? { img: back.img, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang } : null };
       if (!it.hang) { try { it.hang = await hangOf(front.img); } catch {} }
       const ok = await safe(store.put('items', it).then(() => true), "Couldn't save the piece. Your device may be out of space.");
@@ -1485,7 +1534,7 @@ function openDetail(it) {
   if (!it) return;
   const used = S.outfits.filter(o => o.pieces.some(p => p.itemId === it.id));
   const facts = [
-    ['Category', esc(catName(catOf(it)))],
+    [catsOf(it).length > 1 ? 'Categories' : 'Category', esc(catsOf(it).map(catName).join(', '))],
     it.color && ['Color', `<span class="dot" style="background:${esc(it.color)}"></span>${esc(it.color.toUpperCase())}`],
     it.color2 && ['Second color', `<span class="dot" style="background:${esc(it.color2)}"></span>${esc(it.color2.toUpperCase())}`],
     it.materials?.length && ['Material', esc(it.materials.join(', '))], (it.gift || it.secondhand != null) && ['Got it', it.gift ? 'Gift' : it.secondhand ? 'Secondhand' : 'New'],
@@ -1504,7 +1553,7 @@ function openDetail(it) {
     </div></div>`, 'full');
   el.addEventListener('click', async e => {
     const sd = e.target.closest('[data-dside]');
-    if (sd) { $$('[data-dside]', el).forEach(x => x.setAttribute('aria-pressed', x === sd)); $('#d-hero', el).innerHTML = hangHTML(sideOf(it, sd.dataset.dside), Math.min(window.innerWidth - 60, 700) * 0.72, Math.min(window.innerHeight * 0.46, 520)); return; }
+    if (sd) { $$('[data-dside]', el).forEach(x => x.setAttribute('aria-pressed', x === sd)); $('#d-hero', el).innerHTML = hangSideHTML(it, sd.dataset.dside, Math.min(window.innerWidth - 60, 700) * 0.72, Math.min(window.innerHeight * 0.46, 520)); return; }
     const dp = e.target.closest('[data-dphoto]'); if (dp) { openLightbox(it.details, +dp.dataset.dphoto); return; }
     const b = e.target.closest('[data-d]'); if (!b) return; const a = b.dataset.d;
     if (a === 'close') closeSheet(el);
@@ -1544,6 +1593,107 @@ function openLightbox(list, i) {
   const up = e => { if (!P.has(e.pointerId)) return; P.delete(e.pointerId); if (P.size < 2) pinch = null; if (!P.size) { if (swipeX != null && list.length > 1 && z.s <= 1.01) { const dx = e.clientX - swipeX; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); } swipeX = null; pan = null; if (z.s < 1.02) { z = { s: 1, x: 0, y: 0 }; apply(); } } };
   box.addEventListener('pointerup', up); box.addEventListener('pointercancel', up);
   box.addEventListener('wheel', e => { e.preventDefault(); zoomAt(clamp(z.s * Math.exp(-e.deltaY * 0.002), 1, 5), e.clientX, e.clientY); }, { passive: false });
+}
+
+/* ---------- dress up: build an outfit layer by layer ---------- */
+const DRESS_STAGES = [
+  { key: 'shirt', label: 'Shirt', hint: 'Swipe to pick your base layer, or None', none: true, re: /t-?shirt|shirt|tee|top|blouse|tank|polo|body|dress|jurk|jumpsuit/i },
+  { key: 'sweater', label: 'Sweater', hint: 'Add a layer on top, or keep it bare', re: /sweat|sweater|jumper|knit|trui|cardigan|hoodie|vest|blazer|jacket|jas|coat|outer/i, none: true },
+  { key: 'bottom', label: 'Bottom', hint: 'Swipe through your bottoms', re: /bottom|pant|trouser|jean|short|skirt|rok|broek|legging/i, none: true },
+  { key: 'shoes', label: 'Shoes', hint: 'Finish the base with shoes', re: /shoe|sneaker|boot|heel|sandal|slipper|loafer|schoen/i, none: true },
+  { key: 'extras', label: 'Extras', hint: 'Tap to add as many extras as you like', re: /bag|tas|purse|tote|clutch|access|jewel|sieraad|necklace|earring|ring|bracelet|hat|cap|scarf|shawl|sjaal|belt|riem|sunglass|bril|watch|horloge|sock/i, multi: true }
+];
+const DRESS_RE = /dress|jurk|jumpsuit/i;
+const itemText = it => [it.name, ...catsOf(it).map(catName)].join(' ');
+const isDress = it => !!it && DRESS_RE.test(itemText(it));
+function dressPools() {
+  const pools = DRESS_STAGES.map(st => S.items.filter(it => st.re.test(itemText(it)) && !(st.key === 'shirt' && DRESS_STAGES[1].re.test(catsOf(it).map(catName).join(' ')) && !/t-?shirt|tee|top/i.test(itemText(it)))));
+  const used = new Set(pools.flat().map(i => i.id)); S.items.forEach(it => { if (!used.has(it.id)) pools[0].push(it); });
+  // simple black t-shirt first
+  const blackTee = it => /t-?shirt|tee/i.test(itemText(it)) && colorFamily(it.color) === 'Black';
+  pools[0].sort((x, y) => (blackTee(y) - blackTee(x)) || ((colorFamily(y.color) === 'Black') - (colorFamily(x.color) === 'Black')));
+  return pools;
+}
+function openMix() {
+  if (!S.items.length) { toast('Add a few pieces first.'); return; }
+  const pools = dressPools(), pick = DRESS_STAGES.map((st, i) => st.multi ? new Set() : (st.key === 'sweater' ? -1 : (pools[i].length ? 0 : -1)));
+  if (isDress(pools[0][pick[0]])) pick[2] = -1;
+  let stage = 0;
+  const vh0 = window.innerHeight, H = Math.round(Math.max(300, Math.min((Math.min(window.innerWidth - 36, 360)) * 1.28, vh0 - 360))), W = Math.round(H / 1.28);
+  const el = openSheet(`<div class="sheet-inner" role="dialog" aria-modal="true" aria-label="Dress up">
+    <header class="sheet-head"><button class="btn ghost sm" data-m="cancel">Cancel</button><h2>Dress up</h2><button class="btn primary sm" data-m="save">Save</button></header>
+    <div class="sheet-body dress-body">
+      <div class="dress-steps" role="tablist">${DRESS_STAGES.map((st, i) => `<button role="tab" data-step="${i}">${i + 1}. ${st.label}</button>`).join('')}</div>
+      <div class="dress-canvas" style="width:${W}px;height:${H}px"><div class="dress-layers"></div>
+        <button class="dress-arrow l" data-m="prev" aria-label="Previous option">${ic('back', 22)}</button><button class="dress-arrow r" data-m="next" aria-label="Next option">${ic('back', 22)}</button>
+        <p class="dress-name"></p></div>
+      <p class="dress-hint"></p>
+      <div class="dress-strip"></div>
+      <div class="btn-row dress-nav"><button class="btn" data-m="back">${ic('back', 18)}Back</button><button class="btn primary" data-m="forward">Next</button></div>
+      <button class="btn ghost sm" data-m="board" style="align-self:center;margin-top:4px">${ic('layers', 18)}Fine-tune on a board</button>
+    </div></div>`, 'full');
+  const canvas = $('.dress-canvas', el), layers = $('.dress-layers', el);
+  const cur = i => (DRESS_STAGES[i].multi ? null : (pick[i] >= 0 ? pools[i][pick[i]] : null));
+  // where each layer sits on the canvas (fractions of the canvas)
+  const zones = () => {
+    const shirt = cur(0), dress = isDress(shirt), z = [];
+    if (cur(2) && !dress) z.push({ st: 2, it: cur(2), box: [0.27, 0.37, 0.46, 0.46], z: 1 });
+    const both = shirt && cur(1);
+    if (shirt) z.push({ st: 0, it: shirt, box: dress ? (both ? [0.1, 0.05, 0.46, 0.74] : [0.24, 0.03, 0.52, 0.78]) : (both ? [0.06, 0.06, 0.48, 0.34] : [0.22, 0.03, 0.56, 0.40]), z: 2 });
+    if (cur(1)) z.push({ st: 1, it: cur(1), box: both ? [0.4, 0.02, 0.56, 0.42] : (dress ? [0.2, 0.02, 0.6, 0.42] : [0.17, 0.02, 0.66, 0.43]), z: 3 });
+    if (cur(3)) z.push({ st: 3, it: cur(3), box: [0.3, 0.82, 0.4, 0.16], z: 4 });
+    const slots = [[0.79, 0.44, 0.2, 0.24], [0.01, 0.30, 0.19, 0.18], [0.81, 0.06, 0.18, 0.16], [0.01, 0.06, 0.18, 0.16], [0.01, 0.56, 0.19, 0.2], [0.8, 0.72, 0.19, 0.18]];
+    const ex = [...pick[4]].map(id => byId(id)).filter(Boolean).sort((x, y) => /bag|tas|purse|tote|clutch/i.test(itemText(y)) - /bag|tas|purse|tote|clutch/i.test(itemText(x)));
+    ex.slice(0, slots.length).forEach((it, k) => z.push({ st: 4, it, box: slots[k], z: 5 + k }));
+    return z;
+  };
+  const fit = (it, box) => { const [bx, by, bw, bh] = box, a = it.aspect || 0.8; let w = bw * W, h = w / a; if (h > bh * H) { h = bh * H; w = h * a; } return { x: bx * W + (bw * W - w) / 2, y: by * H + (bh * H - h) / 2, w, h }; };
+  const draw = enterDir => {
+    layers.innerHTML = zones().map(L => { const f = fit(L.it, L.box), active = L.st === stage && !DRESS_STAGES[stage].multi; return `<img class="dl${active ? ' active' : ''}${active && enterDir ? (enterDir > 0 ? ' in-r' : ' in-l') : ''}" data-st="${L.st}" src="${L.it.img}" alt="" draggable="false" style="left:${f.x.toFixed(1)}px;top:${f.y.toFixed(1)}px;width:${f.w.toFixed(1)}px;height:${f.h.toFixed(1)}px;z-index:${L.z}">`; }).join('');
+    const st = DRESS_STAGES[stage], it = cur(stage);
+    $('.dress-name', el).textContent = st.multi ? (pick[4].size ? `${pick[4].size} extra${pick[4].size > 1 ? 's' : ''}` : 'No extras yet') : (it ? itemName(it) : `No ${st.label.toLowerCase()}`);
+    $('.dress-hint', el).textContent = pools[stage].length ? st.hint : `No ${st.label.toLowerCase()} pieces in your closet yet.`;
+    $$('.dress-arrow', el).forEach(b => { b.hidden = !!st.multi || (pools[stage].length + (st.none ? 1 : 0)) < 2; });
+    $$('[data-step]', el).forEach((b, i) => { b.setAttribute('aria-selected', i === stage); b.classList.toggle('done', i < stage); });
+    const strip = st.multi ? pools[4].map(it => `<button class="dthumb2${pick[4].has(it.id) ? ' on' : ''}" data-pick="${it.id}" aria-label="${esc(itemName(it))}"><img src="${it.img}" alt=""></button>`).join('')
+      : (st.none ? `<button class="dthumb2 none${pick[stage] < 0 ? ' on' : ''}" data-pick="-1">None</button>` : '') + pools[stage].map((it, k) => `<button class="dthumb2${pick[stage] === k ? ' on' : ''}" data-pick="${k}" aria-label="${esc(itemName(it))}"><img src="${it.img}" alt=""></button>`).join('');
+    $('.dress-strip', el).innerHTML = strip;
+    const on = $('.dress-strip .on', el); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+    $('[data-m="back"]', el).disabled = stage === 0;
+    $('[data-m="forward"]', el).textContent = stage === DRESS_STAGES.length - 1 ? 'Save outfit' : `Next: ${DRESS_STAGES[stage + 1].label}`;
+  };
+  const step = dir => { // cycle the current layer's options (None counts as one)
+    const st = DRESS_STAGES[stage]; if (st.multi) return; const n = pools[stage].length, lo = st.none ? -1 : 0; if (n + (st.none ? 1 : 0) < 2) return;
+    let v = pick[stage] + dir; if (v >= n) v = lo; if (v < lo) v = n - 1; pick[stage] = v;
+    if (stage === 0) { if (isDress(cur(0))) pick[2] = -1; }
+    draw(dir);
+  };
+  const goStage = i => { stage = clamp(i, 0, DRESS_STAGES.length - 1); draw(0); };
+  // swipe on the outfit to change the current layer
+  let sx = null, act = null;
+  canvas.addEventListener('pointerdown', e => { if (e.target.closest('button')) return; sx = e.clientX; act = $('.dl.active', el); try { canvas.setPointerCapture(e.pointerId); } catch {} });
+  canvas.addEventListener('pointermove', e => { if (sx == null || !act) return; act.style.transform = `translateX(${(e.clientX - sx) * 0.6}px)`; act.style.opacity = String(1 - Math.min(Math.abs(e.clientX - sx) / 260, 0.6)); });
+  const end = e => { if (sx == null) return; const dx = e.clientX - sx; sx = null; if (act) { act.style.transform = ''; act.style.opacity = ''; } act = null; if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1); };
+  canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
+  const outfit = () => { const o = { id: uid(), name: '', created: Date.now(), pieces: zones().map((L, k) => { const f = fit(L.it, L.box); return { k: uid(), itemId: L.it.id, x: (f.x + f.w / 2) / W, y: (f.y + f.h / 2) / H, w: f.w / W, z: L.z }; }) }; return o; };
+  el.addEventListener('click', async e => {
+    const sb = e.target.closest('[data-step]'); if (sb) { goStage(+sb.dataset.step); return; }
+    const pb = e.target.closest('[data-pick]');
+    if (pb) { const st = DRESS_STAGES[stage]; if (st.multi) { const id = pb.dataset.pick; pick[4].has(id) ? pick[4].delete(id) : pick[4].add(id); draw(0); } else { const v = +pb.dataset.pick, dir = v > pick[stage] ? 1 : -1; pick[stage] = v; if (stage === 0 && isDress(cur(0))) pick[2] = -1; draw(dir); } return; }
+    const b = e.target.closest('[data-m]'); if (!b) return; const a = b.dataset.m;
+    if (a === 'cancel') closeSheet(el);
+    if (a === 'prev') step(-1); if (a === 'next') step(1);
+    if (a === 'back') goStage(stage - 1);
+    if (a === 'forward' && stage < DRESS_STAGES.length - 1) { goStage(stage + 1); return; }
+    if (a === 'board') { const o = outfit(); if (!o.pieces.length) { toast('Pick at least one piece.'); return; } closeSheet(el); openBoard(o); return; }
+    if (a === 'save' || a === 'forward') {
+      const o = outfit(); if (!o.pieces.length) { toast('Pick at least one piece.'); return; }
+      o.name = `Outfit ${S.outfits.length + 1}`; o.updated = Date.now();
+      if (!(await safe(store.put('outfits', o).then(() => true)))) return;
+      S.outfits.push(o); sortOutfits(); closeSheet(el); renderOutfits(); renderSettings(); if (S.view !== 'outfits') go('outfits'); toast('Outfit saved. Tap it to rename or fine-tune.');
+    }
+  });
+  draw(0);
 }
 
 /* ---------- outfit board ---------- */
@@ -1605,7 +1755,7 @@ function openBoard(outfit = null, seedId = null) {
   };
   const renderTray = () => {
     $('#tray-chips', el).innerHTML = chipRow(trayCat, 'tray', false);
-    const list = S.items.filter(i => trayCat === 'all' || catOf(i) === trayCat); const on = new Set(o.pieces.map(p => p.itemId));
+    const list = S.items.filter(i => trayCat === 'all' || inCat(i, trayCat)); const on = new Set(o.pieces.map(p => p.itemId));
     tray.innerHTML = list.length ? list.map(i => `<button class="${on.has(i.id) ? 'on' : ''}" data-add="${i.id}" aria-label="${esc(itemName(i))}${on.has(i.id) ? ', on board' : ''}"><img src="${i.img}" alt=""></button>`).join('') : '<p class="muted tray-empty">No pieces in this category yet.</p>';
   };
   const styleOf = p => { const n = board.querySelector(`[data-k="${p.k}"]`); if (n) { n.style.left = (p.x * 100) + '%'; n.style.top = (p.y * 100) + '%'; n.style.width = (p.w * 100) + '%'; n.style.zIndex = p.z; } };
@@ -1724,7 +1874,7 @@ function renderInsights() {
   // brands: top 6 + other
   let brands = tally(i => (i.brand || '').trim() || 'Not set'); const bTop = brands.filter(b => b.label !== 'Not set').slice(0, 6), bRest = brands.filter(b => b.label !== 'Not set').slice(6).reduce((a, b) => a + b.count, 0), bNone = brands.find(b => b.label === 'Not set');
   brands = [...bTop, ...(bRest ? [{ label: 'Other', count: bRest, items: brands.filter(b => b.label !== 'Not set').slice(6).flatMap(b => b.items) }] : []), ...(bNone ? [bNone] : [])];
-  const cats = tally(i => catName(catOf(i)));
+  const cats = tally(i => catsOf(i).map(catName));
   const colors = tally(i => colorFamily(i.color) || 'Not set');
   const seasons = tally(i => i.seasons || []);
   const bought = tally(i => i.gift ? 'Gift' : i.secondhand == null ? 'Not set' : i.secondhand ? 'Secondhand' : 'New');
@@ -1733,7 +1883,7 @@ function renderInsights() {
   // things worth a look
   const tips = [];
   if (never.length && S.items.length > 1) tips.push(`${never.length} of ${n} pieces aren't in any outfit yet.`);
-  const emptyCats = S.cats.filter(c => !S.items.some(i => catOf(i) === c.id)).map(c => c.name);
+  const emptyCats = S.cats.filter(c => !S.items.some(i => inCat(i, c.id))).map(c => c.name);
   if (emptyCats.length && emptyCats.length < S.cats.length) tips.push(`Nothing yet in ${emptyCats.join(', ')}.`);
   const tagged = S.items.filter(i => i.seasons?.length).length;
   if (tagged >= 3) { const low = SEASONS.map(x => [x, S.items.filter(i => i.seasons?.includes(x)).length]).sort((a, b) => a[1] - b[1])[0]; if (low[1] <= Math.max(1, tagged * 0.15)) tips.push(`Only ${low[1]} ${low[1] === 1 ? 'piece' : 'pieces'} for ${low[0]}.`); }
@@ -1788,7 +1938,7 @@ async function importBackup(file) {
   if (!data || data.app !== 'closet-index' || !Array.isArray(data.items)) { toast("That file isn't a closet backup."); return; }
   const str = v => typeof v === 'string' ? v.slice(0, 2000) : '';
   const items = data.items.filter(i => i && typeof i.id === 'string' && IMG_RE.test(i.img || '')).map(i => ({
-    id: i.id, created: +i.created || Date.now(), updated: +i.updated || Date.now(), name: str(i.name), cat: typeof i.cat === 'string' ? i.cat : null,
+    id: i.id, created: +i.created || Date.now(), updated: +i.updated || Date.now(), name: str(i.name), cat: typeof i.cat === 'string' ? i.cat : null, cats: Array.isArray(i.cats) ? i.cats.filter(c => typeof c === 'string').slice(0, 10) : [],
     color: /^#[0-9a-f]{6}$/i.test(i.color || '') ? i.color : '', brand: str(i.brand), price: str(i.price), size: str(i.size).slice(0, 40), notes: str(i.notes),
     seasons: Array.isArray(i.seasons) ? i.seasons.filter(s => SEASONS.includes(s)) : [], occasions: Array.isArray(i.occasions) ? i.occasions.filter(s => OCCASIONS.includes(s)) : [],
     img: i.img, orig: IMG_RE.test(i.orig || '') ? i.orig : undefined, mask: IMG_RE.test(i.mask || '') ? i.mask : undefined, aspect: +i.aspect || 0.8,
@@ -1841,9 +1991,10 @@ document.addEventListener('click', async e => {
     case 'closet-add': if (S.ctab === 'wish') openWish(null); else openAdd(); break;
     case 'wish-add': openWish(null); break;
     case 'detail': openDetail(byId(a.dataset.id)); break;
-    case 'flip': { const it = byId(a.dataset.id); if (!it?.back) break; S.flip[it.id] = !S.flip[it.id]; const sl = $(`.slide[data-id="${it.id}"]`); if (sl) { const [mw, mh] = rackDims(); sl.innerHTML = hangHTML(sideOf(it, S.flip[it.id] ? 'back' : 'front'), mw, mh); sl.classList.remove('flipping'); void sl.offsetWidth; sl.classList.add('flipping'); setTimeout(() => sl.classList.remove('flipping'), 500); } renderTag(it); break; }
+    case 'flip': { const it = byId(a.dataset.id); if (!it?.back) break; S.flip[it.id] = !S.flip[it.id]; const sl = $(`.slide[data-id="${it.id}"]`); if (sl) { const [mw, mh] = rackDims(); sl.innerHTML = hangSideHTML(it, S.flip[it.id] ? 'back' : 'front', mw, mh); sl.classList.remove('flipping'); void sl.offsetWidth; sl.classList.add('flipping'); setTimeout(() => sl.classList.remove('flipping'), 500); } renderTag(it); break; }
     case 'style': openBoard(null, a.dataset.id); break;
     case 'new-outfit': openBoard(); break;
+    case 'mix': openMix(); break;
     case 'open-outfit': openBoard(S.outfits.find(o => o.id === a.dataset.id)); break;
     case 'add-cat': { const inp = $('#new-cat'); const name = inp.value.trim(); if (!name) { inp.focus(); return; } S.cats.push({ id: uid(), name: name.slice(0, 60) }); await saveCats(); renderAll(); toast(`Added ${name}`); break; }
     case 'export': exportBackup(); break;
