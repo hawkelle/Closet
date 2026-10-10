@@ -1,0 +1,1503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Closet</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Closet">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FAFAF8">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" href="data:image/png;base64,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">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFAF8; --surface:#FFFFFF; --surface-2:#F1F0ED; --line:#E6E4E0;
+  --ink:#141414; --muted:#6B6B6B; --mauve:#141414; --mauve-ink:#FFFFFF; --mauve-soft:#EFEEEB;
+  --meadow:#141414; --copper:#141414; --teal:#141414; --teal-soft:#F0EFEC; --sage:#141414;
+  --pattern:none; --danger:#B3261E; --checker-a:#F6F5F2; --checker-b:#ECEBE7;
+  --shadow:0 12px 30px -20px rgba(0,0,0,.22);
+  --serif:"Gloock","Bodoni Moda",Georgia,serif;
+  --sans:"Outfit",ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111111; --surface:#1B1B1B; --surface-2:#242424; --line:#2E2E2E;
+    --ink:#F2F2F0; --muted:#A3A3A3; --mauve:#F2F2F0; --mauve-ink:#111111; --mauve-soft:#2A2A2A;
+    --meadow:#F2F2F0; --copper:#F2F2F0; --teal:#F2F2F0; --teal-soft:#2A2A2A; --sage:#F2F2F0;
+    --pattern:none; --danger:#F2A39B; --checker-a:#1B1B1B; --checker-b:#252525;
+    --shadow:0 12px 30px -20px rgba(0,0,0,.7); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111111; --surface:#1B1B1B; --surface-2:#242424; --line:#2E2E2E;
+  --ink:#F2F2F0; --muted:#A3A3A3; --mauve:#F2F2F0; --mauve-ink:#111111; --mauve-soft:#2A2A2A;
+  --meadow:#F2F2F0; --copper:#F2F2F0; --teal:#F2F2F0; --teal-soft:#2A2A2A; --sage:#F2F2F0;
+  --pattern:none; --danger:#F2A39B; --checker-a:#1B1B1B; --checker-b:#252525;
+  --shadow:0 12px 30px -20px rgba(0,0,0,.7); color-scheme:dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background-color:var(--bg);background-image:var(--pattern);background-size:160px 240px;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+input,textarea{font:inherit;color:inherit}
+img{max-width:100%}
+:focus-visible{outline:2px solid var(--mauve);outline-offset:2px}
+[hidden]{display:none!important}
+.muted{color:var(--muted)}
+
+#app{height:100%;max-width:760px;margin:0 auto;position:relative}
+#views{position:absolute;inset:0}
+.view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:120px;-webkit-overflow-scrolling:touch}
+
+/* nav */
+.nav{position:absolute;left:14px;right:14px;bottom:10px;height:70px;background:var(--surface);border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:5}
+.nav button{width:50px;height:50px;border-radius:18px;display:grid;place-items:center;color:var(--muted);position:relative}
+.nav button.active{color:var(--mauve)}
+.nav button.active::after{content:"";position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:var(--mauve)}
+.nav .add{width:58px;height:68px;border-radius:29px 29px 16px 16px;background:var(--mauve);color:var(--mauve-ink);transform:translateY(-22px);border:4px solid var(--bg);box-shadow:0 12px 22px -12px rgba(0,0,0,.45)}
+
+/* buttons, chips */
+.btn{height:46px;padding:0 20px;border-radius:999px;background:var(--surface-2);font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+.btn.primary{background:var(--mauve);color:var(--mauve-ink)}
+.btn.sm{height:38px;padding:0 16px;font-size:14px}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.4;cursor:default}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 20px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:36px;padding:0 15px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:14px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.chip .n{font-size:12px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--mauve);color:var(--mauve-ink);border-color:var(--mauve)}
+.cdot{width:9px;height:9px;border-radius:50%;flex:none}
+.chip[aria-pressed="true"] .n{color:inherit;opacity:.75}
+.chips.wrap{flex-wrap:wrap;overflow:visible;padding:0}
+
+/* rack */
+.arc{position:relative;padding:26px 0 8px;color:var(--ink);text-align:center}
+.arc h1{font-family:var(--serif);font-weight:400;font-size:30px;letter-spacing:.05em;text-transform:uppercase;line-height:1;margin:0}
+.arc .count{font-size:13px;color:var(--muted);margin-top:6px;display:block}
+.arc .chips{justify-content:safe center;padding-top:14px}
+.rack-stage{position:relative;margin-top:8px}
+.arch-win{position:absolute;left:50%;top:0;transform:translateX(-50%);background:var(--surface-2);border-radius:999px 999px 22px 22px;pointer-events:none}
+.rail{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 19%;margin-top:0;scrollbar-width:none;outline:none}
+.rail::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;transform-origin:50% 0;padding-top:30px}
+.hang{position:relative;margin:0 auto;flex:none}
+.hang .hk{position:absolute;top:0;color:var(--ink);z-index:0;display:block}
+.hang .hk svg{display:block;width:100%;height:auto;overflow:visible}
+.hang img{position:absolute;left:0;z-index:1;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.tag{margin:14px auto 0;width:min(80%,360px);background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:24px 20px 18px;text-align:center;position:relative;box-shadow:var(--shadow);animation:tagin .25s ease}
+@keyframes tagin{from{opacity:.4;transform:translateY(4px)}}
+.tag .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--surface-2);color:#141414;font-size:12.5px;padding:4px 13px;border-radius:999px;font-weight:500;white-space:nowrap}
+.tag h3{font-weight:500;font-size:19px;margin:0;display:flex;align-items:center;justify-content:center;gap:8px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.tag .brand{margin:2px 0 0;color:var(--muted);font-size:14px}
+.tag .price{margin:4px 0 0;color:var(--teal);font-weight:600;font-size:21px}
+.mini-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:10px}
+.mini-tags span{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--teal-soft);color:#141414}
+.tag-actions{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.rail-pos{text-align:center;font-size:12.5px;color:var(--muted);margin:12px 0 0}
+
+/* empty */
+.empty{text-align:center;padding:36px 28px 0;max-width:360px;margin:0 auto}
+.empty .hook{width:120px;margin:0 auto 6px;color:var(--muted);opacity:.7}
+.empty h2{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:.05em;text-transform:uppercase;margin:0 0 6px}
+.empty p{color:var(--muted);margin:0 0 20px}
+
+/* pages */
+.page-head{padding:24px 20px 6px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.page-head h1{font-family:var(--serif);font-weight:400;font-size:30px;letter-spacing:.05em;text-transform:uppercase;line-height:1;margin:0}
+.search{margin:10px 20px 2px;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:0 16px;height:48px;color:var(--muted)}
+.search input{flex:1;border:0;background:none;outline:none;color:var(--ink);min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:16px 14px;padding:8px 20px 12px}
+.tile{text-align:left;display:block;width:100%}
+.tile .ph{aspect-ratio:4/5;border-radius:999px 999px 20px 20px;background:var(--surface-2);display:grid;place-items:center;padding:13%}
+.tile .ph img{max-width:100%;max-height:100%;object-fit:contain}
+.tile .nm{font-size:14.5px;margin:8px 6px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .sub{font-size:12.5px;color:var(--muted);margin:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sec{font-family:var(--serif);font-weight:400;font-size:19px;letter-spacing:.05em;text-transform:uppercase;margin:18px 22px 0;display:flex;align-items:baseline;gap:10px}
+.sec small{font-family:var(--sans);text-transform:none;letter-spacing:0;font-style:normal;font-size:13px;color:var(--muted)}
+.ocard{text-align:left;display:block;width:100%}
+.ocard .nm{font-size:15px;margin:8px 6px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ocard .sub{font-size:12.5px;color:var(--muted);margin:0 6px}
+.mboard{aspect-ratio:4/5;border-radius:26px;background:var(--surface);position:relative;overflow:hidden}
+.piece{position:absolute;transform:translate(-50%,-50%)}
+.piece img{width:100%;display:block;pointer-events:none;user-select:none;-webkit-user-drag:none}
+
+/* settings */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:20px;margin:14px 20px}
+.panel h2{font-family:var(--serif);font-weight:400;font-size:19px;letter-spacing:.05em;text-transform:uppercase;margin:0 0 4px}
+.panel p{margin:0 0 14px;color:var(--muted);font-size:14.5px}
+.cat-list{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:8px}
+.cat-list li{display:flex;align-items:center;gap:4px;background:var(--bg);border-radius:18px;padding:4px 4px 4px 14px}
+.cat-list input{flex:1;min-width:0;border:0;background:none;outline:none;height:40px}
+.cat-list .n{font-size:13px;color:var(--muted);margin-right:4px}
+.icon-btn{width:38px;height:38px;border-radius:14px;display:grid;place-items:center;color:var(--muted)}
+.icon-btn:disabled{opacity:.3}
+.add-row{display:flex;gap:8px}
+.add-row input{flex:1;min-width:0;background:var(--bg);border:1.5px solid transparent;border-radius:18px;padding:0 14px;height:46px;outline:none}
+.add-row input:focus{border-color:var(--mauve)}
+.check{display:flex;align-items:flex-start;gap:10px;font-size:14.5px;margin:4px 0 14px}
+.check input{accent-color:var(--mauve);width:18px;height:18px;margin-top:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;background:var(--bg);border-radius:999px;padding:4px;gap:4px}
+.seg button{flex:1;height:38px;border-radius:999px;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--mauve);font-weight:500;box-shadow:0 2px 8px -4px rgba(0,0,0,.2)}
+
+/* sheets */
+.sheet{position:fixed;inset:0;z-index:50}
+.sheet.full{background-color:var(--bg);background-image:var(--pattern);background-size:160px 240px;transform:translateY(100%);transition:transform .34s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet.full.open{transform:none}
+.sheet-inner{display:flex;flex-direction:column;height:100%;max-width:760px;width:100%;margin:0 auto;min-height:0}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;gap:10px;flex:none}
+.sheet-head h2{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:.05em;text-transform:uppercase;margin:0;flex:1;text-align:center}
+.title-input{flex:1;min-width:0;text-align:center;border:0;background:none;outline:none;font-family:var(--serif);font-size:20px;font-weight:400}
+.title-input::placeholder{color:var(--muted)}
+.sheet-body{flex:1;overflow-y:auto;padding:4px 18px 40px;min-height:0}
+.sheet.mini{background:rgba(42,26,36,0);transition:background .25s;display:flex;align-items:flex-end;justify-content:center}
+.sheet.mini.open{background:rgba(42,26,36,.38)}
+.mini-card{width:min(100% - 20px,460px);margin-bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);border-radius:30px;padding:22px 18px 14px;transform:translateY(115%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.sheet.mini.open .mini-card{transform:none}
+.mini-card h3{font-family:var(--serif);font-weight:400;font-size:21px;letter-spacing:.05em;text-transform:uppercase;margin:0 6px 4px}
+.mini-card p{color:var(--muted);margin:0 6px 16px;font-size:14.5px}
+.stack{display:flex;flex-direction:column;gap:8px}
+.stack .btn{width:100%;height:52px}
+
+/* editor */
+.stage{display:flex;flex-direction:column;align-items:center}
+.canvas-wrap{position:relative;max-width:100%;width:min(100%,calc(50vh * .75));aspect-ratio:3/4;border-radius:26px;overflow:hidden;touch-action:none;background-color:var(--checker-a);background-image:conic-gradient(var(--checker-b) 25%,transparent 0 50%,var(--checker-b) 0 75%,transparent 0);background-size:22px 22px}
+.layer{position:absolute;inset:0;transform-origin:0 0}
+.layer canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+.layer canvas.ov{opacity:.5;pointer-events:none}
+.frame{position:absolute;border:2px solid var(--mauve-ink);border-radius:6px;box-shadow:0 0 0 9999px rgba(42,26,36,.45),0 0 0 1px var(--mauve);pointer-events:none}
+.frame i{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--mauve);border:3px solid var(--mauve-ink)}
+.frame i:nth-child(1){left:-12px;top:-12px}.frame i:nth-child(2){right:-12px;top:-12px}.frame i:nth-child(3){left:-12px;bottom:-12px}.frame i:nth-child(4){right:-12px;bottom:-12px}
+#e-cut{margin-top:10px}
+.busy{position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 65%,transparent);font-size:14.5px;color:var(--ink)}
+.zoom-reset{position:absolute;right:10px;top:10px;height:32px;padding:0 12px;border-radius:999px;background:var(--surface);font-size:13px;box-shadow:var(--shadow)}
+.hint{font-size:13.5px;color:var(--muted);text-align:center;margin:10px 8px 0;min-height:2.6em;max-width:420px}
+.tools{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin:10px 0 6px;background:var(--surface);border-radius:24px;padding:6px}
+.tool{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 6px;border-radius:16px;font-size:11px;color:var(--muted);min-width:0}
+.hgr{position:absolute;color:var(--ink);pointer-events:none}
+.hgr svg{display:block;width:100%;height:auto;overflow:visible}
+.tool[aria-pressed="true"]{background:var(--mauve-soft);color:var(--mauve)}
+.tool:disabled{opacity:.35}
+.slider{display:flex;align-items:center;gap:12px;padding:6px 8px;font-size:13.5px;color:var(--muted)}
+.slider span{flex:none;width:86px}
+.slider input{flex:1;accent-color:var(--mauve)}
+.form{display:flex;flex-direction:column;gap:18px;margin-top:16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field>span,.field>label{font-size:13px;color:var(--muted);padding-left:4px}
+.field input[type=text],.field textarea{background:var(--surface);border:1.5px solid transparent;border-radius:18px;padding:12px 15px;outline:none;width:100%;resize:vertical}
+.field input[type=text]:focus,.field textarea:focus{border-color:var(--mauve)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.color-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.color-row input[type=color]{width:46px;height:46px;border:0;border-radius:50%;padding:0;background:none;cursor:pointer}
+.color-row input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.color-row input[type=color]::-webkit-color-swatch{border:none;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.color-row input[type=color]::-moz-color-swatch{border:none;border-radius:50%}
+.newcat{display:inline-flex;gap:6px}
+.newcat input{height:36px;border-radius:999px;border:1.5px solid var(--mauve);background:var(--surface);padding:0 14px;outline:none;width:150px}
+
+/* detail */
+.detail-hero{background:var(--surface-2);border-radius:999px 999px 30px 30px;padding-top:56px!important;padding:22px 12px 28px;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+.detail-name{font-family:var(--serif);font-weight:400;font-size:24px;letter-spacing:.05em;text-transform:uppercase;line-height:1.1;margin:18px 4px 8px}
+.facts{list-style:none;padding:0;margin:8px 0 18px;background:var(--surface);border-radius:24px}
+.facts li{display:flex;justify-content:space-between;gap:16px;padding:13px 18px;border-bottom:1px solid var(--line)}
+.facts li:last-child{border-bottom:0}
+.facts li span:first-child{color:var(--muted)}
+.facts li span:last-child{text-align:right;display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn{flex:1}
+
+/* board */
+.board{position:relative;aspect-ratio:4/5;width:min(100%,calc(54vh * .8));margin:0 auto;background:var(--surface);border-radius:30px;overflow:hidden;touch-action:none;user-select:none}
+.board .piece{cursor:grab}
+.board .piece.sel{outline:1.5px dashed var(--mauve);outline-offset:3px;border-radius:6px}
+.handle{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--mauve);color:var(--mauve-ink);display:grid;place-items:center;z-index:2;box-shadow:0 4px 10px -4px rgba(0,0,0,.4)}
+.handle.del{right:-12px;top:-12px}
+.handle.rz{right:-12px;bottom:-12px;cursor:nwse-resize}
+.board-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);padding:30px;font-size:15px;pointer-events:none}
+.board-tools{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:14px 0 4px}
+.tray{display:flex;gap:10px;overflow-x:auto;padding:6px 20px 14px;margin:0 -18px;scrollbar-width:none}
+.tray::-webkit-scrollbar{display:none}
+.tray button{flex:none;width:78px;height:96px;border-radius:20px;background:var(--surface);padding:9px;position:relative;display:grid;place-items:center}
+.tray button img{max-width:100%;max-height:100%;object-fit:contain}
+.tray button.on{box-shadow:inset 0 0 0 2px var(--mauve)}
+.tray button.on::after{content:"";position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:var(--mauve)}
+.tray-empty{padding:20px 4px;margin:0}
+.board-sheet .chips{margin:0 -18px}
+
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 20px 0}
+@media (min-width:560px){.stat-row{grid-template-columns:repeat(4,1fr)}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:14px 16px}
+.stat strong{display:block;font-family:var(--serif);font-weight:400;font-size:29px;line-height:1.05;color:var(--teal)}
+.stat span{font-size:13px;color:var(--muted)}
+.tips{margin:6px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.tips li{position:relative;padding-left:18px;font-size:14.5px}
+.tips li::before{content:"";position:absolute;left:2px;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--teal)}
+.charts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-auto-flow:row dense;gap:12px;margin:14px 20px 0}
+.charts .panel{margin:0}
+.chart{cursor:pointer;padding:16px 14px 14px;transition:box-shadow .2s}
+.chart:not(.open):hover{box-shadow:var(--shadow)}
+.chart h2{font-size:13.5px;letter-spacing:.05em;text-transform:uppercase;margin:0 0 6px;line-height:1.15}
+.chart .donut{display:block;width:100%;max-width:150px;height:auto;margin:2px auto 0}
+.chart .cap{margin:6px 0 0;font-size:12.5px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart.open{grid-column:1 / -1;cursor:default;padding:18px 18px 12px}
+.chart-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.chart-head h2{font-size:17px;letter-spacing:.05em;text-transform:uppercase;margin:0}
+.chart.open .chart-body{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:6px 0 4px}
+.chart.open .donut{width:180px;max-width:none;margin:0}
+.chart-note{flex:1;min-width:140px;font-size:13px;margin:0}
+.donut .dn{font-family:var(--serif);font-size:9px;fill:var(--ink)}
+.donut .dl{font-size:3.2px;fill:var(--muted);font-family:var(--sans)}
+.legend{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.legend .row{display:flex;align-items:center;gap:10px;width:100%;padding:7px 6px;border-radius:12px;text-align:left;font-size:15px}
+.legend .row:not(:disabled):hover{background:var(--bg)}
+.legend .row:disabled{cursor:default}
+.legend .sw{width:13px;height:13px;border-radius:4px;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.legend .lb{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.legend .ct{font-variant-numeric:tabular-nums}
+.legend .pc{color:var(--muted);font-size:13px;width:38px;text-align:right;font-variant-numeric:tabular-nums}
+.slice-items{display:flex;gap:6px;overflow-x:auto;padding:0 0 8px 29px;scrollbar-width:none}
+.slice-items:empty{display:none}
+.slice-items::-webkit-scrollbar{display:none}
+.slice-items button{flex:none;width:46px;height:56px;border-radius:12px;background:var(--bg);padding:5px;display:grid;place-items:center}
+.slice-items img{max-width:100%;max-height:100%;object-fit:contain}
+.slice-items .more{align-self:center;font-size:13px;color:var(--muted);padding:0 6px}
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
+@media (min-width:640px){.rail{padding:0 27%}}
+</style>
+</head>
+<body>
+<div id="app">
+  <main id="views">
+    <section class="view" id="view-rack" data-view="rack" aria-label="Rack"></section>
+    <section class="view" id="view-closet" data-view="closet" aria-label="Closet" hidden></section>
+    <section class="view" id="view-outfits" data-view="outfits" aria-label="Outfits" hidden></section>
+    <section class="view" id="view-insights" data-view="insights" aria-label="Insights" hidden></section>
+    <section class="view" id="view-settings" data-view="settings" aria-label="Settings" hidden></section>
+  </main>
+  <nav class="nav" aria-label="Main">
+    <button data-go="rack" aria-label="Rack" class="active"></button>
+    <button data-go="closet" aria-label="Closet"></button>
+    <button class="add" data-act="add" aria-label="Add a piece"></button>
+    <button data-go="outfits" aria-label="Outfits"></button>
+    <button data-go="insights" aria-label="Insights"></button>
+  </nav>
+</div>
+<div id="sheets"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="pick-camera" accept="image/*" capture="environment" hidden>
+<input type="file" id="pick-library" accept="image/*" hidden>
+<input type="file" id="pick-backup" accept="application/json,.json" hidden>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+const hex = (r, g, b) => '#' + [r, g, b].map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+const IMG_RE = /^data:image\/(png|webp|jpeg);base64,[A-Za-z0-9+/=]+$/;
+
+const P = {
+  hanger:'<path d="M9.8 6a2.2 2.2 0 1 1 3 2.05c-.5.2-.8.6-.8 1.1V10"/><path d="M12 10 3.3 16.1c-.8.6-.4 1.9.6 1.9h16.2c1 0 1.4-1.3.6-1.9Z"/>',
+  grid:'<rect x="4" y="4" width="7" height="7" rx="2.2"/><rect x="13" y="4" width="7" height="7" rx="2.2"/><rect x="4" y="13" width="7" height="7" rx="2.2"/><rect x="13" y="13" width="7" height="7" rx="2.2"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  layers:'<path d="m12 3.5 8.5 4.6L12 12.7 3.5 8.1Z"/><path d="m3.5 12.3 8.5 4.6 8.5-4.6"/><path d="m3.5 16.3 8.5 4.6 8.5-4.6"/>',
+  sliders:'<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
+  sparkle:'<path d="M12 4l1.7 5.3L19 11l-5.3 1.7L12 18l-1.7-5.3L5 11l5.3-1.7Z"/><path d="M19 3v3M17.5 4.5h3"/>',
+  wand:'<path d="M4 20 14 10"/><path d="M15.5 3.5 16.4 6l2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9Z"/>',
+  eraser:'<path d="M8 20 3.8 15.8a1.6 1.6 0 0 1 0-2.3l9.6-9.6a1.6 1.6 0 0 1 2.3 0l4.4 4.4a1.6 1.6 0 0 1 0 2.3L11 20Z"/><path d="M8 20h12M9 9l6 6"/>',
+  brush:'<path d="M18.5 3.5a1.8 1.8 0 0 1 2.5 2.5l-8.5 8.5-2.5-2.5Z"/><path d="M8.5 13.5c-2 0-3.5 1.4-3.5 3.3 0 1.3-.7 2.2-2 2.7 3.6 1.4 8 .4 8-3.5"/>',
+  undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+  reset:'<path d="M4 12a8 8 0 1 0 2.6-5.9L4 8.5"/><path d="M4 4v4.5h4.5"/>',
+  trash:'<path d="M4.5 7h15M10 11v6M14 11v6M6.5 7l.8 11.2A2 2 0 0 0 9.3 20h5.4a2 2 0 0 0 2-1.8L17.5 7M9.5 7V4.5h5V7"/>',
+  x:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+  camera:'<path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.7l1.3-2h5l1.3 2h1.7A2.5 2.5 0 0 1 20 8.5v8a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5Z"/><circle cx="12" cy="12.5" r="3.5"/>',
+  photo:'<rect x="3.5" y="4.5" width="17" height="15" rx="3.5"/><circle cx="9" cy="10" r="1.6"/><path d="m4 17 5-4.5 4 3.5 2.5-2 4.5 3.5"/>',
+  resize:'<path d="M14 5h5v5M10 19H5v-5M19 5l-6 6M5 19l6-6"/>',
+  front:'<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 5.5V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h.5"/>',
+  back:'<rect x="4" y="4" width="11" height="11" rx="2.5"/><path d="M19 9.5h.1a1 1 0 0 1 .9 1V19a1 1 0 0 1-1 1h-8.5a1 1 0 0 1-1-1v-.1"/>',
+  download:'<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16Z"/><path d="m13.5 6.5 4 4"/>',
+  arrange:'<rect x="4" y="4" width="7" height="10" rx="2"/><rect x="13" y="4" width="7" height="6" rx="2"/><rect x="13" y="12" width="7" height="8" rx="2"/><rect x="4" y="16" width="7" height="4" rx="2"/>',
+  up:'<path d="m6.5 14.5 5.5-5.5 5.5 5.5"/>',
+  down:'<path d="m6.5 9.5 5.5 5.5 5.5-5.5"/>',
+  frame:'<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/>',
+  plusc:'<circle cx="12" cy="12" r="8"/><path d="M12 8.5v7M8.5 12h7"/>',
+  minusc:'<circle cx="12" cy="12" r="8"/><path d="M8.5 12h7"/>',
+  pie:'<path d="M11 4.1A8 8 0 1 0 19.9 13H11Z"/><path d="M14 3.6A7.6 7.6 0 0 1 20.4 10H14Z"/>',
+  back:'<path d="m14.5 6-6 6 6 6"/>',
+  upload:'<path d="M12 20V9M7.5 13.5 12 9l4.5 4.5M5 4h14"/>'
+};
+const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+const HANG_SVG = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="2.6" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M53 11a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v4"/><path vector-effect="non-scaling-stroke" d="M60 25 12 45c-3 1.3-2.2 4.5 1 4.5h94c3.2 0 4-3.2 1-4.5Z"/></svg>';
+const CLIP_SVG = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M53 9a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v6"/><path vector-effect="non-scaling-stroke" d="M7 25.5h106"/><path vector-effect="non-scaling-stroke" d="M14 25.5v4M106 25.5v4"/><rect x="9.5" y="29.5" width="9" height="16" rx="2" fill="currentColor" stroke="none"/><rect x="101.5" y="29.5" width="9" height="16" rx="2" fill="currentColor" stroke="none"/><path d="M11.5 36h5M103.5 36h5" stroke-width="1" style="stroke:var(--surface)" vector-effect="non-scaling-stroke"/></svg>';
+const HANGERS = { hanger: { svg: () => HANG_SVG, anchor: 0.905, front: false }, clip: { svg: () => CLIP_SVG, anchor: 0.86, front: true } };
+const NO_HANGER_RE = /shoe|sneaker|boot|heel|sandal|slipper|schoen|jewel|sieraad|ring|necklace|earring|bracelet|watch|horloge|bag|purse|tas|accessor|hat|cap|sock|sok|belt|riem|sunglass|bril|scarf|sjaal/i;
+const CLIP_RE = /bottom|pant|trouser|jean|short|skirt|legging|broek|rok/i;
+const defaultHanger = it => { const n = catName(catOf(it)); return NO_HANGER_RE.test(n) ? 'none' : CLIP_RE.test(n) ? 'clip' : 'hanger'; };
+const hangerType = it => (it.hanger === 'hanger' || it.hanger === 'clip' || it.hanger === 'none') ? it.hanger : defaultHanger(it);
+const MATERIALS = ['Cotton', 'Linen', 'Wool', 'Cashmere', 'Silk', 'Denim', 'Leather', 'Viscose', 'Polyester', 'Nylon', 'Elastane', 'Other'];
+const HANGER = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M53 11a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v4"/><path d="M60 25 12 45c-3 1.3-2.2 4.5 1 4.5h94c3.2 0 4-3.2 1-4.5Z"/></svg>';
+
+const SEASONS = ['Spring', 'Summer', 'Fall', 'Winter'];
+const OCCASIONS = ['Everyday', 'Work', 'Going out', 'Lounge', 'Active', 'Formal'];
+const DEFAULT_CATS = () => ['Tops', 'Bottoms', 'Outerwear', 'Dresses', 'Shoes', 'Bags', 'Accessories'].map(name => ({ id: uid() + name.slice(0, 2), name }));
+
+/* ---------- storage ---------- */
+let useMem = false; const mem = { items: new Map(), outfits: new Map(), meta: new Map() };
+let dbp = null;
+function openDB() {
+  if (dbp) return dbp;
+  dbp = new Promise((res, rej) => {
+    const r = indexedDB.open('closet-index', 1);
+    r.onupgradeneeded = () => { const d = r.result; ['items', 'outfits', 'meta'].forEach(s => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: 'id' }); }); };
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => rej(new Error('blocked'));
+  });
+  return dbp;
+}
+async function tx(store, mode, fn) {
+  const d = await openDB();
+  return new Promise((res, rej) => {
+    const t = d.transaction(store, mode); const s = t.objectStore(store); let out; const r = fn(s);
+    if (r) r.onsuccess = () => { out = r.result; };
+    t.oncomplete = () => res(out); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error || new Error('aborted'));
+  });
+}
+const store = {
+  all: s => useMem ? Promise.resolve([...mem[s].values()]) : tx(s, 'readonly', st => st.getAll()),
+  put: (s, v) => useMem ? (mem[s].set(v.id, v), Promise.resolve()) : tx(s, 'readwrite', st => st.put(v)),
+  del: (s, k) => useMem ? (mem[s].delete(k), Promise.resolve()) : tx(s, 'readwrite', st => st.delete(k)),
+  clear: s => useMem ? (mem[s].clear(), Promise.resolve()) : tx(s, 'readwrite', st => st.clear())
+};
+async function safe(p, msg = "Couldn't save that change.") { try { return await p; } catch (e) { console.error(e); toast(msg); } }
+
+/* ---------- state ---------- */
+const S = { items: [], outfits: [], cats: [], customMats: [], openChart: null, view: 'rack', rackCat: 'all', closetCat: 'all', q: '', rackIndex: 0 };
+const byId = id => S.items.find(i => i.id === id);
+const catOf = it => (it && S.cats.some(c => c.id === it.cat)) ? it.cat : 'none';
+const catName = id => id === 'none' ? 'Uncategorized' : (S.cats.find(c => c.id === id)?.name || 'Uncategorized');
+const itemName = it => (it.name && it.name.trim()) || catName(catOf(it));
+const saveCats = () => safe(store.put('meta', { id: 'categories', list: S.cats }));
+const saveMats = () => safe(store.put('meta', { id: 'materials', list: S.customMats }));
+const allMaterials = () => [...MATERIALS.filter(m => m !== 'Other'), ...S.customMats.filter(m => !MATERIALS.includes(m)), 'Other'];
+const sortItems = () => S.items.sort((a, b) => b.created - a.created);
+const sortOutfits = () => S.outfits.sort((a, b) => (b.updated || 0) - (a.updated || 0));
+let downloadsP = null;
+const getDownloads = () => downloadsP || (downloadsP = (window.claude && typeof window.claude.use === 'function') ? window.claude.use('downloads').catch(() => null) : Promise.resolve(null));
+
+/* ---------- ui helpers ---------- */
+let toastT;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2800); }
+function openSheet(html, cls) {
+  const el = document.createElement('div'); el.className = 'sheet ' + cls; el.innerHTML = html;
+  $('#sheets').append(el); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('open'))); return el;
+}
+function closeSheet(el) { if (!el) return; el.classList.remove('open'); setTimeout(() => el.remove(), 320); }
+function closeAllSheets() { $$('#sheets > .sheet').forEach(closeSheet); }
+function choose(title, msg, options) {
+  return new Promise(res => {
+    const el = openSheet(`<div class="mini-card" role="dialog" aria-modal="true" aria-label="${esc(title)}"><h3>${esc(title)}</h3>${msg ? `<p>${esc(msg)}</p>` : ''}<div class="stack">${options.map((o, i) => `<button class="btn ${o.primary ? 'primary' : ''} ${o.danger ? 'danger' : ''}" data-i="${i}">${o.icon ? ic(o.icon, 20) : ''}${esc(o.label)}</button>`).join('')}<button class="btn ghost" data-i="-1">Cancel</button></div></div>`, 'mini');
+    el.addEventListener('click', e => {
+      const b = e.target.closest('[data-i]');
+      if (!b && e.target !== el) return;
+      const i = b ? +b.dataset.i : -1; closeSheet(el);
+      if (i >= 0 && options[i].run) options[i].run();
+      res(i >= 0 ? options[i].v : null);
+    });
+  });
+}
+const confirmDanger = (title, msg, label) => choose(title, msg, [{ v: true, label, danger: true }]);
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+const PASTEL_C = ['#F4A9B8', '#F9C79A', '#F3DA7E', '#A8D8A0', '#8FD0CF', '#9FB8EE', '#C3A9EC', '#E9A6D7'];
+const PASTEL_L = ['#FCE3E8', '#FDEBDC', '#FBF2CF', '#E2F2DE', '#DCF1F0', '#E1E9FB', '#ECE4FA', '#F9E2F3'];
+const SEASON_COL = { Spring: '#A8D8A0', Summer: '#F3DA7E', Fall: '#F9C79A', Winter: '#9FB8EE' };
+const SEASON_L = { Spring: '#E2F2DE', Summer: '#FBF2CF', Fall: '#FDEBDC', Winter: '#E1E9FB' };
+const catIdx = id => { const i = S.cats.findIndex(c => c.id === id); return i < 0 ? -1 : i % PASTEL_C.length; };
+const catColor = id => { const i = catIdx(id); return i < 0 ? '#D6D6D6' : PASTEL_C[i]; };
+const catLight = id => { const i = catIdx(id); return i < 0 ? '#EDEDED' : PASTEL_L[i]; };
+const tagLight = t => { if (SEASON_L[t]) return SEASON_L[t]; let h = 0; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return PASTEL_L[h % PASTEL_L.length]; };
+function chipRow(active, scope, withCounts = true) {
+  const counts = {}; S.items.forEach(i => { const c = catOf(i); counts[c] = (counts[c] || 0) + 1; });
+  const n = c => withCounts ? `<span class="n">${counts[c] || 0}</span>` : '';
+  let h = `<button class="chip" data-cat="all" aria-pressed="${active === 'all'}">All${withCounts ? `<span class="n">${S.items.length}</span>` : ''}</button>`;
+  h += S.cats.map(c => `<button class="chip" data-cat="${c.id}" aria-pressed="${active === c.id}"><span class="cdot" style="background:${catColor(c.id)}"></span>${esc(c.name)}${n(c.id)}</button>`).join('');
+  if (counts.none) h += `<button class="chip" data-cat="none" aria-pressed="${active === 'none'}">Uncategorized${n('none')}</button>`;
+  return `<div class="chips" data-scope="${scope}">${h}</div>`;
+}
+const pieceHTML = (p, it, sel) => `<div class="piece${sel ? ' sel' : ''}" data-k="${p.k}" style="left:${(p.x * 100).toFixed(2)}%;top:${(p.y * 100).toFixed(2)}%;width:${(p.w * 100).toFixed(2)}%;z-index:${p.z}"><img src="${it.img}" alt="${esc(itemName(it))}" draggable="false">${sel ? `<span class="handle del" data-h="del" role="button" aria-label="Remove from outfit">${ic('x', 16)}</span><span class="handle rz" data-h="rz" role="button" aria-label="Resize">${ic('resize', 15)}</span>` : ''}</div>`;
+const miniBoard = o => `<div class="mboard">${o.pieces.map(p => { const it = byId(p.itemId); return it ? pieceHTML(p, it, false) : ''; }).join('')}</div>`;
+
+/* ---------- views ---------- */
+function go(view) {
+  S.view = view;
+  $$('.view').forEach(v => { v.hidden = v.dataset.view !== view; });
+  $$('.nav [data-go]').forEach(b => { const on = b.dataset.go === view || (view === 'settings' && b.dataset.go === 'insights'); b.classList.toggle('active', on); if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  if (view === 'rack') renderRack();
+  if (view === 'settings') renderSettings();
+  if (view === 'insights') renderInsights();
+}
+function renderAll() { renderRack(); renderCloset(); renderOutfits(); renderSettings(); renderInsights(); }
+
+
+/* hanger: cx = centre x, ty = where the arm tips sit, w = width; all as fractions of the cut-out */
+function autoHang(alpha, W, H, thr, type = 'hanger') {
+  let x0 = W, x1 = -1, y0 = H, y1 = -1;
+  for (let y = 0; y < H; y++) for (let i = 0; i < W; i++) if (alpha(y * W + i) > thr) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  if (x1 < 0) return null;
+  const clip = type === 'clip', gh = y1 - y0 + 1, band = Math.min(H, y0 + Math.max(2, Math.round(gh * (clip ? 0.04 : 0.1)))); let l = W, r = -1;
+  for (let y = y0; y < band; y++) for (let i = 0; i < W; i++) if (alpha(y * W + i) > thr) { if (i < l) l = i; if (i > r) r = i; }
+  const span = Math.max((r - l + 1), (x1 - x0 + 1) * 0.3);
+  if (clip) return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.025, w: span * 0.8 / 0.767, box: { x0, y0, x1, y1 } };
+  return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.06, w: span / 0.84, box: { x0, y0, x1, y1 } };
+}
+async function hangOf(src, type = 'hanger') {
+  const im = await loadImage(src), W = 160, H = Math.max(2, Math.round(W * im.naturalHeight / im.naturalWidth));
+  const c = mk(W, H), x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0, W, H); const d = x.getImageData(0, 0, W, H).data;
+  if (type === 'none') return { type };
+  const g = autoHang(i => d[i * 4 + 3], W, H, 40, type);
+  return g ? { type, cx: g.cx / W, ty: g.ty / H, w: g.w / W } : hangNorm(null, type);
+}
+function hangNorm(g, type = 'hanger') {
+  if (g && g.cx != null && (g.type || 'hanger') === type) return g;
+  if (type === 'hanger' && g && g.l != null) return { cx: (g.l + g.r) / 2, ty: 0.06, w: (g.r - g.l) / 0.84 };
+  return type === 'clip' ? { type, cx: 0.5, ty: 0.025, w: 0.85 } : { type, cx: 0.5, ty: 0.06, w: 0.8 };
+}
+function hangHTML(it, maxW, maxH) {
+  const type = hangerType(it), a = it.aspect || 0.75; if (type === 'none') maxH *= 0.72;
+  let ih = maxH, iw = ih * a; if (iw > maxW) { iw = maxW; ih = iw / a; }
+  if (type === 'none') { const top = Math.round(maxH * 0.22); return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${(ih + top).toFixed(1)}px"><img src="${it.img}" alt="" style="top:${top}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px"></div>`; }
+  const H = HANGERS[type], g = hangNorm(it.hang, type);
+  const hw = clamp(g.w * iw, 56, maxW * 1.1), hh = hw * 52 / 120, cx = g.cx * iw;
+  const over = Math.max(0, hh * H.anchor - g.ty * ih);
+  return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${(ih + over).toFixed(1)}px"><span class="hk" style="left:${(cx - hw / 2).toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img src="${it.img}" alt="" style="top:${over.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px"></div>`;
+}
+const rackDims = () => { const vw = Math.min(window.innerWidth, 760), pad = vw >= 640 ? 0.27 : 0.19; return [vw * (1 - 2 * pad), clamp(window.innerHeight * 0.38, 200, 380)]; };
+const rackItems = () => S.items.filter(i => S.rackCat === 'all' || catOf(i) === S.rackCat);
+function renderRack() {
+  const v = $('#view-rack'); const items = rackItems(); const total = S.items.length;
+  let body;
+  if (!total) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Your rack is empty</h2><p>Photograph a piece, frame it, and it'll hang here with the background removed.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add your first piece</button></div>`;
+  else if (!items.length) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Nothing here yet</h2><p>No pieces in ${esc(catName(S.rackCat))} so far.</p><button class="btn primary" data-act="add">${ic('plus', 20)}Add a piece</button></div>`;
+  else { const [mw, mh] = rackDims(); body = `<div class="rack-stage"><div class="arch-win" style="width:${Math.round(Math.min(mw + 44, 340))}px;height:${Math.round(mh + 74)}px"></div><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map(it => `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangHTML(it, mw, mh)}</button>`).join('')}</div></div><div id="rack-tag"></div><p class="rail-pos" id="rail-pos"></p>`; }
+  v.innerHTML = `<header class="arc"><h1>My closet</h1><span class="count">${total} ${total === 1 ? 'piece' : 'pieces'}</span>${total ? chipRow(S.rackCat, 'rack') : ''}</header>${body}`;
+  if (items.length) wireRail(items);
+}
+function wireRail(items) {
+  const rail = $('#rail'); if (!rail || $('#view-rack').hidden) return;
+  const slides = $$('.slide', rail); let raf = 0, shown = -1;
+  const update = () => {
+    raf = 0; const rc = rail.getBoundingClientRect(); const cx = rc.left + rc.width / 2; let best = 0, bd = 1e9;
+    slides.forEach((s, i) => {
+      const r = s.getBoundingClientRect(); const d = (r.left + r.width / 2 - cx) / (r.width || 1); const ad = Math.min(Math.abs(d), 1);
+      s.style.transform = `translateY(${(ad * 22).toFixed(1)}px) scale(${(1 - 0.22 * ad).toFixed(3)})`; s.style.opacity = (1 - 0.5 * ad).toFixed(2);
+      if (Math.abs(d) < bd) { bd = Math.abs(d); best = i; }
+    });
+    if (best !== shown) { shown = best; S.rackIndex = best; renderTag(items[best]); $('#rail-pos').textContent = `${best + 1} of ${items.length}`; }
+  };
+  rail.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+  const centerOn = (i, smooth) => { const s = slides[i]; if (!s) return; rail.scrollTo({ left: s.offsetLeft - (rail.clientWidth - s.offsetWidth) / 2, behavior: smooth ? 'smooth' : 'auto' }); };
+  centerOn(Math.min(S.rackIndex, slides.length - 1), false); update();
+  slides.forEach((s, i) => s.addEventListener('click', () => { if (i === S.rackIndex) openDetail(items[i]); else centerOn(i, true); }));
+  rail.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { e.preventDefault(); centerOn(Math.min(S.rackIndex + 1, slides.length - 1), true); } if (e.key === 'ArrowLeft') { e.preventDefault(); centerOn(Math.max(S.rackIndex - 1, 0), true); } });
+}
+function metaTags(it) { return [...(it.seasons || []), ...(it.occasions || []), ...(it.materials || [])].map(t => `<span style="background:${tagLight(t)}">${esc(t)}</span>`).join(''); }
+function renderTag(it) {
+  const el = $('#rack-tag'); if (!el || !it) return; const tags = metaTags(it);
+  el.innerHTML = `<article class="tag"><span class="badge" style="background:${catLight(catOf(it))}">${esc(catName(catOf(it)))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${esc(itemName(it))}</h3>${it.brand ? `<p class="brand">${esc(it.brand)}</p>` : ''}${it.price ? `<p class="price">${esc(it.price)}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions"><button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
+}
+
+function renderCloset() {
+  const v = $('#view-closet');
+  if (!v.dataset.built) {
+    v.innerHTML = `<div class="page-head"><h1>Closet</h1><button class="btn sm primary" data-act="add">${ic('plus', 18)}Add</button></div><label class="search">${ic('search', 20)}<input type="search" id="closet-q" placeholder="Search names, brands, notes" aria-label="Search closet"></label><div id="closet-chips"></div><div id="closet-results"></div>`;
+    v.dataset.built = '1';
+    $('#closet-q').addEventListener('input', e => { S.q = e.target.value; renderClosetResults(); });
+  }
+  renderClosetResults();
+}
+const tileHTML = it => `<button class="tile" data-act="detail" data-id="${it.id}"><div class="ph"><img src="${it.img}" alt="" loading="lazy"></div><p class="nm">${esc(itemName(it))}</p><p class="sub">${esc([it.brand, it.price].filter(Boolean).join(', ') || catName(catOf(it)))}</p></button>`;
+function renderClosetResults() {
+  $('#closet-chips').innerHTML = S.items.length ? chipRow(S.closetCat, 'closet') : '';
+  const out = $('#closet-results'); const q = S.q.trim().toLowerCase();
+  if (!S.items.length) { out.innerHTML = `<div class="empty"><h2>Start your closet</h2><p>Each piece you add shows up here, sorted by category.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add a piece</button></div>`; return; }
+  let items = S.items;
+  if (q) items = items.filter(i => [i.name, i.brand, i.notes, i.price, catName(catOf(i)), colorFamily(i.color), i.secondhand === true ? 'secondhand' : '', ...(i.seasons || []), ...(i.occasions || []), ...(i.materials || [])].join(' ').toLowerCase().includes(q));
+  if (S.closetCat !== 'all') items = items.filter(i => catOf(i) === S.closetCat);
+  if (!items.length) { out.innerHTML = `<p class="muted" style="padding:24px 22px">No pieces match${q ? ` "${esc(S.q)}"` : ''}.</p>`; return; }
+  if (S.closetCat === 'all' && !q) {
+    const groups = [...S.cats.map(c => c.id), 'none'].map(id => [id, items.filter(i => catOf(i) === id)]).filter(g => g[1].length);
+    out.innerHTML = groups.map(([id, list]) => `<h2 class="sec"><span class="cdot" style="background:${catColor(id)};align-self:center"></span>${esc(catName(id))}<small>${list.length}</small></h2><div class="grid">${list.map(tileHTML).join('')}</div>`).join('');
+  } else out.innerHTML = `<div class="grid">${items.map(tileHTML).join('')}</div>`;
+}
+
+function renderOutfits() {
+  const v = $('#view-outfits');
+  const head = `<div class="page-head"><h1>Outfits</h1>${S.outfits.length ? `<button class="btn sm primary" data-act="new-outfit">${ic('plus', 18)}New outfit</button>` : ''}</div>`;
+  if (!S.outfits.length) {
+    v.innerHTML = head + `<div class="empty"><h2>No outfits yet</h2><p>${S.items.length ? 'Drop pieces onto a board, move and resize them, and save the look.' : 'Add a few pieces first, then put them together here.'}</p><button class="btn primary" data-act="${S.items.length ? 'new-outfit' : 'add'}">${ic('plus', 20)}${S.items.length ? 'Create an outfit' : 'Add a piece'}</button></div>`;
+    return;
+  }
+  v.innerHTML = head + `<div class="grid">${S.outfits.map(o => { const n = o.pieces.filter(p => byId(p.itemId)).length; return `<button class="ocard" data-act="open-outfit" data-id="${o.id}">${miniBoard(o)}<p class="nm">${esc(o.name || 'Untitled outfit')}</p><p class="sub">${n} ${n === 1 ? 'piece' : 'pieces'}</p></button>`; }).join('')}</div>`;
+}
+
+function getTheme() { try { return localStorage.getItem('closet-theme') || 'auto'; } catch { return 'auto'; } }
+function applyTheme(t) { const r = document.documentElement; if (t === 'light' || t === 'dark') r.dataset.theme = t; else delete r.dataset.theme; try { localStorage.setItem('closet-theme', t); } catch {} }
+function renderSettings() {
+  const v = $('#view-settings'); const counts = {}; S.items.forEach(i => { const c = catOf(i); counts[c] = (counts[c] || 0) + 1; }); const t = getTheme();
+  v.innerHTML = `<div class="page-head"><h1>Settings</h1><button class="btn sm" data-go="insights">${ic('back', 18)}Insights</button></div>
+  <section class="panel"><h2>Categories</h2><p>Rename, reorder, or remove. Pieces in a removed category move to Uncategorized.</p>
+    <ul class="cat-list">${S.cats.map((c, i) => `<li><input type="text" value="${esc(c.name)}" data-rename="${c.id}" aria-label="Category name"><span class="n">${counts[c.id] || 0}</span><button class="icon-btn" data-catmove="-1" data-id="${c.id}" aria-label="Move up" ${i === 0 ? 'disabled' : ''}>${ic('up', 20)}</button><button class="icon-btn" data-catmove="1" data-id="${c.id}" aria-label="Move down" ${i === S.cats.length - 1 ? 'disabled' : ''}>${ic('down', 20)}</button><button class="icon-btn" data-catdel="${c.id}" aria-label="Delete ${esc(c.name)}">${ic('trash', 19)}</button></li>`).join('') || '<li class="muted" style="padding:12px 14px">No categories yet.</li>'}</ul>
+    <div class="add-row"><input type="text" id="new-cat" placeholder="New category, e.g. Knitwear" aria-label="New category name"><button class="btn primary" data-act="add-cat">Add</button></div>
+  </section>
+  <section class="panel"><h2>Your materials</h2><p>Materials you added yourself. Add new ones while editing a piece.</p>
+    ${S.customMats.length ? `<div class="chips wrap">${S.customMats.map(m => `<span class="chip">${esc(m)}<button class="icon-btn" style="width:24px;height:24px" data-matdel="${esc(m)}" aria-label="Remove ${esc(m)}">${ic('x', 15)}</button></span>`).join('')}</div>` : '<p style="margin:0">None yet.</p>'}
+  </section>
+  <section class="panel"><h2>Backup</h2><p>Everything lives on this device only. Export a backup now and then so you never lose your closet, or to move it to another device.</p>
+    <label class="check"><input type="checkbox" id="inc-orig" checked><span>Include original photos, so backgrounds stay editable after importing (bigger file)</span></label>
+    <div class="row"><button class="btn primary" data-act="export">${ic('download', 20)}Export backup</button><button class="btn" data-act="import">${ic('upload', 20)}Import backup</button></div>
+    <p id="usage" style="margin:14px 0 0;font-size:13px"></p>
+  </section>
+  <section class="panel"><h2>Appearance</h2><div class="seg" role="group" aria-label="Theme">${['auto', 'light', 'dark'].map(x => `<button data-theme-opt="${x}" aria-pressed="${t === x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div></section>
+  <section class="panel"><h2>Start over</h2><p>Permanently delete every piece, outfit, and category on this device.</p><button class="btn danger" data-act="wipe">${ic('trash', 20)}Delete everything</button></section>`;
+  if (navigator.storage?.estimate) navigator.storage.estimate().then(({ usage }) => { const u = $('#usage'); if (u && usage) u.textContent = `Using about ${(usage / 1048576).toFixed(1)} MB on this device. ${S.items.length} pieces, ${S.outfits.length} outfits.`; }).catch(() => {});
+}
+
+/* ---------- background removal: GrabCut ---------- */
+/* ---- GrabCut: GMM colour models + Boykov–Kolmogorov max-flow ---- */
+class GMM {
+  constructor(K = 5) { this.K = K; this.coefs = new Float64Array(K); this.mean = new Float64Array(K * 3); this.inv = new Float64Array(K * 9); this.det = new Float64Array(K); this.s = new Float64Array(K * 13); }
+  prob(k, r, g, b) {
+    if (this.coefs[k] <= 0) return 0; const m = this.mean, v = this.inv, o = k * 3, q = k * 9;
+    const d0 = r - m[o], d1 = g - m[o + 1], d2 = b - m[o + 2];
+    const x = d0 * (d0 * v[q] + d1 * v[q + 3] + d2 * v[q + 6]) + d1 * (d0 * v[q + 1] + d1 * v[q + 4] + d2 * v[q + 7]) + d2 * (d0 * v[q + 2] + d1 * v[q + 5] + d2 * v[q + 8]);
+    return Math.exp(-0.5 * x) / Math.sqrt(this.det[k]);
+  }
+  total(r, g, b) { let s = 0; for (let k = 0; k < this.K; k++) s += this.coefs[k] * this.prob(k, r, g, b); return s; }
+  which(r, g, b) { let bk = 0, bp = -1; for (let k = 0; k < this.K; k++) { const p = this.prob(k, r, g, b); if (p > bp) { bp = p; bk = k; } } return bk; }
+  begin() { this.s.fill(0); }
+  add(k, r, g, b) { const s = this.s, o = k * 13; s[o] += r; s[o + 1] += g; s[o + 2] += b; s[o + 3] += r * r; s[o + 4] += r * g; s[o + 5] += r * b; s[o + 6] += g * g; s[o + 7] += g * b; s[o + 8] += b * b; s[o + 9]++; }
+  end() {
+    const s = this.s; let tot = 0; for (let k = 0; k < this.K; k++) tot += s[k * 13 + 9];
+    for (let k = 0; k < this.K; k++) {
+      const o = k * 13, n = s[o + 9]; if (!n) { this.coefs[k] = 0; continue; }
+      this.coefs[k] = n / tot; const mr = s[o] / n, mg = s[o + 1] / n, mb = s[o + 2] / n; this.mean.set([mr, mg, mb], k * 3);
+      let c00 = s[o + 3] / n - mr * mr + 0.01, c01 = s[o + 4] / n - mr * mg, c02 = s[o + 5] / n - mr * mb, c11 = s[o + 6] / n - mg * mg + 0.01, c12 = s[o + 7] / n - mg * mb, c22 = s[o + 8] / n - mb * mb + 0.01;
+      let det = c00 * (c11 * c22 - c12 * c12) - c01 * (c01 * c22 - c12 * c02) + c02 * (c01 * c12 - c11 * c02);
+      if (det <= 1e-6) { c00 += 1; c11 += 1; c22 += 1; det = c00 * (c11 * c22 - c12 * c12) - c01 * (c01 * c22 - c12 * c02) + c02 * (c01 * c12 - c11 * c02); }
+      this.det[k] = det; const v = this.inv, q = k * 9;
+      v[q] = (c11 * c22 - c12 * c12) / det; v[q + 1] = (c02 * c12 - c01 * c22) / det; v[q + 2] = (c01 * c12 - c02 * c11) / det;
+      v[q + 3] = v[q + 1]; v[q + 4] = (c00 * c22 - c02 * c02) / det; v[q + 5] = (c01 * c02 - c00 * c12) / det;
+      v[q + 6] = v[q + 2]; v[q + 7] = v[q + 5]; v[q + 8] = (c00 * c11 - c01 * c01) / det;
+    }
+  }
+}
+function kmeansInit(gmm, px, idx) {
+  const K = gmm.K, n = idx.length; if (!n) { gmm.coefs.fill(0); return; }
+  const step = Math.max(1, Math.floor(n / 20000)), smp = []; for (let i = 0; i < n; i += step) smp.push(idx[i]);
+  const C = new Float64Array(K * 3);
+  // k-means++ style seeding (deterministic: farthest point)
+  let first = smp[Math.floor(smp.length / 2)]; C[0] = px[first * 4]; C[1] = px[first * 4 + 1]; C[2] = px[first * 4 + 2];
+  const dmin = new Float64Array(smp.length).fill(1e18);
+  for (let k = 1; k < K; k++) { let far = 0, fd = -1; for (let j = 0; j < smp.length; j++) { const p = smp[j] * 4; const a = px[p] - C[(k - 1) * 3], b = px[p + 1] - C[(k - 1) * 3 + 1], c = px[p + 2] - C[(k - 1) * 3 + 2]; const d = a * a + b * b + c * c; if (d < dmin[j]) dmin[j] = d; if (dmin[j] > fd) { fd = dmin[j]; far = j; } } const p = smp[far] * 4; C[k * 3] = px[p]; C[k * 3 + 1] = px[p + 1]; C[k * 3 + 2] = px[p + 2]; }
+  const S = new Float64Array(K * 4);
+  for (let it = 0; it < 10; it++) {
+    S.fill(0);
+    for (const i of smp) { const p = i * 4; let bk = 0, bd = 1e18; for (let k = 0; k < K; k++) { const a = px[p] - C[k * 3], b = px[p + 1] - C[k * 3 + 1], c = px[p + 2] - C[k * 3 + 2], d = a * a + b * b + c * c; if (d < bd) { bd = d; bk = k; } } S[bk * 4] += px[p]; S[bk * 4 + 1] += px[p + 1]; S[bk * 4 + 2] += px[p + 2]; S[bk * 4 + 3]++; }
+    for (let k = 0; k < K; k++) if (S[k * 4 + 3]) { C[k * 3] = S[k * 4] / S[k * 4 + 3]; C[k * 3 + 1] = S[k * 4 + 1] / S[k * 4 + 3]; C[k * 3 + 2] = S[k * 4 + 2] / S[k * 4 + 3]; }
+  }
+  gmm.begin();
+  for (const i of idx) { const p = i * 4; let bk = 0, bd = 1e18; for (let k = 0; k < K; k++) { const a = px[p] - C[k * 3], b = px[p + 1] - C[k * 3 + 1], c = px[p + 2] - C[k * 3 + 2], d = a * a + b * b + c * c; if (d < bd) { bd = d; bk = k; } } gmm.add(bk, px[p], px[p + 1], px[p + 2]); }
+  gmm.end();
+}
+class BK {
+  constructor(w, h) {
+    const n = w * h; this.n = n;
+    const m2 = (4 * n) * 2; this.first = new Int32Array(n).fill(-1); this.next = new Int32Array(m2); this.head = new Int32Array(m2); this.cap = new Float64Array(m2); this.rcap = new Float64Array(m2);
+    this.parent = new Int32Array(n); this.ts = new Int32Array(n); this.dist = new Int32Array(n); this.sink = new Uint8Array(n); this.tr = new Float64Array(n);
+    this.q = new Int32Array(n + 1); this.inQ = new Uint8Array(n); this.orph = new Int32Array(n * 2 + 16); this.na = 0;
+  }
+  edge(i, j, c) { const a = this.na; this.na += 2; this.head[a] = j; this.next[a] = this.first[i]; this.first[i] = a; this.cap[a] = c; this.head[a + 1] = i; this.next[a + 1] = this.first[j]; this.first[j] = a + 1; this.cap[a + 1] = c; }
+  solve() {
+    const NONE = -1, TERM = -2, ORPH = -3, n = this.n, first = this.first, next = this.next, head = this.head, rc = this.rcap, par = this.parent, TS = this.ts, D = this.dist, SK = this.sink, tr = this.tr, Q = this.q, inQ = this.inQ, ORP = this.orph;
+    rc.set(this.cap.subarray(0, this.na)); let qh = 0, qt = 0; const QN = n + 1; inQ.fill(0);
+    const act = i => { if (!inQ[i]) { inQ[i] = 1; Q[qt] = i; qt = qt + 1 === QN ? 0 : qt + 1; } };
+    const pop = () => { while (qh !== qt) { const i = Q[qh]; qh = qh + 1 === QN ? 0 : qh + 1; inQ[i] = 0; if (par[i] !== NONE) return i; } return -1; };
+    for (let i = 0; i < n; i++) { TS[i] = 0; D[i] = 0; if (tr[i] !== 0) { SK[i] = tr[i] < 0 ? 1 : 0; par[i] = TERM; D[i] = 1; act(i); } else par[i] = NONE; }
+    let TIME = 0, op = 0, cur = -1, flow = 0;
+    const orphan = i => { par[i] = ORPH; ORP[op++] = i; };
+    for (;;) {
+      if (cur < 0 || par[cur] === NONE) { cur = pop(); if (cur < 0) break; }
+      const i = cur; let found = -1;
+      if (!SK[i]) {
+        for (let a = first[i]; a >= 0; a = next[a]) if (rc[a] > 0) { const j = head[a]; if (par[j] === NONE) { SK[j] = 0; par[j] = a ^ 1; TS[j] = TS[i]; D[j] = D[i] + 1; act(j); } else if (SK[j]) { found = a; break; } else if (TS[j] <= TS[i] && D[j] > D[i]) { par[j] = a ^ 1; TS[j] = TS[i]; D[j] = D[i] + 1; } }
+      } else {
+        for (let a = first[i]; a >= 0; a = next[a]) if (rc[a ^ 1] > 0) { const j = head[a]; if (par[j] === NONE) { SK[j] = 1; par[j] = a ^ 1; TS[j] = TS[i]; D[j] = D[i] + 1; act(j); } else if (!SK[j]) { found = a ^ 1; break; } else if (TS[j] <= TS[i] && D[j] > D[i]) { par[j] = a ^ 1; TS[j] = TS[i]; D[j] = D[i] + 1; } }
+      }
+      TIME++;
+      if (found < 0) { cur = -1; continue; }
+      // augment along source-tree -> found -> sink-tree
+      const a0 = found; let b = rc[a0];
+      for (let j = head[a0 ^ 1]; ;) { const p = par[j]; if (p === TERM) { if (tr[j] < b) b = tr[j]; break; } if (rc[p ^ 1] < b) b = rc[p ^ 1]; j = head[p]; }
+      for (let j = head[a0]; ;) { const p = par[j]; if (p === TERM) { if (-tr[j] < b) b = -tr[j]; break; } if (rc[p] < b) b = rc[p]; j = head[p]; }
+      rc[a0 ^ 1] += b; rc[a0] -= b;
+      for (let j = head[a0 ^ 1]; ;) { const p = par[j]; if (p === TERM) { tr[j] -= b; if (!(tr[j] > 0)) { tr[j] = 0; orphan(j); } break; } rc[p] += b; rc[p ^ 1] -= b; if (!(rc[p ^ 1] > 0)) orphan(j); j = head[p]; }
+      for (let j = head[a0]; ;) { const p = par[j]; if (p === TERM) { tr[j] += b; if (!(tr[j] < 0)) { tr[j] = 0; orphan(j); } break; } rc[p ^ 1] += b; rc[p] -= b; if (!(rc[p] > 0)) orphan(j); j = head[p]; }
+      flow += b;
+      // adoption
+      TIME++;
+      while (op > 0) {
+        const i2 = ORP[--op]; const sk = SK[i2]; let dmin = 1e9, amin = NONE;
+        for (let a = first[i2]; a >= 0; a = next[a]) {
+          if (!(sk ? rc[a] > 0 : rc[a ^ 1] > 0)) continue;
+          let j = head[a]; if (SK[j] !== sk || par[j] === NONE) continue;
+          let d = 0, ok = true;
+          for (;;) { if (TS[j] === TIME) { d += D[j]; break; } const p = par[j]; d++; if (p === TERM) { TS[j] = TIME; D[j] = 1; break; } if (p === ORPH) { ok = false; break; } j = head[p]; }
+          if (ok) { if (d < dmin) { amin = a; dmin = d; } for (let k = head[a]; TS[k] !== TIME; k = head[par[k]]) { TS[k] = TIME; D[k] = d--; } }
+        }
+        if (amin !== NONE) { par[i2] = amin; TS[i2] = TIME; D[i2] = dmin + 1; }
+        else {
+          for (let a = first[i2]; a >= 0; a = next[a]) { const j = head[a]; const p = par[j]; if (SK[j] !== sk || p === NONE) continue; if (sk ? rc[a] > 0 : rc[a ^ 1] > 0) act(j); if (p !== TERM && p !== ORPH && head[p] === i2) { par[j] = ORPH; ORP[op++] = j; } }
+          par[i2] = NONE;
+        }
+      }
+    }
+    this.flow = flow; return flow;
+  }
+  isSource(i) { return this.parent[i] === -1 ? true : !this.sink[i]; }
+}
+/* labels: 0 bg, 1 fg, 2 probable bg, 3 probable fg */
+function grabCut(px, w, h, labels, iters = 4) {
+  const n = w * h, gamma = 50, lambda = 9 * gamma;
+  const fg = new GMM(), bg = new GMM();
+  const fi = [], bi = []; for (let i = 0; i < n; i++) (labels[i] & 1 ? fi : bi).push(i);
+  if (!fi.length || !bi.length) return labels;
+  kmeansInit(fg, px, fi); kmeansInit(bg, px, bi);
+  // smoothness
+  const dirs = [[1, 0], [-1, 1], [0, 1], [1, 1]]; let sum = 0, cnt = 0;
+  const diff = (i, j) => { const a = px[i * 4] - px[j * 4], b = px[i * 4 + 1] - px[j * 4 + 1], c = px[i * 4 + 2] - px[j * 4 + 2]; return a * a + b * b + c * c; };
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) for (const [dx, dy] of dirs) { const X = x + dx, Y = y + dy; if (X < 0 || X >= w || Y >= h) continue; sum += diff(y * w + x, Y * w + X); cnt++; }
+  const beta = sum > 0 ? 1 / (2 * sum / cnt) : 0;
+  const g = new BK(w, h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) for (const [dx, dy] of dirs) { const X = x + dx, Y = y + dy; if (X < 0 || X >= w || Y >= h) continue; const i = y * w + x, j = Y * w + X; g.edge(i, j, (dx && dy ? gamma / Math.SQRT2 : gamma) * Math.exp(-beta * diff(i, j))); }
+  const comp = new Uint8Array(n);
+  for (let it = 0; it < iters; it++) {
+    for (let i = 0; i < n; i++) { const p = i * 4; comp[i] = (labels[i] & 1 ? fg : bg).which(px[p], px[p + 1], px[p + 2]); }
+    fg.begin(); bg.begin(); for (let i = 0; i < n; i++) { const p = i * 4; (labels[i] & 1 ? fg : bg).add(comp[i], px[p], px[p + 1], px[p + 2]); } fg.end(); bg.end();
+    for (let i = 0; i < n; i++) {
+      const l = labels[i];
+      if (l === 0) g.tr[i] = -lambda; else if (l === 1) g.tr[i] = lambda;
+      else { const p = i * 4; const pf = fg.total(px[p], px[p + 1], px[p + 2]), pb = bg.total(px[p], px[p + 1], px[p + 2]); g.tr[i] = -Math.log(pb + 1e-300) + Math.log(pf + 1e-300); }
+    }
+    g.solve();
+    for (let i = 0; i < n; i++) if (labels[i] >= 2) labels[i] = g.isSource(i) ? 3 : 2;
+  }
+  return labels;
+}
+function boxMean(src, w, h, r, out) {
+  const W1 = w + 1, I = new Float64Array(W1 * (h + 1));
+  for (let y = 0; y < h; y++) { let row = 0; for (let x = 0; x < w; x++) { row += src[y * w + x]; I[(y + 1) * W1 + x + 1] = I[y * W1 + x + 1] + row; } }
+  for (let y = 0; y < h; y++) { const y0 = Math.max(0, y - r), y1 = Math.min(h, y + r + 1); for (let x = 0; x < w; x++) { const x0 = Math.max(0, x - r), x1 = Math.min(w, x + r + 1); out[y * w + x] = (I[y1 * W1 + x1] - I[y0 * W1 + x1] - I[y1 * W1 + x0] + I[y0 * W1 + x0]) / ((y1 - y0) * (x1 - x0)); } }
+  return out;
+}
+function keepMain(m, w, h) { // m: Uint8 0/1, drop small fg islands
+  const n = w * h, lbl = new Int32Array(n), q = new Int32Array(n), sizes = [0]; let id = 0, big = 0;
+  for (let i = 0; i < n; i++) { if (!m[i] || lbl[i]) continue; id++; let a = 0, b = 0; q[b++] = i; lbl[i] = id; while (a < b) { const p = q[a++], x = p % w; if (x > 0 && m[p - 1] && !lbl[p - 1]) { lbl[p - 1] = id; q[b++] = p - 1; } if (x < w - 1 && m[p + 1] && !lbl[p + 1]) { lbl[p + 1] = id; q[b++] = p + 1; } if (p >= w && m[p - w] && !lbl[p - w]) { lbl[p - w] = id; q[b++] = p - w; } if (p < n - w && m[p + w] && !lbl[p + w]) { lbl[p + w] = id; q[b++] = p + w; } } sizes[id] = b; if (b > big) big = b; }
+  const thr = big * 0.004; for (let i = 0; i < n; i++) if (m[i] && sizes[lbl[i]] < thr) m[i] = 0; return m;
+}
+function refineMask(low, lw, lh, px, W, H) {
+  const n = W * H, p = new Float32Array(n), I = new Float32Array(n), sx = lw / W, sy = lh / H;
+  for (let y = 0; y < H; y++) { const fy = Math.min(lh - 1, Math.max(0, (y + 0.5) * sy - 0.5)), y0 = fy | 0, y1 = Math.min(lh - 1, y0 + 1), ty = fy - y0;
+    for (let x = 0; x < W; x++) { const fx = Math.min(lw - 1, Math.max(0, (x + 0.5) * sx - 0.5)), x0 = fx | 0, x1 = Math.min(lw - 1, x0 + 1), tx = fx - x0;
+      const a = low[y0 * lw + x0], b = low[y0 * lw + x1], c = low[y1 * lw + x0], d = low[y1 * lw + x1]; p[y * W + x] = (a * (1 - tx) + b * tx) * (1 - ty) + (c * (1 - tx) + d * tx) * ty; } }
+  for (let i = 0; i < n; i++) I[i] = (px[i * 4] * 0.299 + px[i * 4 + 1] * 0.587 + px[i * 4 + 2] * 0.114) / 255;
+  const r = Math.max(2, Math.round(Math.max(W, H) / 180)), eps = 2e-4;
+  const mI = boxMean(I, W, H, r, new Float32Array(n)), mp = boxMean(p, W, H, r, new Float32Array(n)), t = new Float32Array(n);
+  for (let i = 0; i < n; i++) t[i] = I[i] * p[i]; const mIp = boxMean(t, W, H, r, new Float32Array(n));
+  for (let i = 0; i < n; i++) t[i] = I[i] * I[i]; const mII = boxMean(t, W, H, r, new Float32Array(n));
+  const A = new Float32Array(n), B = new Float32Array(n);
+  for (let i = 0; i < n; i++) { const v = mII[i] - mI[i] * mI[i], cv = mIp[i] - mI[i] * mp[i]; A[i] = cv / (v + eps); B[i] = mp[i] - A[i] * mI[i]; }
+  const mA = boxMean(A, W, H, r, new Float32Array(n)), mB = boxMean(B, W, H, r, new Float32Array(n));
+  const out = new Uint8ClampedArray(n);
+  for (let i = 0; i < n; i++) { let q = mA[i] * I[i] + mB[i]; q = (q - 0.3) / 0.4; q = q < 0 ? 0 : q > 1 ? 1 : q; out[i] = q * q * (3 - 2 * q) * 255; }
+  return out;
+}
+
+function smoothWrinkles(d, w, h, eps, strength) {
+  const n = w * h, L = new Float32Array(n), t = new Float32Array(n);
+  for (let i = 0; i < n; i++) L[i] = (d[i * 4] * 0.299 + d[i * 4 + 1] * 0.587 + d[i * 4 + 2] * 0.114) / 255;
+  const r = Math.max(2, Math.round(Math.max(w, h) / 140));
+  const m = boxMean(L, w, h, r, new Float32Array(n)); for (let i = 0; i < n; i++) t[i] = L[i] * L[i];
+  const m2 = boxMean(t, w, h, r, new Float32Array(n)), A = new Float32Array(n), B = new Float32Array(n);
+  for (let i = 0; i < n; i++) { const v = m2[i] - m[i] * m[i], a = v / (v + eps); A[i] = a; B[i] = m[i] * (1 - a); }
+  const mA = boxMean(A, w, h, r, new Float32Array(n)), mB = boxMean(B, w, h, r, new Float32Array(n)), o = new Uint8ClampedArray(d);
+  for (let i = 0; i < n; i++) { const dl = (mA[i] * L[i] + mB[i] - L[i]) * 255 * strength; o[i * 4] = d[i * 4] + dl; o[i * 4 + 1] = d[i * 4 + 1] + dl; o[i * 4 + 2] = d[i * 4 + 2] + dl; }
+  return o;
+}
+const MAX_WORK = 1100, LOW = 520;
+class Cutout {
+  constructor(wrap) {
+    this.wrap = wrap; this.layer = $('.layer', wrap); this.canvas = $('canvas.img', wrap); this.ctx = this.canvas.getContext('2d');
+    this.ov = $('canvas.ov', wrap); this.octx = this.ov.getContext('2d'); this.frameEl = $('.frame', wrap);
+    this.tool = 'frame'; this.htype = 'hanger'; this.smooth = false; this.brush = 22; this.stack = []; this.ptrs = new Map(); this.z = { s: 1, x: 0, y: 0 };
+    this.onChange = () => {}; this.onStroke = () => {}; this.src = null; this.labels = null; this.cut = false; this.bind();
+  }
+  setSource(img, maskImg, alphaFromSrc) {
+    const nw = img.naturalWidth || img.width, nh = img.naturalHeight || img.height;
+    const s = Math.min(1, MAX_WORK / Math.max(nw, nh)); const w = Math.max(1, Math.round(nw * s)), h = Math.max(1, Math.round(nh * s)), n = w * h;
+    this.w = w; this.h = h; this.canvas.width = this.ov.width = w; this.canvas.height = this.ov.height = h;
+    const c = mk(w, h), x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0, w, h);
+    this.src = x.getImageData(0, 0, w, h); const d = this.src.data, m = new Uint8ClampedArray(n).fill(255);
+    if (alphaFromSrc) { for (let i = 0; i < n; i++) { m[i] = d[i * 4 + 3]; d[i * 4 + 3] = 255; } }
+    else { for (let i = 0; i < n; i++) d[i * 4 + 3] = 255; if (maskImg) { x.clearRect(0, 0, w, h); x.drawImage(maskImg, 0, 0, w, h); const md = x.getImageData(0, 0, w, h).data; for (let i = 0; i < n; i++) m[i] = md[i * 4 + 3]; } }
+    this.mask = m; this.er = new Uint8ClampedArray(n); this.rs = new Uint8ClampedArray(n); this.labels = null; this.stack = []; this.cut = !!(maskImg || alphaFromSrc);
+    x.putImageData(this.src, 0, 0);
+    const k = Math.min(1, LOW / Math.max(w, h)); this.lw = Math.max(2, Math.round(w * k)); this.lh = Math.max(2, Math.round(h * k));
+    const lc = mk(this.lw, this.lh), lx = lc.getContext('2d', { willReadFrequently: true }); lx.imageSmoothingQuality = 'high'; lx.drawImage(c, 0, 0, this.lw, this.lh);
+    this.lowPx = lx.getImageData(0, 0, this.lw, this.lh).data;
+    this.view = this.ctx.createImageData(w, h); this.view.data.set(d); this.smoothed = null; if (this.smooth) this.setSmooth(true);
+    this.frame = { x0: w * 0.12, y0: h * 0.05, x1: w * 0.88, y1: h * 0.96 }; this.placeFrame();
+    this.wrap.style.aspectRatio = `${w} / ${h}`; this.wrap.style.width = `min(100%, calc(50vh * ${(w / h).toFixed(4)}))`;
+    this.resetZoom(); this.redraw(); this.onChange();
+  }
+  autoHanger() { if (this.htype === 'none') { this.placeHanger(); return; } const g = autoHang(i => this.mask[i], this.w, this.h, 128, this.htype); if (g) this.hg = { cx: g.cx, ty: g.ty, w: g.w }; this.placeHanger(); }
+  setSmooth(on) {
+    this.smooth = on; if (!this.src) return;
+    if (on && !this.smoothed) this.smoothed = smoothWrinkles(this.src.data, this.w, this.h, 0.004, 0.85);
+    const s = on ? this.smoothed : this.src.data, d = this.view.data;
+    for (let i = 0; i < d.length; i += 4) { d[i] = s[i]; d[i + 1] = s[i + 1]; d[i + 2] = s[i + 2]; }
+    this.redraw();
+  }
+  gBox() { const { w, h } = this, m = this.mask; let x0 = w, y0 = h, x1 = -1, y1 = -1; for (let y = 0; y < h; y++) { const row = y * w; for (let x = 0; x < w; x++) if (m[row + x] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } } return x1 < 0 ? null : { x0, y0, x1, y1 }; }
+  cropBox() { const b = this.gBox(); if (!b) return null; const { w, h } = this, pad = Math.round(Math.max(b.x1 - b.x0, b.y1 - b.y0) * 0.04), sx = Math.max(0, b.x0 - pad), sy = b.y0, ex = Math.min(w, b.x1 + 1 + pad), ey = Math.min(h, b.y1 + 1 + pad); return { sx, sy, sw: ex - sx, sh: ey - sy }; }
+  placeHanger() {
+    const el = $('.hgr', this.wrap); if (!el) return; const g = this.hg, H = HANGERS[this.htype];
+    if (!g || !H || this.tool !== 'hanger') { el.hidden = true; return; }
+    if (el.dataset.type !== this.htype) { el.innerHTML = H.svg(); el.dataset.type = this.htype; }
+    const hh = g.w * 52 / 120; el.hidden = false; el.style.zIndex = H.front ? 2 : 0;
+    el.style.left = ((g.cx - g.w / 2) / this.w * 100) + '%'; el.style.top = ((g.ty - hh * H.anchor) / this.h * 100) + '%'; el.style.width = (g.w / this.w * 100) + '%';
+  }
+  placeFrame() {
+    const F = this.frame, el = this.frameEl;
+    el.style.left = (F.x0 / this.w * 100) + '%'; el.style.top = (F.y0 / this.h * 100) + '%'; el.style.width = ((F.x1 - F.x0) / this.w * 100) + '%'; el.style.height = ((F.y1 - F.y0) / this.h * 100) + '%';
+    el.hidden = this.tool !== 'frame';
+  }
+  redraw(x0 = 0, y0 = 0, x1 = this.w, y1 = this.h) {
+    if (!this.src) return; x0 = clamp(x0 | 0, 0, this.w); y0 = clamp(y0 | 0, 0, this.h); x1 = clamp(Math.ceil(x1), 0, this.w); y1 = clamp(Math.ceil(y1), 0, this.h);
+    if (x1 <= x0 || y1 <= y0) return;
+    const d = this.view.data, m = this.mask, w = this.w, full = this.tool === 'frame' || !this.cut, ghost = this.tool === 'restore' || this.tool === 'keep';
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const i = y * w + x; let a = full ? 255 : m[i]; if (ghost && a < 70) a = 70; d[i * 4 + 3] = a; }
+    this.ctx.putImageData(this.view, 0, 0, x0, y0, x1 - x0, y1 - y0);
+  }
+  snap() { return { m: this.mask.slice(), l: this.labels ? this.labels.slice() : null, er: this.er.slice(), rs: this.rs.slice(), cut: this.cut, f: { ...this.frame }, hg: this.hg ? { ...this.hg } : null }; }
+  push() { this.stack.push(this.snap()); if (this.stack.length > 8) this.stack.shift(); this.onChange(); }
+  undo() { const s = this.stack.pop(); if (s) { this.mask = s.m; this.labels = s.l; this.er = s.er; this.rs = s.rs; this.cut = s.cut; this.frame = s.f; this.hg = s.hg; this.placeFrame(); this.placeHanger(); this.octx.clearRect(0, 0, this.w, this.h); this.redraw(); } this.onChange(); }
+  fgFraction() { let c = 0; const m = this.mask; for (let i = 0; i < m.length; i += 7) if (m[i] > 128) c++; return c / Math.ceil(m.length / 7); }
+  ensureLabels() {
+    if (this.labels) return true;
+    const { lw, lh, w, h } = this, L = new Uint8Array(lw * lh); let x0 = lw, y0 = lh, x1 = -1, y1 = -1;
+    for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) { const v = this.mask[Math.min(h - 1, Math.floor((y + 0.5) * h / lh)) * w + Math.min(w - 1, Math.floor((x + 0.5) * w / lw))]; const f = v > 128; L[y * lw + x] = f ? 3 : 2; if (f) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
+    if (x1 < 0) return false;
+    const mg = Math.round(Math.max(lw, lh) * 0.04);
+    for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) if (x < x0 - mg || x > x1 + mg || y < y0 - mg || y > y1 + mg) L[y * lw + x] = 0;
+    let hasBg = false; for (let i = 0; i < L.length; i++) if (!(L[i] & 1)) { hasBg = true; break; }
+    if (!hasBg) return false;
+    this.labels = L; return true;
+  }
+  runCut(iters, region) {
+    const { lw, lh, w, h } = this;
+    if (region) {
+      const L = this.labels, tmp = L.slice(), { x0, y0, x1, y1 } = region;
+      for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) { const i = y * lw + x; if ((x < x0 || x > x1 || y < y0 || y > y1) && tmp[i] >= 2) tmp[i] -= 2; }
+      grabCut(this.lowPx, lw, lh, tmp, iters);
+      for (let y = Math.max(0, y0); y <= Math.min(lh - 1, y1); y++) for (let x = Math.max(0, x0); x <= Math.min(lw - 1, x1); x++) { const i = y * lw + x; L[i] = tmp[i]; }
+    } else grabCut(this.lowPx, lw, lh, this.labels, iters);
+    const low = keepMain(this.labels.map(v => v & 1), lw, lh);
+    const r = refineMask(low, lw, lh, this.src.data, w, h), m = this.mask, er = this.er, rs = this.rs;
+    for (let i = 0; i < w * h; i++) { let v = r[i]; if (er[i] && v > 255 - er[i]) v = 255 - er[i]; if (rs[i] > v) v = rs[i]; m[i] = v; }
+    this.cut = true; this.octx.clearRect(0, 0, w, h); this.redraw(); this.onChange();
+  }
+  cutFromFrame() {
+    this.push(); const { lw, lh, w, h } = this, F = this.frame, L = new Uint8Array(lw * lh);
+    const fx0 = F.x0 * lw / w, fx1 = F.x1 * lw / w, fy0 = F.y0 * lh / h, fy1 = F.y1 * lh / h;
+    for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) { const inF = x >= fx0 && x < fx1 && y >= fy0 && y < fy1, edge = x < 3 || y < 3 || x >= lw - 3 || y >= lh - 3; L[y * lw + x] = inF ? (edge ? 2 : 3) : 0; }
+    this.labels = L; this.er.fill(0); this.rs.fill(0); this.runCut(4);
+  }
+  takeRegion() {
+    const b = this.sb; this.sb = null; if (!b) return null; const k = this.lw / this.w, pad = Math.round(Math.max(this.lw, this.lh) * 0.1);
+    return { x0: Math.floor(b.x0 * k) - pad, y0: Math.floor(b.y0 * k) - pad, x1: Math.ceil(b.x1 * k) + pad, y1: Math.ceil(b.y1 * k) + pad };
+  }
+  paintLabels(cx, cy, r, val) {
+    if (!this.labels) return; const { lw, lh, w } = this, k = lw / w, lx = cx * k, ly = cy * k, lr = Math.max(0.9, r * k), L = this.labels;
+    for (let y = Math.max(0, Math.floor(ly - lr)); y <= Math.min(lh - 1, Math.ceil(ly + lr)); y++) for (let x = Math.max(0, Math.floor(lx - lr)); x <= Math.min(lw - 1, Math.ceil(lx + lr)); x++) if ((x + 0.5 - lx) ** 2 + (y + 0.5 - ly) ** 2 <= lr * lr) L[y * lw + x] = val;
+  }
+  brushPx() { const cw = this.canvas.getBoundingClientRect().width || this.w; return Math.max(1.5, this.brush * (this.w / cw)); }
+  dab(cx, cy, r) {
+    const t = this.tool;
+    if (t === 'keep' || t === 'remove') {
+      const o = this.octx; o.fillStyle = t === 'keep' ? '#5DBB8A' : '#EE7B93'; o.beginPath(); o.arc(cx, cy, r, 0, Math.PI * 2); o.fill();
+      this.paintLabels(cx, cy, r, t === 'keep' ? 1 : 0); this.dirtyStroke = true;
+      const b = this.sb || (this.sb = { x0: cx, y0: cy, x1: cx, y1: cy }); b.x0 = Math.min(b.x0, cx - r); b.y0 = Math.min(b.y0, cy - r); b.x1 = Math.max(b.x1, cx + r); b.y1 = Math.max(b.y1, cy + r); return;
+    }
+    const r2 = r * r, inner = r * 0.6, w = this.w, m = this.mask, er = this.er, rs = this.rs, erase = t === 'erase';
+    const x0 = Math.max(0, Math.floor(cx - r)), x1 = Math.min(w, Math.ceil(cx + r)), y0 = Math.max(0, Math.floor(cy - r)), y1 = Math.min(this.h, Math.ceil(cy + r));
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+      const dx = x + 0.5 - cx, dy = y + 0.5 - cy, d2 = dx * dx + dy * dy; if (d2 > r2) continue;
+      const d = Math.sqrt(d2), f = d <= inner ? 1 : 1 - (d - inner) / (r - inner), i = y * w + x, v = 255 * f;
+      if (erase) { if (m[i] > 255 - v) m[i] = 255 - v; if (er[i] < v) er[i] = v; if (rs[i] > 255 - v) rs[i] = 255 - v; }
+      else { if (m[i] < v) m[i] = v; if (rs[i] < v) rs[i] = v; if (er[i] > 255 - v) er[i] = 255 - v; }
+    }
+    this.paintLabels(cx, cy, r * 0.6, erase ? 0 : 1); this.redraw(x0, y0, x1, y1);
+  }
+  strokeTo(p) { const r = this.brushPx(), a = this.last, dist = Math.hypot(p.x - a.x, p.y - a.y), steps = Math.max(1, Math.ceil(dist / (r * 0.35))); for (let k = 1; k <= steps; k++) this.dab(a.x + (p.x - a.x) * k / steps, a.y + (p.y - a.y) * k / steps, r); this.last = p; }
+  toImg(e) { const r = this.canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * this.w / r.width, y: (e.clientY - r.top) * this.h / r.height }; }
+  frameDown(e) {
+    const p = this.toImg(e), F = this.frame, sc = this.canvas.getBoundingClientRect().width / this.w;
+    p.x = clamp(p.x, 0, this.w); p.y = clamp(p.y, 0, this.h); this.f0 = { ...F };
+    const corners = [[F.x0, F.y0, F.x1, F.y1], [F.x1, F.y0, F.x0, F.y1], [F.x0, F.y1, F.x1, F.y0], [F.x1, F.y1, F.x0, F.y0]];
+    for (const c of corners) if (Math.hypot((p.x - c[0]) * sc, (p.y - c[1]) * sc) < 32) { this.fdrag = { ax: c[2], ay: c[3] }; return; }
+    if (p.x > F.x0 && p.x < F.x1 && p.y > F.y0 && p.y < F.y1) { this.fdrag = { move: true, sx: p.x, sy: p.y }; return; }
+    this.fdrag = { ax: p.x, ay: p.y }; this.frame = { x0: p.x, y0: p.y, x1: p.x, y1: p.y }; this.placeFrame();
+  }
+  frameMove(e) {
+    const D = this.fdrag, p = this.toImg(e), w = this.w, h = this.h; p.x = clamp(p.x, 0, w); p.y = clamp(p.y, 0, h);
+    if (D.move) { const f = this.f0, dx = clamp(p.x - D.sx, -f.x0, w - f.x1), dy = clamp(p.y - D.sy, -f.y0, h - f.y1); this.frame = { x0: f.x0 + dx, x1: f.x1 + dx, y0: f.y0 + dy, y1: f.y1 + dy }; }
+    else this.frame = { x0: Math.min(D.ax, p.x), x1: Math.max(D.ax, p.x), y0: Math.min(D.ay, p.y), y1: Math.max(D.ay, p.y) };
+    this.placeFrame();
+  }
+  frameUp() { const F = this.frame; if (F.x1 - F.x0 < this.w * 0.05 || F.y1 - F.y0 < this.h * 0.05) { this.frame = this.f0; this.placeFrame(); } this.fdrag = null; }
+  bind() {
+    const W = this.wrap;
+    W.addEventListener('pointerdown', e => {
+      if (!this.src || e.target.closest('button')) return; e.preventDefault();
+      try { W.setPointerCapture(e.pointerId); } catch {}
+      this.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.ptrs.size === 2) { this.hdrag = null; if (this.stroking) { this.stroking = false; this.dirtyStroke = false; this.undo(); } if (this.fdrag) { this.frame = this.f0; this.fdrag = null; this.placeFrame(); } this.startPinch(); return; }
+      if (this.ptrs.size > 2) return;
+      if (this.tool === 'frame') { this.frameDown(e); return; }
+      if (this.tool === 'hanger') { if (this.htype === 'none') return; if (!this.hg) this.autoHanger(); const p = this.toImg(e); this.hdrag = { sx: p.x, sy: p.y, g0: { ...this.hg } }; return; }
+      if ((this.tool === 'keep' || this.tool === 'remove') && !this.ensureLabels()) { toast('Frame the piece and tap Cut out first.'); return; }
+      const p = this.toImg(e); this.push(); this.stroking = true; this.dirtyStroke = false; this.sb = null; this.last = p; this.dab(p.x, p.y, this.brushPx());
+    });
+    W.addEventListener('pointermove', e => {
+      if (!this.ptrs.has(e.pointerId)) return; this.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.pinch && this.ptrs.size >= 2) this.updatePinch(); else if (this.hdrag) { const p = this.toImg(e), D = this.hdrag; this.hg = { ...D.g0, cx: clamp(D.g0.cx + p.x - D.sx, 0, this.w), ty: clamp(D.g0.ty + p.y - D.sy, 0, this.h) }; this.placeHanger(); } else if (this.fdrag) this.frameMove(e); else if (this.stroking) this.strokeTo(this.toImg(e));
+    });
+    const up = e => {
+      if (!this.ptrs.has(e.pointerId)) return; this.ptrs.delete(e.pointerId);
+      if (this.pinch && this.ptrs.size < 2) this.pinch = null;
+      if (this.ptrs.size === 0) {
+        if (this.fdrag) this.frameUp(); this.hdrag = null;
+        if (this.stroking) { this.stroking = false; if (this.dirtyStroke) { this.dirtyStroke = false; this.onStroke(); } }
+      }
+    };
+    W.addEventListener('pointerup', up); W.addEventListener('pointercancel', up);
+    W.addEventListener('wheel', e => {
+      if (!this.src) return; e.preventDefault(); const r = W.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+      const s0 = this.z.s, s = clamp(s0 * Math.exp(-e.deltaY * 0.002), 1, 6), cx = (mx - this.z.x) / s0, cy = (my - this.z.y) / s0;
+      this.z = { s, x: clamp(mx - cx * s, r.width - r.width * s, 0), y: clamp(my - cy * s, r.height - r.height * s, 0) }; this.applyZoom();
+    }, { passive: false });
+  }
+  startPinch() { const [a, b] = [...this.ptrs.values()], r = this.wrap.getBoundingClientRect(); this.pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, mx0: (a.x + b.x) / 2 - r.left, my0: (a.y + b.y) / 2 - r.top, s0: this.z.s, x0: this.z.x, y0: this.z.y }; }
+  updatePinch() {
+    const P = this.pinch, [a, b] = [...this.ptrs.values()], r = this.wrap.getBoundingClientRect();
+    const mx = (a.x + b.x) / 2 - r.left, my = (a.y + b.y) / 2 - r.top, s = clamp(P.s0 * Math.hypot(a.x - b.x, a.y - b.y) / P.d0, 1, 6);
+    const cx = (P.mx0 - P.x0) / P.s0, cy = (P.my0 - P.y0) / P.s0;
+    this.z = { s, x: clamp(mx - cx * s, r.width - r.width * s, 0), y: clamp(my - cy * s, r.height - r.height * s, 0) }; this.applyZoom();
+  }
+  applyZoom() { this.layer.style.transform = `translate(${this.z.x}px,${this.z.y}px) scale(${this.z.s})`; const b = $('.zoom-reset', this.wrap); if (b) b.hidden = this.z.s <= 1.01; }
+  resetZoom() { this.z = { s: 1, x: 0, y: 0 }; this.applyZoom(); }
+  dominant() {
+    const d = this.src.data, m = this.mask, n = this.w * this.h, step = Math.max(1, Math.floor(n / 60000)), bins = new Map(), neutral = []; let tot = 0;
+    for (let i = 0; i < n; i += step) {
+      if (m[i] < 220) continue; const r = d[i * 4], g = d[i * 4 + 1], b = d[i * 4 + 2]; tot++;
+      if (Math.max(r, g, b) - Math.min(r, g, b) < 26) neutral.push(i);
+      const k = (r >> 5) << 6 | (g >> 5) << 3 | (b >> 5); let e = bins.get(k); if (!e) bins.set(k, e = [0, 0, 0, 0]); e[0] += r; e[1] += g; e[2] += b; e[3]++;
+    }
+    if (!tot) return null;
+    if (neutral.length > tot * 0.5) { // mostly neutral fabric: use its lit tone, not its shadows
+      neutral.sort((p, q) => (d[p * 4] + d[p * 4 + 1] + d[p * 4 + 2]) - (d[q * 4] + d[q * 4 + 1] + d[q * 4 + 2]));
+      const lo = Math.floor(neutral.length * 0.7), hi = Math.max(lo + 1, Math.floor(neutral.length * 0.9)); let R = 0, G = 0, B = 0;
+      for (let j = lo; j < hi; j++) { const p = neutral[j] * 4; R += d[p]; G += d[p + 1]; B += d[p + 2]; }
+      const c = hi - lo; return hex(R / c, G / c, B / c);
+    }
+    let best = null; for (const e of bins.values()) if (!best || e[3] > best[3]) best = e;
+    return hex(best[0] / best[3], best[1] / best[3], best[2] / best[3]);
+  }
+  result() {
+    const { w, h } = this, m = this.mask; let x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (let y = 0; y < h; y++) { const row = y * w; for (let x = 0; x < w; x++) if (m[row + x] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
+    if (x1 < 0) return null;
+    const pad = Math.round(Math.max(x1 - x0, y1 - y0) * 0.04), sx = Math.max(0, x0 - pad), sy = y0, ex = Math.min(w, x1 + 1 + pad), ey = Math.min(h, y1 + 1 + pad), sw = ex - sx, sh = ey - sy;
+    const full = mk(w, h), id = new ImageData(new Uint8ClampedArray(this.smooth && this.smoothed ? this.smoothed : this.src.data), w, h);
+    for (let i = 0; i < w * h; i++) id.data[i * 4 + 3] = m[i]; full.getContext('2d').putImageData(id, 0, 0);
+    const k = Math.min(1, 900 / Math.max(sw, sh)), ow = Math.max(1, Math.round(sw * k)), oh = Math.max(1, Math.round(sh * k)), out = mk(ow, oh), ox = out.getContext('2d');
+    ox.imageSmoothingQuality = 'high'; ox.drawImage(full, sx, sy, sw, sh, 0, 0, ow, oh);
+    let img = out.toDataURL('image/webp', 0.9); if (!img.startsWith('data:image/webp')) img = out.toDataURL('image/png');
+    const oc = mk(w, h); oc.getContext('2d').putImageData(this.src, 0, 0); const orig = oc.toDataURL('image/jpeg', 0.86);
+    const mc = mk(w, h), mi = new ImageData(w, h); for (let i = 0; i < w * h; i++) mi.data[i * 4 + 3] = m[i]; mc.getContext('2d').putImageData(mi, 0, 0);
+    if (!this.hg) this.autoHanger(); const g = this.hg;
+    const hang = this.htype === 'none' ? { type: 'none' } : g ? { type: this.htype, cx: (g.cx - sx) / sw, ty: (g.ty - sy) / sh, w: g.w / sw } : null;
+    return { img, orig, mask: mc.toDataURL('image/png'), aspect: ow / oh, color: this.dominant(), hang };
+  }
+}
+function loadImage(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('image')); i.src = src; }); }
+function fileToDataURL(f) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(f); }); }
+
+/* ---------- add / edit piece ---------- */
+function openAdd() {
+  const el = openSheet(`<div class="mini-card" role="dialog" aria-modal="true" aria-label="Add a piece"><h3>Add a piece</h3><p>Any background works. Next you'll drag a frame around the piece and the app cuts it out.</p><div class="stack"><button class="btn primary" data-pick="camera">${ic('camera', 20)}Take photo</button><button class="btn" data-pick="library">${ic('photo', 20)}Choose from photos</button><button class="btn ghost" data-pick="">Cancel</button></div></div>`, 'mini');
+  el.addEventListener('click', e => {
+    const b = e.target.closest('[data-pick]'); if (!b && e.target !== el) return;
+    if (b && b.dataset.pick) $('#pick-' + b.dataset.pick).click();
+    closeSheet(el);
+  });
+}
+const TOOL_HINT = {
+  frame: 'Drag a snug frame around the piece, then tap Cut out. Drag the corners to adjust.',
+  keep: 'Paint over parts that went missing. The cut-out updates when you lift your finger.',
+  remove: 'Paint over leftover background, like the hanger or a door edge. Updates when you lift.',
+  erase: 'Erases exactly where you paint. Pinch with two fingers to zoom.',
+  restore: 'Paints back exactly where you paint. Removed areas show faintly.',
+  hanger: 'Pick a hanger, then drag it to where the piece hangs from: across the straps or shoulders, or clips on the waistband.'
+};
+async function openEditor({ item = null, file = null }) {
+  const isNew = !item;
+  const defCat = S.rackCat !== 'all' && S.rackCat !== 'none' ? S.rackCat : (S.closetCat !== 'all' && S.closetCat !== 'none' ? S.closetCat : (S.cats[0]?.id || null));
+  const st = { cat: item ? (catOf(item) === 'none' ? null : item.cat) : defCat, seasons: new Set(item?.seasons || []), occ: new Set(item?.occasions || []), colorTouched: !!item?.color, mats: new Set(item?.materials || []), second: item?.secondhand ?? null, hManual: !!item?.hangerManual };
+  let smoothPref = true; try { smoothPref = localStorage.getItem('closet-smooth') !== '0'; } catch {}
+  st.smooth = item ? !!item.smooth : smoothPref;
+  const el = openSheet(`<div class="sheet-inner" role="dialog" aria-modal="true" aria-label="${isNew ? 'New piece' : 'Edit piece'}">
+    <header class="sheet-head"><button class="btn ghost sm" data-e="cancel">Cancel</button><h2>${isNew ? 'New piece' : 'Edit piece'}</h2><button class="btn primary sm" data-e="save">Save</button></header>
+    <div class="sheet-body">
+      <div class="stage"><div class="canvas-wrap"><div class="layer"><div class="hgr" hidden>${HANG_SVG}</div><canvas class="img"></canvas><canvas class="ov"></canvas><div class="frame" hidden><i></i><i></i><i></i><i></i></div></div><div class="busy">Loading photo…</div><button class="zoom-reset" hidden>Fit</button></div>
+        <p class="hint" id="e-hint"></p><button class="btn primary" id="e-cut" hidden>${ic('sparkle', 20)}Cut out</button></div>
+      <div class="tools" role="toolbar" aria-label="Cut-out tools">
+        <button class="tool" data-tool="frame">${ic('frame')}Frame</button>
+        <button class="tool" data-tool="keep">${ic('plusc')}Keep</button>
+        <button class="tool" data-tool="remove">${ic('minusc')}Remove</button>
+        <button class="tool" data-tool="erase">${ic('eraser')}Erase</button>
+        <button class="tool" data-tool="restore">${ic('brush')}Restore</button>
+        <button class="tool" data-tool="hanger">${ic('hanger')}Hanger</button>
+        <button class="tool" data-cmd="undo">${ic('undo')}Undo</button>
+      </div>
+      <div class="seg" id="e-htype" role="group" aria-label="Hanger type" style="margin:4px 0 8px" hidden><button data-htype="hanger">Hanger</button><button data-htype="clip">Clips</button><button data-htype="none">No hanger</button></div>
+      <label class="slider" id="e-slider-row"><span id="e-slabel">Brush size</span><input type="range" id="e-slider" min="6" max="70" step="1" value="22"></label>
+      <label class="check" style="margin:8px 6px 0"><input type="checkbox" id="e-smooth" ${st.smooth ? 'checked' : ''}><span>Smooth out wrinkles a little</span></label>
+      <div class="form">
+        <label class="field"><span>Name</span><input type="text" id="f-name" placeholder="Long fine-knit cardigan" value="${esc(item?.name || '')}"></label>
+        <div class="field"><span>Category</span><div class="chips wrap" id="f-cats"></div></div>
+        <div class="field"><span>Color</span><div class="color-row"><input type="color" id="f-color" value="${esc(item?.color || '#c9b49b')}" aria-label="Color"><span class="muted" id="f-color-note"></span></div></div>
+        <div class="field"><span>Material</span><div class="chips wrap" id="f-mat"></div></div>
+        <div class="field"><span>Bought</span><div class="chips wrap" id="f-src"><button class="chip" data-src="new" aria-pressed="${st.second === false}">New</button><button class="chip" data-src="second" aria-pressed="${st.second === true}">Secondhand</button></div></div>
+        <div class="two"><label class="field"><span>Brand</span><input type="text" id="f-brand" value="${esc(item?.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="f-price" inputmode="decimal" value="${esc(item?.price || '')}" placeholder="$29.99"></label></div>
+        <div class="field"><span>Season</span><div class="chips wrap" id="f-season">${SEASONS.map(s => `<button class="chip" data-season="${s}" aria-pressed="${st.seasons.has(s)}">${s}</button>`).join('')}</div></div>
+        <div class="field"><span>Occasion</span><div class="chips wrap" id="f-occ">${OCCASIONS.map(s => `<button class="chip" data-occ="${s}" aria-pressed="${st.occ.has(s)}">${s}</button>`).join('')}</div></div>
+        <label class="field"><span>Notes</span><textarea id="f-notes" rows="3" placeholder="Fit, care, where it's from">${esc(item?.notes || '')}</textarea></label>
+      </div>
+    </div></div>`, 'full');
+  const ed = new Cutout($('.canvas-wrap', el)); const busy = $('.busy', el), hint = $('#e-hint', el), slider = $('#e-slider', el), cutBtn = $('#e-cut', el);
+  ed.onChange = () => { $('[data-cmd="undo"]', el).disabled = !ed.stack.length; };
+  const renderCats = () => {
+    $('#f-cats', el).innerHTML = S.cats.map(c => `<button class="chip" data-fcat="${c.id}" aria-pressed="${st.cat === c.id}">${esc(c.name)}</button>`).join('') + `<button class="chip" data-newcat>${ic('plus', 16)}New category</button>`;
+  };
+  renderCats();
+  const renderMats = () => {
+    const list = [...allMaterials(), ...[...st.mats].filter(m => !allMaterials().includes(m))];
+    $('#f-mat', el).innerHTML = list.map(m => `<button class="chip" data-mat="${esc(m)}" aria-pressed="${st.mats.has(m)}">${esc(m)}</button>`).join('') + `<button class="chip" data-newmat>${ic('plus', 16)}Add material</button>`;
+  };
+  renderMats();
+  const setTool = t => {
+    ed.tool = t; $$('[data-tool]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.tool === t));
+    $('#e-slider-row', el).hidden = t === 'frame';
+    $('#e-htype', el).hidden = t !== 'hanger'; $$('[data-htype]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.htype === ed.htype));
+    if (t === 'hanger' && ed.htype === 'none') $('#e-slider-row', el).hidden = true;
+    if (t === 'hanger') { if (!ed.hg) ed.autoHanger(); const b = ed.gBox(); $('#e-slabel', el).textContent = 'Hanger size'; slider.min = 15; slider.max = 140; slider.value = b && ed.hg ? Math.round(ed.hg.w / (b.x1 - b.x0 + 1) * 100) : 80; }
+    else { $('#e-slabel', el).textContent = 'Brush size'; slider.min = 6; slider.max = 70; slider.value = ed.brush; } cutBtn.hidden = t !== 'frame'; cutBtn.textContent = ''; cutBtn.insertAdjacentHTML('beforeend', `${ic('sparkle', 20)}${ed.cut && ed.labels ? 'Cut out again' : 'Cut out'}`);
+    hint.textContent = TOOL_HINT[t]; ed.placeFrame(); ed.placeHanger(); ed.redraw();
+  };
+  const work = async (msg, fn) => { busy.textContent = msg; busy.hidden = false; await new Promise(r => setTimeout(r, 60)); try { fn(); } catch (e) { console.error(e); toast("Couldn't process that photo."); } busy.hidden = true; };
+  const detectColor = () => { if (!st.colorTouched) { const c = ed.dominant(); if (c) { $('#f-color', el).value = c; $('#f-color-note', el).textContent = 'Detected from the photo'; } } };
+  cutBtn.addEventListener('click', async () => {
+    await work('Cutting out…', () => { ed.cutFromFrame(); ed.autoHanger(); });
+    const f = ed.fgFraction();
+    setTool('remove');
+    if (f < 0.01) hint.textContent = "Couldn't find the piece. Tap Undo, then frame it more snugly.";
+    else hint.textContent = 'Done. Leftover background? Paint it with Remove. A missing strap? Paint it with Keep. Then check the Hanger.';
+    detectColor();
+  });
+  ed.onStroke = () => { const reg = ed.takeRegion(); work('Updating…', () => { ed.runCut(3, reg); detectColor(); }); };
+  slider.addEventListener('input', () => {
+    if (ed.tool === 'hanger') { const b = ed.gBox(); if (b && ed.hg) { ed.hg.w = (b.x1 - b.x0 + 1) * slider.value / 100; ed.placeHanger(); } }
+    else ed.brush = +slider.value;
+  });
+  $('#f-color', el).addEventListener('input', () => { st.colorTouched = true; $('#f-color-note', el).textContent = ''; });
+  $('.zoom-reset', el).addEventListener('click', () => ed.resetZoom());
+  $('#e-smooth', el).addEventListener('change', e => { st.smooth = e.target.checked; try { localStorage.setItem('closet-smooth', st.smooth ? '1' : '0'); } catch {} ed.setSmooth(st.smooth); });
+  ed.htype = item ? hangerType(item) : defaultHanger({ cat: st.cat }); ed.smooth = st.smooth;
+
+  el.addEventListener('click', async e => {
+    const t = e.target.closest('button'); if (!t) return;
+    if (t.dataset.tool) { if (!ed.src) return; if (t.dataset.tool !== 'frame' && !ed.cut) { toast('Frame the piece and tap Cut out first.'); return; } setTool(t.dataset.tool); return; }
+    if (t.dataset.cmd === 'undo') { ed.undo(); if (!ed.cut && ed.tool !== 'frame') setTool('frame'); return; }
+    if (t.dataset.fcat) { st.cat = t.dataset.fcat; renderCats(); if (!st.hManual) { const ht = defaultHanger({ cat: st.cat }); if (ht !== ed.htype) { ed.htype = ht; ed.hg = null; if (ed.cut) ed.autoHanger(); if (ed.tool === 'hanger') setTool('hanger'); } } return; }
+    if (t.dataset.htype) { st.hManual = true; ed.htype = t.dataset.htype; ed.hg = null; ed.autoHanger(); setTool('hanger'); return; }
+    if (t.dataset.mat) { const m = t.dataset.mat; st.mats.has(m) ? st.mats.delete(m) : st.mats.add(m); t.setAttribute('aria-pressed', st.mats.has(m)); return; }
+    if (t.dataset.src) { const v = t.dataset.src === 'second'; st.second = st.second === v ? null : v; $$('[data-src]', el).forEach(b => b.setAttribute('aria-pressed', st.second === (b.dataset.src === 'second'))); return; }
+    if (t.dataset.season) { const s = t.dataset.season; st.seasons.has(s) ? st.seasons.delete(s) : st.seasons.add(s); t.setAttribute('aria-pressed', st.seasons.has(s)); return; }
+    if (t.dataset.occ) { const s = t.dataset.occ; st.occ.has(s) ? st.occ.delete(s) : st.occ.add(s); t.setAttribute('aria-pressed', st.occ.has(s)); return; }
+    if (t.hasAttribute('data-newmat')) {
+      const span = document.createElement('span'); span.className = 'newcat'; span.innerHTML = `<input type="text" maxlength="40" placeholder="e.g. Mohair" aria-label="New material"><button class="chip" data-addmat aria-pressed="true">Add</button>`;
+      t.replaceWith(span); const inp = $('input', span); inp.focus();
+      inp.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); $('[data-addmat]', span).click(); } });
+      return;
+    }
+    if (t.hasAttribute('data-addmat')) {
+      const raw = t.parentElement.querySelector('input')?.value.trim(); if (!raw) { renderMats(); return; }
+      const name = raw.slice(0, 40), known = allMaterials().find(m => m.toLowerCase() === name.toLowerCase());
+      if (known) st.mats.add(known); else { S.customMats.push(name); await saveMats(); st.mats.add(name); renderSettings(); }
+      renderMats(); return;
+    }
+    if (t.hasAttribute('data-newcat')) {
+      const span = document.createElement('span'); span.className = 'newcat'; span.innerHTML = `<input type="text" placeholder="Category name" aria-label="New category name"><button class="chip" data-addcat aria-pressed="true">Add</button>`;
+      t.replaceWith(span); const inp = $('input', span); inp.focus();
+      inp.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); $('[data-addcat]', span).click(); } });
+      return;
+    }
+    if (t.hasAttribute('data-addcat')) {
+      const name = $('.newcat input', el)?.value.trim(); if (!name) { renderCats(); return; }
+      const c = { id: uid(), name }; S.cats.push(c); await saveCats(); st.cat = c.id; renderCats(); renderAll(); return;
+    }
+    if (t.dataset.e === 'cancel') {
+      if (isNew && ed.src && !(await confirmDanger('Discard this piece?', "The photo and details won't be saved.", 'Discard'))) return;
+      closeSheet(el); return;
+    }
+    if (t.dataset.e === 'save') {
+      if (!ed.src) return;
+      if (!ed.cut) { toast('Frame the piece and tap Cut out first.'); return; }
+      t.disabled = true; busy.textContent = 'Saving…'; busy.hidden = false; await new Promise(r => setTimeout(r, 30));
+      let res; try { res = ed.result(); } catch (err) { console.error(err); }
+      busy.hidden = true; t.disabled = false;
+      if (!res) { toast('Nothing is left in the photo. Undo or restore part of it first.'); return; }
+      const now = Date.now();
+      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, color: $('#f-color', el).value, brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: res.img, orig: res.orig, mask: res.mask, aspect: res.aspect, v: 5, hang: res.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second };
+      if (!it.hang) { try { it.hang = await hangOf(res.img); } catch {} }
+      const ok = await safe(store.put('items', it).then(() => true), "Couldn't save the piece. Your device may be out of space.");
+      if (!ok) return;
+      const idx = S.items.findIndex(x => x.id === it.id); if (idx >= 0) S.items[idx] = it; else S.items.push(it); sortItems();
+      if (isNew) { S.rackIndex = Math.max(0, rackItems().findIndex(x => x.id === it.id)); if (S.items.length === 1) navigator.storage?.persist?.().catch(() => {}); }
+      closeAllSheets(); renderAll(); toast(isNew ? 'Added to your closet' : 'Changes saved');
+    }
+  });
+
+  try {
+    if (file) { const im = await loadImage(await fileToDataURL(file)); ed.setSource(im); setTool('frame'); busy.hidden = true; }
+    else if (item.orig && item.mask) { const [o, m] = await Promise.all([loadImage(item.orig), loadImage(item.mask)]); ed.setSource(o, m); busy.hidden = true; }
+    else { ed.setSource(await loadImage(item.img), null, true); busy.hidden = true; }
+    if (!file) {
+      const cb = ed.cropBox(), g = item.hang && item.hang.cx != null && (item.hang.type || 'hanger') === ed.htype ? item.hang : null;
+      if (cb && g) ed.hg = { cx: cb.sx + g.cx * cb.sw, ty: cb.sy + g.ty * cb.sh, w: g.w * cb.sw }; else ed.autoHanger();
+      setTool(item.orig && item.mask ? 'remove' : 'erase');
+    }
+  } catch (err) { console.error(err); busy.textContent = "Couldn't open that photo. Try a JPEG or PNG."; }
+}
+
+/* ---------- detail ---------- */
+function openDetail(it) {
+  if (!it) return;
+  const used = S.outfits.filter(o => o.pieces.some(p => p.itemId === it.id));
+  const facts = [
+    ['Category', esc(catName(catOf(it)))],
+    it.color && ['Color', `<span class="dot" style="background:${esc(it.color)}"></span>${esc(it.color.toUpperCase())}`],
+    it.materials?.length && ['Material', esc(it.materials.join(', '))], it.secondhand != null && ['Bought', it.secondhand ? 'Secondhand' : 'New'],
+    it.brand && ['Brand', esc(it.brand)], it.price && ['Price', esc(it.price)],
+    it.seasons?.length && ['Season', esc(it.seasons.join(', '))], it.occasions?.length && ['Occasion', esc(it.occasions.join(', '))],
+    used.length && ['In outfits', esc(used.map(o => o.name || 'Untitled').join(', '))]
+  ].filter(Boolean);
+  const el = openSheet(`<div class="sheet-inner" role="dialog" aria-modal="true" aria-label="${esc(itemName(it))}">
+    <header class="sheet-head"><button class="icon-btn" data-d="close" aria-label="Close">${ic('x')}</button><span></span><button class="btn sm" data-d="edit">${ic('edit', 18)}Edit</button></header>
+    <div class="sheet-body"><div class="detail-hero">${hangHTML(it, Math.min(window.innerWidth - 60, 700) * 0.72, Math.min(window.innerHeight * 0.46, 520))}</div>
+      <h2 class="detail-name">${esc(itemName(it))}</h2>
+      <ul class="facts">${facts.map(([k, v]) => `<li><span>${k}</span><span>${v}</span></li>`).join('')}</ul>
+      ${it.notes ? `<p style="margin:0 4px 20px;white-space:pre-wrap">${esc(it.notes)}</p>` : ''}
+      <div class="btn-row"><button class="btn primary" data-d="style">${ic('layers', 20)}Style it</button><button class="btn danger" data-d="delete">${ic('trash', 20)}Delete</button></div>
+    </div></div>`, 'full');
+  el.addEventListener('click', async e => {
+    const b = e.target.closest('[data-d]'); if (!b) return; const a = b.dataset.d;
+    if (a === 'close') closeSheet(el);
+    if (a === 'edit') openEditor({ item: it });
+    if (a === 'style') { closeSheet(el); openBoard(null, it.id); }
+    if (a === 'delete') {
+      if (!(await confirmDanger(`Delete ${itemName(it)}?`, used.length ? `It will also be taken out of ${used.length} ${used.length === 1 ? 'outfit' : 'outfits'}.` : 'This can’t be undone.', 'Delete piece'))) return;
+      await safe(store.del('items', it.id)); S.items = S.items.filter(x => x.id !== it.id);
+      for (const o of used) { o.pieces = o.pieces.filter(p => p.itemId !== it.id); await safe(store.put('outfits', o)); }
+      closeSheet(el); renderAll(); toast('Piece deleted');
+    }
+  });
+}
+
+/* ---------- outfit board ---------- */
+const SMALL_RE = /shoe|sneaker|boot|heel|sandal|bag|purse|tote|access|jewel|hat|cap|sock|belt|watch|scarf|glass|bottle/i;
+function arrange(o) {
+  const ps = o.pieces.map(p => ({ p, it: byId(p.itemId) })).filter(x => x.it);
+  const ord = it => { const i = S.cats.findIndex(c => c.id === catOf(it)); return i < 0 ? 99 : i; };
+  ps.sort((a, b) => ord(a.it) - ord(b.it)); const gap = 0.03;
+  const place = (list, cx, baseW) => {
+    let tot = 0;
+    list.forEach((e, i) => { const a = e.it.aspect || 0.8; let w = baseW, hf = w / (1.25 * a); if (hf > 0.6) { hf = 0.6; w = hf * 1.25 * a; } e.w = w; e.hf = hf; tot += hf + (i ? gap : 0); });
+    const s = tot > 0.92 ? 0.92 / tot : 1; let y = (1 - tot * s) / 2;
+    list.forEach(e => { const hf = e.hf * s; e.p.w = e.w * s; e.p.x = cx; e.p.y = y + hf / 2; y += hf + gap * s; });
+  };
+  if (ps.length === 1) place(ps, 0.5, 0.72);
+  else {
+    const small = ps.filter(e => SMALL_RE.test(catName(catOf(e.it)))), big = ps.filter(e => !small.includes(e));
+    if (small.length && big.length) { place(big, 0.38, 0.54); place(small, 0.8, 0.3); }
+    else { const A = [], B = []; let ha = 0, hb = 0; ps.forEach(e => { const hf = 0.44 / (1.25 * (e.it.aspect || 0.8)); if (ha <= hb) { A.push(e); ha += hf; } else { B.push(e); hb += hf; } }); place(A, 0.27, 0.44); place(B, 0.73, 0.44); }
+  }
+  ps.forEach((e, i) => { e.p.z = i + 1; });
+}
+async function outfitBlob(o) {
+  const W = 1080, H = 1350, c = mk(W, H), x = c.getContext('2d'); x.fillStyle = cssVar('--surface') || '#F7F2EB'; x.fillRect(0, 0, W, H);
+  for (const p of [...o.pieces].sort((a, b) => a.z - b.z)) {
+    const it = byId(p.itemId); if (!it) continue; const im = await loadImage(it.img);
+    const dw = p.w * W, dh = dw * (im.naturalHeight / im.naturalWidth); x.drawImage(im, p.x * W - dw / 2, p.y * H - dh / 2, dw, dh);
+  }
+  return new Promise(r => c.toBlob(r, 'image/png'));
+}
+const slug = s => (s || 'outfit').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'outfit';
+
+function openBoard(outfit = null, seedId = null) {
+  if (!S.items.length) { toast('Add a piece first.'); return; }
+  const existing = !!outfit;
+  const o = outfit ? JSON.parse(JSON.stringify(outfit)) : { id: uid(), name: '', pieces: [], created: Date.now() };
+  o.pieces = o.pieces.filter(p => byId(p.itemId)); o.pieces.forEach(p => { if (!p.k) p.k = uid(); });
+  let sel = null, trayCat = 'all', dirty = false;
+  const defW = it => { const a = it.aspect || 0.8; return Math.min(0.42, 0.45 * 1.25 * a); };
+  const maxZ = () => o.pieces.reduce((m, p) => Math.max(m, p.z || 0), 0);
+  const addItem = id => { const ex = o.pieces.find(p => p.itemId === id); if (ex) { sel = ex.k; return; } const it = byId(id); const p = { k: uid(), itemId: id, x: 0.5 + (Math.random() - 0.5) * 0.2, y: 0.5 + (Math.random() - 0.5) * 0.2, w: defW(it), z: maxZ() + 1 }; o.pieces.push(p); sel = p.k; dirty = true; };
+  if (seedId) addItem(seedId);
+  const el = openSheet(`<div class="sheet-inner board-sheet" role="dialog" aria-modal="true" aria-label="Outfit board">
+    <header class="sheet-head"><button class="btn ghost sm" data-b="cancel">Cancel</button><input class="title-input" id="b-name" placeholder="Name this outfit" value="${esc(o.name)}" aria-label="Outfit name"><button class="btn primary sm" data-b="save">Save</button></header>
+    <div class="sheet-body"><div class="board" id="board"></div>
+      <div class="board-tools">
+        <button class="btn sm" data-b="arrange">${ic('arrange', 18)}Arrange</button>
+        <button class="btn sm" data-b="front" data-needsel>${ic('front', 18)}Front</button>
+        <button class="btn sm" data-b="back" data-needsel>${ic('back', 18)}Back</button>
+        <button class="btn sm" data-b="image">${ic('download', 18)}Image</button>
+        ${existing ? `<button class="btn sm danger" data-b="delete">${ic('trash', 18)}Delete</button>` : ''}
+      </div>
+      <div id="tray-chips"></div><div class="tray" id="tray"></div>
+    </div></div>`, 'full');
+  const board = $('#board', el), tray = $('#tray', el);
+  const renderBoard = () => {
+    board.innerHTML = o.pieces.map(p => pieceHTML(p, byId(p.itemId), p.k === sel)).join('') + (o.pieces.length ? '' : '<div class="board-empty">Tap pieces below to drop them here. Drag to move, pinch or use the corner handle to resize.</div>');
+    $$('[data-needsel]', el).forEach(b => { b.disabled = !sel; });
+  };
+  const renderTray = () => {
+    $('#tray-chips', el).innerHTML = chipRow(trayCat, 'tray', false);
+    const list = S.items.filter(i => trayCat === 'all' || catOf(i) === trayCat); const on = new Set(o.pieces.map(p => p.itemId));
+    tray.innerHTML = list.length ? list.map(i => `<button class="${on.has(i.id) ? 'on' : ''}" data-add="${i.id}" aria-label="${esc(itemName(i))}${on.has(i.id) ? ', on board' : ''}"><img src="${i.img}" alt=""></button>`).join('') : '<p class="muted tray-empty">No pieces in this category yet.</p>';
+  };
+  const styleOf = p => { const n = board.querySelector(`[data-k="${p.k}"]`); if (n) { n.style.left = (p.x * 100) + '%'; n.style.top = (p.y * 100) + '%'; n.style.width = (p.w * 100) + '%'; n.style.zIndex = p.z; } };
+  const cur = () => o.pieces.find(p => p.k === sel);
+  renderBoard(); renderTray();
+
+  const ptrs = new Map(); let drag = null;
+  board.addEventListener('pointerdown', e => {
+    e.preventDefault(); try { board.setPointerCapture(e.pointerId); } catch {}
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); const rect = board.getBoundingClientRect();
+    const h = e.target.closest('.handle'), pe = e.target.closest('.piece');
+    if (ptrs.size === 2 && sel) { const [a, b] = [...ptrs.values()]; drag = { mode: 'pinch', d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, w0: cur().w }; return; }
+    if (ptrs.size > 1) return;
+    if (h && h.dataset.h === 'del') { o.pieces = o.pieces.filter(p => p.k !== sel); sel = null; dirty = true; renderBoard(); renderTray(); drag = null; return; }
+    if (h && h.dataset.h === 'rz') { const p = cur(), cx = rect.left + p.x * rect.width, cy = rect.top + p.y * rect.height; drag = { mode: 'resize', cx, cy, d0: Math.hypot(e.clientX - cx, e.clientY - cy) || 1, w0: p.w }; return; }
+    if (pe) { if (sel !== pe.dataset.k) { sel = pe.dataset.k; renderBoard(); } const p = cur(); drag = { mode: 'move', sx: e.clientX, sy: e.clientY, x0: p.x, y0: p.y, rect }; }
+    else { if (sel) { sel = null; renderBoard(); } drag = null; }
+  });
+  board.addEventListener('pointermove', e => {
+    if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); if (!drag) return; const p = cur(); if (!p) return;
+    if (drag.mode === 'pinch' && ptrs.size >= 2) { const [a, b] = [...ptrs.values()]; p.w = clamp(drag.w0 * Math.hypot(a.x - b.x, a.y - b.y) / drag.d0, 0.06, 1.3); }
+    else if (drag.mode === 'move') { p.x = clamp(drag.x0 + (e.clientX - drag.sx) / drag.rect.width, 0, 1); p.y = clamp(drag.y0 + (e.clientY - drag.sy) / drag.rect.height, 0, 1); }
+    else if (drag.mode === 'resize') { p.w = clamp(drag.w0 * Math.hypot(e.clientX - drag.cx, e.clientY - drag.cy) / drag.d0, 0.06, 1.3); }
+    else return;
+    dirty = true; styleOf(p);
+  });
+  const up = e => { ptrs.delete(e.pointerId); if (drag?.mode === 'pinch' && ptrs.size < 2) drag = null; if (!ptrs.size) drag = null; };
+  board.addEventListener('pointerup', up); board.addEventListener('pointercancel', up);
+  $('#b-name', el).addEventListener('input', () => { dirty = true; });
+
+  el.addEventListener('click', async e => {
+    const c = e.target.closest('[data-cat]'); if (c && c.closest('[data-scope="tray"]')) { trayCat = c.dataset.cat; renderTray(); return; }
+    const add = e.target.closest('[data-add]'); if (add) { addItem(add.dataset.add); renderBoard(); renderTray(); return; }
+    const b = e.target.closest('[data-b]'); if (!b) return; const a = b.dataset.b;
+    if (a === 'arrange') { if (!o.pieces.length) return; arrange(o); dirty = true; renderBoard(); }
+    if (a === 'front' && cur()) { cur().z = maxZ() + 1; dirty = true; styleOf(cur()); }
+    if (a === 'back' && cur()) { const p = cur(); o.pieces.forEach(q => { if (q !== p) q.z = (q.z || 0) + 1; }); p.z = 0; o.pieces.forEach(styleOf); dirty = true; }
+    if (a === 'image') { if (!o.pieces.length) { toast('Add a piece to the board first.'); return; } const blob = await outfitBlob(o); if (blob) saveFile(`${slug($('#b-name', el).value)}.png`, blob); }
+    if (a === 'cancel') { if (dirty && o.pieces.length && !(await confirmDanger('Discard changes?', 'This outfit board won’t be saved.', 'Discard'))) return; closeSheet(el); }
+    if (a === 'delete') {
+      if (!(await confirmDanger('Delete this outfit?', 'The pieces stay in your closet.', 'Delete outfit'))) return;
+      await safe(store.del('outfits', o.id)); S.outfits = S.outfits.filter(x => x.id !== o.id); closeSheet(el); renderOutfits(); renderSettings(); toast('Outfit deleted');
+    }
+    if (a === 'save') {
+      if (!o.pieces.length) { toast('Add at least one piece to the board.'); return; }
+      o.name = $('#b-name', el).value.trim() || `Outfit ${S.outfits.length + (existing ? 0 : 1)}`; o.updated = Date.now();
+      const ok = await safe(store.put('outfits', o).then(() => true)); if (!ok) return;
+      const i = S.outfits.findIndex(x => x.id === o.id); if (i >= 0) S.outfits[i] = o; else S.outfits.push(o); sortOutfits();
+      closeSheet(el); renderOutfits(); renderSettings(); if (S.view !== 'outfits') go('outfits'); toast('Outfit saved');
+    }
+  });
+}
+
+
+/* ---------- insights ---------- */
+const FAMILY = { White: '#ECE6DC', Black: '#2B2523', Gray: '#9C968F', Beige: '#D6C1A2', Brown: '#8A5A3C', Red: '#B8322E', Pink: '#E59AB0', Orange: '#E07B39', Yellow: '#E2BF45', Green: '#6E8B55', Blue: '#4F6FA0', Purple: '#7D4E8C' };
+function colorFamily(hx) {
+  if (!/^#[0-9a-f]{6}$/i.test(hx || '')) return '';
+  const f = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; }, t = v => v > 0.008856 ? Math.cbrt(v) : 7.787 * v + 16 / 116;
+  const r = f(parseInt(hx.slice(1, 3), 16)), g = f(parseInt(hx.slice(3, 5), 16)), bl = f(parseInt(hx.slice(5, 7), 16));
+  const X = t((r * 0.4124 + g * 0.3576 + bl * 0.1805) / 0.95047), Y = t(r * 0.2126 + g * 0.7152 + bl * 0.0722), Z = t((r * 0.0193 + g * 0.1192 + bl * 0.9505) / 1.08883);
+  const L = 116 * Y - 16, a = 500 * (X - Y), b = 200 * (Y - Z), C = Math.hypot(a, b); let h = Math.atan2(b, a) * 180 / Math.PI; if (h < 0) h += 360;
+  if (L < 22 && C < 20) return 'Black';
+  if (C < 10 || (L > 72 && C < 14)) return L > 72 ? 'White' : L < 28 ? 'Black' : 'Gray';
+  if (h >= 55 && h < 100 && C < 35 && L > 55) return 'Beige';
+  if (h >= 25 && h < 100 && L <= 55 && C < 45) return 'Brown';
+  if ((h >= 290 || h < 10) && C < 22) return 'Purple';
+  if ((h >= 330 || h < 20) && b < 0 && L < 45) return 'Purple';
+  if (h < 20 || h >= 330) return L > 62 ? 'Pink' : 'Red';
+  if (h < 50) return L > 68 && C < 45 ? 'Pink' : 'Red';
+  if (h < 75) return 'Orange'; if (h < 105) return 'Yellow'; if (h < 200) return 'Green'; if (h < 285) return 'Blue';
+  return 'Purple';
+}
+const PASTEL = ['#F4A9B8', '#F9C79A', '#F3DA7E', '#A8D8A0', '#8FD0CF', '#9FB8EE', '#C3A9EC', '#E9A6D7'];
+const rot = k => PASTEL.slice(k).concat(PASTEL.slice(0, k));
+const RAMPS_OLD = {
+  cat: ['#4A1D33', '#7A3E5C', '#A86C88', '#D2A9BC', '#2E1220', '#93526F', '#E3C7D3', '#BF8AA2'],
+  season: ['#907082', '#5F4455', '#B79AAB', '#DCC9D3', '#7A5A6C', '#CBB3C0'],
+  bought: ['#2B4951', '#8FB0B8', '#5D828B'],
+  brand: ['#9C7754', '#BF9D7D', '#6E5039', '#D9C2A9', '#836246', '#E9DCCB', '#B08A66', '#C7AD92'],
+  mat: ['#251822', '#4D3A47', '#77636F', '#A6949E', '#CFC2C8', '#5E4553', '#3A2A34', '#8E7B86'],
+  occ: ['#4F7166', '#7A9C90', '#A9C3B9', '#36534A', '#D2E1DB', '#90B0A4']
+};
+const RAMPS = { brand: rot(5), mat: rot(2), occ: rot(6) };
+function tally(keyFn) {
+  const m = new Map();
+  for (const it of S.items) { let k = keyFn(it); if (!Array.isArray(k)) k = [k]; if (!k.length) k = ['Not set']; for (const x of k) { const key = x || 'Not set'; if (!m.has(key)) m.set(key, []); m.get(key).push(it); } }
+  return [...m.entries()].map(([label, items]) => ({ label, count: items.length, items })).sort((a, b) => (a.label === 'Not set') - (b.label === 'Not set') || b.count - a.count);
+}
+const avgColor = items => { const c = items.map(i => i.color).filter(x => /^#[0-9a-f]{6}$/i.test(x || '')); if (!c.length) return null; const s = [0, 0, 0]; c.forEach(x => { s[0] += parseInt(x.slice(1, 3), 16); s[1] += parseInt(x.slice(3, 5), 16); s[2] += parseInt(x.slice(5, 7), 16); }); return hex(s[0] / c.length, s[1] / c.length, s[2] / c.length); };
+function donutSVG(entries, total, note) {
+  let off = 0; const gap = entries.length > 1 ? 0.8 : 0;
+  const arcs = entries.map(e => { const pct = e.count / total * 100; const seg = `<circle r="15.915" cx="21" cy="21" fill="none" stroke="${e._c}" stroke-width="6.5" stroke-dasharray="${Math.max(0.01, pct - gap).toFixed(2)} ${(100 - pct + gap).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`; off += pct; return seg; }).join('');
+  return `<svg viewBox="0 0 42 42" class="donut" aria-hidden="true"><circle r="15.915" cx="21" cy="21" fill="none" stroke="var(--line)" stroke-width="6.5" opacity=".35"/><g transform="rotate(-90 21 21)">${arcs}</g><text x="21" y="22.4" text-anchor="middle" class="dn">${total}</text><text x="21" y="26.8" text-anchor="middle" class="dl">${note}</text></svg>`;
+}
+function donutCard(id, title, entries, { ramp, colors, note = 'pieces', scope = 'q' } = {}) {
+  const total = entries.reduce((a, e) => a + e.count, 0); if (!total || entries.every(e => e.label === 'Not set')) return '';
+  let ri = 0; entries.forEach(e => { e._c = e.label === 'Not set' ? 'var(--line)' : (colors && colors(e)) || ramp[ri++ % ramp.length]; });
+  const top = entries.find(e => e.label !== 'Not set'), open = S.openChart === id;
+  if (!open) return `<section class="panel chart" data-chart="${id}" role="button" tabindex="0" aria-expanded="false" aria-label="${esc(title)}, tap for details"><h2>${esc(title)}</h2>${donutSVG(entries, total, note)}<p class="cap">${top ? `Mostly ${esc(top.label)}, ${Math.round(top.count / total * 100)}%` : ''}</p></section>`;
+  const rows = entries.map(e => {
+    const thumbs = e.items.slice(0, 8).map(it => `<button data-thumb="${it.id}" aria-label="${esc(itemName(it))}"><img src="${it.img}" alt=""></button>`).join('') + (e.items.length > 8 ? `<span class="more">+${e.items.length - 8}</span>` : '');
+    return `<li><button class="row" data-iq="${esc(e.label)}" data-iscope="${scope}" ${e.label === 'Not set' || e.label === 'Other' ? 'disabled' : ''}><span class="sw" style="background:${e._c}"></span><span class="lb">${esc(e.label)}</span><span class="ct">${e.count}</span><span class="pc">${Math.round(e.count / total * 100)}%</span></button><div class="slice-items">${thumbs}</div></li>`;
+  }).join('');
+  return `<section class="panel chart open" data-chart="${id}" aria-expanded="true"><div class="chart-head"><h2>${esc(title)}</h2><button class="icon-btn" data-chart-close aria-label="Close ${esc(title)}">${ic('x', 20)}</button></div><div class="chart-body">${donutSVG(entries, total, note)}<p class="muted chart-note">Tap a name to see those pieces in your closet, or a photo to open it.</p></div><ul class="legend">${rows}</ul></section>`;
+}
+const priceNum = p => { const m = String(p || '').replace(/\s/g, '').match(/\d+(?:[.,]\d{1,2})?/); return m ? parseFloat(m[0].replace(',', '.')) : NaN; };
+function renderInsights() {
+  const v = $('#view-insights'); if (!v) return; const n = S.items.length;
+  const head = `<div class="page-head"><h1>Insights</h1><button class="btn sm" data-go="settings">${ic('sliders', 18)}Settings</button></div>`;
+  if (!n) { v.innerHTML = head + `<div class="empty"><h2>Nothing to count yet</h2><p>Add a few pieces and you'll see your closet broken down by category, color, season, material, and more.</p><button class="btn primary" data-act="add">${ic('plus', 20)}Add a piece</button></div>`; return; }
+  const prices = S.items.map(i => priceNum(i.price)).filter(x => !isNaN(x)), value = prices.reduce((a, b) => a + b, 0);
+  const shKnown = S.items.filter(i => i.secondhand != null), sh = shKnown.filter(i => i.secondhand).length;
+  const styled = new Set(S.outfits.flatMap(o => o.pieces.map(p => p.itemId))), never = S.items.filter(i => !styled.has(i.id));
+  const stats = [[n, n === 1 ? 'piece' : 'pieces'], [S.outfits.length, S.outfits.length === 1 ? 'outfit' : 'outfits'], [shKnown.length ? Math.round(sh / shKnown.length * 100) + '%' : '–', 'secondhand'], [prices.length ? Math.round(value).toLocaleString() : '–', prices.length < n && prices.length ? `spent on ${prices.length} priced` : 'total spent']];
+  // brands: top 6 + other
+  let brands = tally(i => (i.brand || '').trim() || 'Not set'); const bTop = brands.filter(b => b.label !== 'Not set').slice(0, 6), bRest = brands.filter(b => b.label !== 'Not set').slice(6).reduce((a, b) => a + b.count, 0), bNone = brands.find(b => b.label === 'Not set');
+  brands = [...bTop, ...(bRest ? [{ label: 'Other', count: bRest, items: brands.filter(b => b.label !== 'Not set').slice(6).flatMap(b => b.items) }] : []), ...(bNone ? [bNone] : [])];
+  const cats = tally(i => catName(catOf(i)));
+  const colors = tally(i => colorFamily(i.color) || 'Not set');
+  const seasons = tally(i => i.seasons || []);
+  const bought = tally(i => i.secondhand == null ? 'Not set' : i.secondhand ? 'Secondhand' : 'New');
+  const mats = tally(i => i.materials || []);
+  const occ = tally(i => i.occasions || []);
+  // things worth a look
+  const tips = [];
+  if (never.length && S.items.length > 1) tips.push(`${never.length} of ${n} pieces aren't in any outfit yet.`);
+  const emptyCats = S.cats.filter(c => !S.items.some(i => catOf(i) === c.id)).map(c => c.name);
+  if (emptyCats.length && emptyCats.length < S.cats.length) tips.push(`Nothing yet in ${emptyCats.join(', ')}.`);
+  const tagged = S.items.filter(i => i.seasons?.length).length;
+  if (tagged >= 3) { const low = SEASONS.map(x => [x, S.items.filter(i => i.seasons?.includes(x)).length]).sort((a, b) => a[1] - b[1])[0]; if (low[1] <= Math.max(1, tagged * 0.15)) tips.push(`Only ${low[1]} ${low[1] === 1 ? 'piece' : 'pieces'} for ${low[0]}.`); }
+  const fam = colors.filter(c => c.label !== 'Not set'); if (fam.length && n >= 5 && fam[0].count / n >= 0.5) tips.push(`${Math.round(fam[0].count / n * 100)}% of your closet is ${fam[0].label.toLowerCase()}.`);
+  const missing = [['season', i => !i.seasons?.length], ['material', i => !i.materials?.length], ['brand', i => !i.brand], ['new or secondhand', i => i.secondhand == null]].map(([k, f]) => [k, S.items.filter(f).length]).filter(x => x[1]);
+  if (missing.length) tips.push(`To sharpen these charts, fill in ${missing.map(([k, c]) => `${k} (${c})`).join(', ')}.`);
+  v.innerHTML = head + `<div class="stat-row">${stats.map(([a, b]) => `<div class="stat"><strong>${esc(a)}</strong><span>${esc(b)}</span></div>`).join('')}</div>`
+    + (tips.length ? `<section class="panel"><h2>Worth a look</h2><ul class="tips">${tips.map(t => `<li>${esc(t)}</li>`).join('')}</ul></section>` : '')
+    + `<div class="charts">`
+    + donutCard('cat', 'Category', cats, { colors: e => { const c = S.cats.find(x => x.name === e.label); return c ? catColor(c.id) : '#D6D6D6'; }, ramp: PASTEL, scope: 'cat' })
+    + donutCard('color', 'Color', colors, { colors: e => avgColor(e.items) || FAMILY[e.label], ramp: PASTEL })
+    + donutCard('season', 'Season', seasons, { colors: e => SEASON_COL[e.label], ramp: PASTEL, note: 'tags' })
+    + donutCard('bought', 'New or secondhand', bought.sort((x, y) => (x.label === 'Not set') - (y.label === 'Not set') || (x.label === 'Secondhand' ? -1 : 1)), { colors: e => e.label === 'Secondhand' ? '#8FD0CF' : '#C3A9EC', ramp: PASTEL })
+    + donutCard('brand', 'Brand', brands, { ramp: RAMPS.brand })
+    + donutCard('mat', 'Material', mats, { ramp: RAMPS.mat, note: 'tags' })
+    + donutCard('occ', 'Occasion', occ, { ramp: RAMPS.occ, note: 'tags' })
+    + `</div>`;
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#sheets')) return;
+  const th = e.target.closest('[data-thumb]'); if (th) { openDetail(byId(th.dataset.thumb)); return; }
+  if (e.target.closest('[data-chart-close]')) { const id = S.openChart; S.openChart = null; renderInsights(); const c = $(`[data-chart="${id}"]`); if (c) c.scrollIntoView({ block: 'nearest' }); return; }
+  const card = e.target.closest('.chart[data-chart]:not(.open)');
+  if (card) { S.openChart = card.dataset.chart; renderInsights(); const c = $(`[data-chart="${S.openChart}"]`); if (c) c.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); return; }
+});
+document.addEventListener('keydown', e => { const card = e.target.closest?.('.chart[data-chart]:not(.open)'); if (card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); card.click(); } });
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-iq]'); if (!b || b.disabled) return;
+  const label = b.dataset.iq;
+  if (b.dataset.iscope === 'cat') { const c = S.cats.find(x => x.name === label); S.closetCat = c ? c.id : (label === 'Uncategorized' ? 'none' : 'all'); S.q = ''; }
+  else { S.closetCat = 'all'; S.q = label; }
+  go('closet'); const q = $('#closet-q'); if (q) q.value = S.q; renderClosetResults();
+});
+/* ---------- files ---------- */
+async function saveFile(name, blob) {
+  const dl = await getDownloads();
+  if (dl) {
+    try { await dl.save({ filename: name, data: blob }); }
+    catch (e) { if (e?.code === 'declined') return; if (e?.code === 'rate_limited') toast('A save is already waiting for you to confirm.'); else if (e?.code === 'too_large') toast('That file is too large to save here.'); else toast("Saving files isn't available in this view."); }
+    return;
+  }
+  try { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); }
+  catch { toast("Saving files isn't available in this view."); }
+}
+async function exportBackup() {
+  const inc = $('#inc-orig')?.checked !== false;
+  const data = { app: 'closet-index', version: 1, exported: new Date().toISOString(), categories: S.cats, customMaterials: S.customMats, items: S.items.map(i => { const o = { ...i }; if (!inc) { delete o.orig; delete o.mask; } return o; }), outfits: S.outfits };
+  await saveFile(`closet-backup-${new Date().toISOString().slice(0, 10)}.json`, new Blob([JSON.stringify(data)], { type: 'application/json' }));
+}
+async function importBackup(file) {
+  let data; try { data = JSON.parse(await file.text()); } catch { toast("That file isn't a closet backup."); return; }
+  if (!data || data.app !== 'closet-index' || !Array.isArray(data.items)) { toast("That file isn't a closet backup."); return; }
+  const str = v => typeof v === 'string' ? v.slice(0, 2000) : '';
+  const items = data.items.filter(i => i && typeof i.id === 'string' && IMG_RE.test(i.img || '')).map(i => ({
+    id: i.id, created: +i.created || Date.now(), updated: +i.updated || Date.now(), name: str(i.name), cat: typeof i.cat === 'string' ? i.cat : null,
+    color: /^#[0-9a-f]{6}$/i.test(i.color || '') ? i.color : '', brand: str(i.brand), price: str(i.price), notes: str(i.notes),
+    seasons: Array.isArray(i.seasons) ? i.seasons.filter(s => SEASONS.includes(s)) : [], occasions: Array.isArray(i.occasions) ? i.occasions.filter(s => OCCASIONS.includes(s)) : [],
+    img: i.img, orig: IMG_RE.test(i.orig || '') ? i.orig : undefined, mask: IMG_RE.test(i.mask || '') ? i.mask : undefined, aspect: +i.aspect || 0.8,
+    hang: (i.hang && [i.hang.cx, i.hang.ty, i.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip'].includes(i.hang.type) ? i.hang.type : 'hanger', cx: clamp(i.hang.cx, -1, 2), ty: clamp(i.hang.ty, -1, 2), w: clamp(i.hang.w, 0.05, 3) } : undefined,
+    hanger: ['hanger', 'clip', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: !!i.smooth,
+    materials: Array.isArray(i.materials) ? i.materials.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim().slice(0, 40)) : [], secondhand: typeof i.secondhand === 'boolean' ? i.secondhand : null
+  }));
+  const cats = (Array.isArray(data.categories) ? data.categories : []).filter(c => c && typeof c.id === 'string' && typeof c.name === 'string').map(c => ({ id: c.id, name: c.name.slice(0, 60) }));
+  const outfits = (Array.isArray(data.outfits) ? data.outfits : []).filter(o => o && typeof o.id === 'string' && Array.isArray(o.pieces)).map(o => ({
+    id: o.id, name: str(o.name), created: +o.created || Date.now(), updated: +o.updated || Date.now(),
+    pieces: o.pieces.filter(p => p && typeof p.itemId === 'string').map(p => ({ k: uid(), itemId: p.itemId, x: clamp(+p.x || 0.5, 0, 1), y: clamp(+p.y || 0.5, 0, 1), w: clamp(+p.w || 0.4, 0.04, 1.5), z: +p.z || 1 }))
+  }));
+  const mode = await choose('Import backup', `${items.length} pieces and ${outfits.length} outfits found.`, [{ v: 'merge', label: 'Add to my closet', primary: true }, { v: 'replace', label: 'Replace my closet', danger: true }]);
+  if (!mode) return;
+  try {
+    if (mode === 'replace') { await Promise.all(['items', 'outfits'].map(s => store.clear(s))); S.items = []; S.outfits = []; S.cats = []; }
+    cats.forEach(c => { if (!S.cats.some(x => x.id === c.id)) S.cats.push(c); });
+    if (mode === 'replace') S.customMats = [];
+    const cm = new Set([...(Array.isArray(data.customMaterials) ? data.customMaterials : []), ...items.flatMap(i => i.materials)].filter(m => typeof m === 'string' && m && !MATERIALS.includes(m)).map(m => m.slice(0, 40)));
+    cm.forEach(m => { if (!S.customMats.includes(m)) S.customMats.push(m); }); await saveMats();
+    for (const it of items) { await store.put('items', it); const i = S.items.findIndex(x => x.id === it.id); if (i >= 0) S.items[i] = it; else S.items.push(it); }
+    for (const o of outfits) { await store.put('outfits', o); const i = S.outfits.findIndex(x => x.id === o.id); if (i >= 0) S.outfits[i] = o; else S.outfits.push(o); }
+    await saveCats(); sortItems(); sortOutfits(); S.rackIndex = 0; renderAll(); toast(`Imported ${items.length} pieces`); migrate();
+  } catch (e) { console.error(e); toast("Import stopped partway. Your device may be out of space."); renderAll(); }
+}
+
+/* ---------- global events ---------- */
+document.addEventListener('click', async e => {
+  if (e.target.closest('#sheets')) return;
+  const g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
+  const c = e.target.closest('[data-cat]');
+  if (c) { const sc = c.closest('[data-scope]')?.dataset.scope; if (sc === 'rack') { S.rackCat = c.dataset.cat; S.rackIndex = 0; renderRack(); } else if (sc === 'closet') { S.closetCat = c.dataset.cat; renderClosetResults(); } return; }
+  const t = e.target.closest('[data-theme-opt]'); if (t) { applyTheme(t.dataset.themeOpt); renderSettings(); return; }
+  const mv = e.target.closest('[data-catmove]');
+  if (mv) { const i = S.cats.findIndex(x => x.id === mv.dataset.id), j = i + +mv.dataset.catmove; if (j >= 0 && j < S.cats.length) { [S.cats[i], S.cats[j]] = [S.cats[j], S.cats[i]]; await saveCats(); renderAll(); } return; }
+  const md = e.target.closest('[data-matdel]');
+  if (md) { S.customMats = S.customMats.filter(m => m !== md.dataset.matdel); await saveMats(); renderSettings(); return; }
+  const dc = e.target.closest('[data-catdel]');
+  if (dc) { const cat = S.cats.find(x => x.id === dc.dataset.catdel); if (!cat) return; const n = S.items.filter(i => i.cat === cat.id).length; if (!(await confirmDanger(`Delete ${cat.name}?`, n ? `Its ${n} ${n === 1 ? 'piece moves' : 'pieces move'} to Uncategorized.` : 'No pieces use it.', 'Delete category'))) return; S.cats = S.cats.filter(x => x.id !== cat.id); if (S.rackCat === cat.id) S.rackCat = 'all'; if (S.closetCat === cat.id) S.closetCat = 'all'; await saveCats(); renderAll(); return; }
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  switch (a.dataset.act) {
+    case 'add': openAdd(); break;
+    case 'detail': openDetail(byId(a.dataset.id)); break;
+    case 'style': openBoard(null, a.dataset.id); break;
+    case 'new-outfit': openBoard(); break;
+    case 'open-outfit': openBoard(S.outfits.find(o => o.id === a.dataset.id)); break;
+    case 'add-cat': { const inp = $('#new-cat'); const name = inp.value.trim(); if (!name) { inp.focus(); return; } S.cats.push({ id: uid(), name: name.slice(0, 60) }); await saveCats(); renderAll(); toast(`Added ${name}`); break; }
+    case 'export': exportBackup(); break;
+    case 'import': $('#pick-backup').click(); break;
+    case 'wipe': if (await confirmDanger('Delete everything?', 'Every piece, outfit, and category on this device will be gone. Export a backup first if you might want them.', 'Delete everything')) { await safe(Promise.all(['items', 'outfits', 'meta'].map(s => store.clear(s)))); S.items = []; S.outfits = []; S.cats = DEFAULT_CATS(); S.customMats = []; await saveCats(); S.rackCat = S.closetCat = 'all'; renderAll(); toast('Closet cleared'); } break;
+  }
+});
+document.addEventListener('change', async e => {
+  const r = e.target.closest('[data-rename]');
+  if (r) { const c = S.cats.find(x => x.id === r.dataset.rename); const v = r.value.trim(); if (c && v && v !== c.name) { c.name = v.slice(0, 60); await saveCats(); renderRack(); renderClosetResults(); } else if (c) r.value = c.name; }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'new-cat') { e.preventDefault(); $('[data-act="add-cat"]').click(); } if (e.key === 'Enter' && e.target.matches('[data-rename]')) e.target.blur(); });
+['camera', 'library'].forEach(k => $('#pick-' + k).addEventListener('change', e => { const f = e.target.files?.[0]; e.target.value = ''; if (f) openEditor({ file: f }); }));
+$('#pick-backup').addEventListener('change', e => { const f = e.target.files?.[0]; e.target.value = ''; if (f) importBackup(f); });
+let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (S.view === 'rack') renderRack(); }, 200); });
+
+
+async function trimTop(it) {
+  const im = await loadImage(it.img), w = im.naturalWidth, h = im.naturalHeight, c = mk(w, h), x = c.getContext('2d', { willReadFrequently: true });
+  x.drawImage(im, 0, 0); const d = x.getImageData(0, 0, w, h).data; let top = 0;
+  outer: for (; top < h; top++) for (let i = 0; i < w; i++) if (d[(top * w + i) * 4 + 3] > 12) break outer;
+  if (top < 2 || top >= h - 2) return false;
+  const o = mk(w, h - top); o.getContext('2d').drawImage(c, 0, top, w, h - top, 0, 0, w, h - top);
+  let img = it.img.startsWith('data:image/webp') ? o.toDataURL('image/webp', 0.9) : ''; if (!img.startsWith('data:image/webp')) img = o.toDataURL('image/png');
+  it.img = img; it.aspect = w / (h - top); return true;
+}
+async function migrate() {
+  let changed = false;
+  for (const it of S.items) {
+    if (it.v >= 5) continue;
+    try {
+      if (!(it.v >= 2)) await trimTop(it);
+      const t = hangerType(it), g = it.hang;
+      if (t !== 'none' && !(g && g.cx != null && (g.type || 'hanger') === t)) it.hang = await hangOf(it.img, t);
+    } catch (e) { console.error(e); }
+    it.v = 5; await safe(store.put('items', it)); changed = true;
+  }
+  if (changed) renderAll();
+}
+/* ---------- init ---------- */
+const navIcons = { rack: 'hanger', closet: 'grid', outfits: 'layers', insights: 'pie' };
+$$('.nav [data-go]').forEach(b => { b.innerHTML = ic(navIcons[b.dataset.go], 25); });
+$('.nav .add').innerHTML = ic('plus', 28);
+applyTheme(getTheme());
+(async () => {
+  try { if (!window.indexedDB) throw new Error('no idb'); await openDB(); }
+  catch { useMem = true; setTimeout(() => toast("Storage isn't available here, so changes won't be kept after closing."), 600); }
+  try {
+    const [items, outfits, meta] = await Promise.all([store.all('items'), store.all('outfits'), store.all('meta')]);
+    S.items = items; S.outfits = outfits; sortItems(); sortOutfits();
+    const c = meta.find(m => m.id === 'categories'); S.cats = c ? c.list : DEFAULT_CATS(); if (!c) await saveCats();
+    const mt = meta.find(m => m.id === 'materials'); S.customMats = Array.isArray(mt?.list) ? mt.list.filter(x => typeof x === 'string') : [];
+  } catch (e) { console.error(e); S.cats = S.cats.length ? S.cats : DEFAULT_CATS(); }
+  renderAll(); go('rack'); migrate();
+})();
+})();
+</script>
+</body>
+</html>
