@@ -192,7 +192,7 @@ img{max-width:100%}
 .busy{position:absolute;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 65%,transparent);font-size:14.5px;color:var(--ink)}
 .zoom-reset{position:absolute;right:10px;top:10px;height:32px;padding:0 12px;border-radius:999px;background:var(--surface);font-size:13px;box-shadow:var(--shadow)}
 .hint{font-size:13.5px;color:var(--muted);text-align:center;margin:10px 8px 0;min-height:2.6em;max-width:420px}
-.tools{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin:10px 0 6px;background:var(--surface);border-radius:24px;padding:6px}
+.tools{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;margin:10px 0 6px;background:var(--surface);border-radius:24px;padding:6px}
 .tool{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 6px;border-radius:16px;font-size:11px;color:var(--muted);min-width:0}
 .hgr{position:absolute;color:var(--ink);pointer-events:none}
 .hgr svg{display:block;width:100%;height:auto;overflow:visible}
@@ -351,6 +351,9 @@ img{max-width:100%}
 .dthumb2.none{border:1.5px dashed var(--line);background:transparent}
 .dthumb2.on{box-shadow:inset 0 0 0 2.5px var(--ink);color:var(--ink)}
 .dress-nav .btn{flex:1}
+.layer .ghost{position:absolute;opacity:.3;pointer-events:none;z-index:1;filter:brightness(0)}
+.rack-flip{position:absolute;top:-6px;z-index:4;width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid var(--line);color:var(--ink);display:grid;place-items:center;box-shadow:0 6px 14px -8px rgba(0,0,0,.35)}
+.rack-flip.on{background:var(--ink);color:var(--mauve-ink);border-color:var(--ink)}
 #toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
@@ -433,7 +436,7 @@ const P = {
   upload:'<path d="M12 20V9M7.5 13.5 12 9l4.5 4.5M5 4h14"/>'
 };
 const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
-const HANG_SVG = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="2.6" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M53 11a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v4"/><path vector-effect="non-scaling-stroke" d="M60 25 12 45c-3 1.3-2.2 4.5 1 4.5h94c3.2 0 4-3.2 1-4.5Z"/></svg>';
+const HANG_SVG = '<svg viewBox="0 0 120 52" aria-hidden="true"><path d="M60 16.5V12.5c0-2.6 2.6-3.6 2.6-7.2a5.6 5.6 0 0 0-11.2-.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="51.4" cy="5.3" r="1.1" fill="currentColor"/><path fill="currentColor" fill-rule="evenodd" d="M58.2 15.2h3.6l.6 1.3c5.4.4 9.2 2.6 13 5.8 1.6 1.4 3.4 2.4 5.5 3L109 41.2c3.6 2 3.6 6.8-.6 6.8H11.6c-4.2 0-4.2-4.8-.6-6.8L39.1 25.3c2.1-.6 3.9-1.6 5.5-3 3.8-3.2 7.6-5.4 13-5.8ZM60 20.4c-4.2 0-7.6 1.9-10.9 4.6-2.4 2-4.9 3.3-7.6 4L15.6 43.6h88.8L78.5 29c-2.7-.7-5.2-2-7.6-4-3.3-2.7-6.7-4.6-10.9-4.6Z"/></svg>';
 const CLIP_SVG = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M53 9a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v6"/><path vector-effect="non-scaling-stroke" d="M7 25.5h106"/><path vector-effect="non-scaling-stroke" d="M14 25.5v4M106 25.5v4"/><rect x="9.5" y="29.5" width="9" height="16" rx="2" fill="currentColor" stroke="none"/><rect x="101.5" y="29.5" width="9" height="16" rx="2" fill="currentColor" stroke="none"/><path d="M11.5 36h5M103.5 36h5" stroke-width="1" style="stroke:var(--surface)" vector-effect="non-scaling-stroke"/></svg>';
 const HOOK_SVG = '<svg viewBox="0 0 40 60" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M14 9a6 6 0 1 1 6 6v25"/><path vector-effect="non-scaling-stroke" d="M20 40v7a7 7 0 0 1-14 0v-4"/></svg>';
 const HANGERS = { hanger: { svg: () => HANG_SVG, anchor: 0.905, front: false, ar: 52 / 120, ax: 0.5 }, clip: { svg: () => CLIP_SVG, anchor: 0.86, front: true, ar: 52 / 120, ax: 0.5 }, hook: { svg: () => HOOK_SVG, anchor: 0.88, front: true, ar: 1.5, ax: 0.33 } };
@@ -609,7 +612,7 @@ function renderRack() {
   let body;
   if (!total) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Your rack is empty</h2><p>Photograph a piece, frame it, and it'll hang here with the background removed.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add your first piece</button></div>`;
   else if (!items.length) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Nothing here yet</h2><p>No pieces in ${esc(catName(S.rackCat))} so far.</p><button class="btn primary" data-act="add">${ic('plus', 20)}Add a piece</button></div>`;
-  else { const [mw, mh] = rackDims(); const top = 32, aw = Math.min(mw + 44, 340), ar = aw / 2, ry = 26.5 + top, half = ry < ar ? Math.sqrt(ar * ar - (ar - ry) * (ar - ry)) : ar; body = `<div class="rack-stage" style="margin-top:${Math.round(top)}px"><div class="arch-win" style="top:${-Math.round(top)}px;width:${Math.round(aw)}px;height:${Math.round(mh + 70 + top)}px"><div class="rail-bar"></div></div><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map(it => `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangSideHTML(it, S.flip[it.id] ? 'back' : 'front', mw, mh)}</button>`).join('')}</div></div><div id="rack-tag"></div>`; }
+  else { const [mw, mh] = rackDims(); const top = 32, aw = Math.min(mw + 44, 340), ar = aw / 2, ry = 26.5 + top, half = ry < ar ? Math.sqrt(ar * ar - (ar - ry) * (ar - ry)) : ar; body = `<div class="rack-stage" style="margin-top:${Math.round(top)}px"><div class="arch-win" style="top:${-Math.round(top)}px;width:${Math.round(aw)}px;height:${Math.round(mh + 70 + top)}px"><div class="rail-bar"></div></div><button class="rack-flip" id="rack-flip" data-act="flip" hidden style="left:calc(50% + ${Math.round(aw / 2 - 58)}px)">${ic('flip', 18)}</button><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map(it => `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangSideHTML(it, S.flip[it.id] ? 'back' : 'front', mw, mh)}</button>`).join('')}</div></div><div id="rack-tag"></div>`; }
   v.innerHTML = `<header class="arc"><h1>My closet</h1><span class="count">${total} ${total === 1 ? 'piece' : 'pieces'}</span>${total ? chipRow(S.rackCat, 'rack') : ''}</header>${body}`;
   if (items.length) wireRail(items);
 }
@@ -637,9 +640,15 @@ function wireRail(items) {
   rail.addEventListener('keydown', e => { if (e.key === 'ArrowRight') { e.preventDefault(); centerOn(Math.min(S.rackIndex + 1, slides.length - 1), true); } if (e.key === 'ArrowLeft') { e.preventDefault(); centerOn(Math.max(S.rackIndex - 1, 0), true); } });
 }
 function metaTags(it) { return [...(it.seasons || []), ...(it.occasions || []), ...(it.materials || [])].map(t => `<span style="background:${tagLight(t)}">${esc(t)}</span>`).join(''); }
+function placeFlip(it) {
+  const b = $('#rack-flip'); if (!b) return;
+  if (!it?.back?.img) { b.hidden = true; return; }
+  b.hidden = false; b.dataset.id = it.id; b.setAttribute('aria-label', `Show the ${S.flip[it.id] ? 'front' : 'back'}`); b.classList.toggle('on', !!S.flip[it.id]);
+}
 function renderTag(it) {
+  placeFlip(it);
   const el = $('#rack-tag'); if (!el || !it) return; const tags = metaTags(it);
-  el.innerHTML = `<article class="tag"><span class="badge" style="background:${catLight(catOf(it))}">${esc(catsOf(it).map(catName).join(', '))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${it.color2 ? `<span class="dot" style="background:${esc(it.color2)};margin-left:-12px"></span>` : ''}${esc(itemName(it))}</h3>${it.brand || it.size ? `<p class="meta">${it.brand ? `<span>${esc(it.brand)}</span>` : ''}${it.size ? `<span class="size">Size ${esc(it.size)}</span>` : ''}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions">${it.back?.img ? `<button class="btn sm" data-act="flip" data-id="${it.id}" aria-label="Show the ${S.flip[it.id] ? 'front' : 'back'}">${ic('flip', 18)}${S.flip[it.id] ? 'Front' : 'Back'}</button>` : ''}<button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
+  el.innerHTML = `<article class="tag"><span class="badge" style="background:${catLight(catOf(it))}">${esc(catsOf(it).map(catName).join(', '))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${it.color2 ? `<span class="dot" style="background:${esc(it.color2)};margin-left:-12px"></span>` : ''}${esc(itemName(it))}</h3>${it.brand || it.size ? `<p class="meta">${it.brand ? `<span>${esc(it.brand)}</span>` : ''}${it.size ? `<span class="size">Size ${esc(it.size)}</span>` : ''}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions"><button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
 }
 
 function renderCloset() {
@@ -1020,7 +1029,15 @@ class Cutout {
   }
   gBox() { const { w, h } = this, m = this.mask; let x0 = w, y0 = h, x1 = -1, y1 = -1; for (let y = 0; y < h; y++) { const row = y * w; for (let x = 0; x < w; x++) if (m[row + x] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } } return x1 < 0 ? null : { x0, y0, x1, y1 }; }
   cropBox() { const b = this.gBox(); if (!b) return null; const { w, h } = this, pad = Math.round(Math.max(b.x1 - b.x0, b.y1 - b.y0) * 0.04), sx = Math.max(0, b.x0 - pad), sy = b.y0, ex = Math.min(w, b.x1 + 1 + pad), ey = Math.min(h, b.y1 + 1 + pad); return { sx, sy, sw: ex - sx, sh: ey - sy }; }
+  placeGhost() {
+    const el = $('.ghost', this.wrap); if (!el) return; const G = this.ghostRef, g = this.hg;
+    if (!G || !g || !this.src || !this.cut || this.htype === 'none') { el.hidden = true; return; }
+    const fw = g.w / Math.max(0.05, G.hang.w), fh = fw / G.aspect, left = g.cx - G.hang.cx * fw, top = g.ty - G.hang.ty * fh;
+    if (el.getAttribute('src') !== G.img) el.src = G.img;
+    el.style.left = (left / this.w * 100) + '%'; el.style.top = (top / this.h * 100) + '%'; el.style.width = (fw / this.w * 100) + '%'; el.style.height = (fh / this.h * 100) + '%'; el.hidden = false;
+  }
   placeHanger() {
+    this.placeGhost();
     const el = $('.hgr', this.wrap); if (!el) return; const g = this.hg, H = HANGERS[this.htype];
     if (!g || !H || this.tool !== 'hanger') { el.hidden = true; return; }
     if (el.dataset.type !== this.htype) { el.innerHTML = H.svg(); el.dataset.type = this.htype; }
@@ -1133,6 +1150,72 @@ class Cutout {
     }
     return removed;
   }
+  detectHanger() {
+    if (this.htype !== 'hanger' || !this.lowBin) return false;
+    const { lw, lh, w, h } = this, n = lw * lh, px = this.lowPx, fg = this.lowBin; let x0 = lw, y0 = lh, x1 = -1, y1 = -1;
+    for (let i = 0; i < n; i++) if (fg[i]) { const x = i % lw, y = (i / lw) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < 0) return false;
+    const gw = x1 - x0 + 1, gh = y1 - y0 + 1, rx0 = Math.max(0, Math.floor(x0 - gw * 0.15)), rx1 = Math.min(lw - 1, Math.ceil(x1 + gw * 0.15)), ry1 = Math.min(lh - 1, Math.ceil(y0 + gh * 0.32));
+    const D = new Uint8Array(n);
+    for (let y = 0; y <= ry1; y++) for (let x = rx0; x <= rx1; x++) { const i = y * lw + x, r = px[i * 4], g = px[i * 4 + 1], b = px[i * 4 + 2]; if (r * 0.299 + g * 0.587 + b * 0.114 < 72 && Math.max(r, g, b) - Math.min(r, g, b) < 45) D[i] = 1; }
+    const comp = new Int32Array(n), q = new Int32Array(n); let id = 0, best = null;
+    for (let i = 0; i < n; i++) {
+      if (!D[i] || comp[i]) continue; id++; let hd = 0, t = 0, cx0 = lw, cy0 = lh, cx1 = -1, cy1 = -1; q[t++] = i; comp[i] = id;
+      while (hd < t) { const p = q[hd++], x = p % lw, y = (p / lw) | 0; if (x < cx0) cx0 = x; if (x > cx1) cx1 = x; if (y < cy0) cy0 = y; if (y > cy1) cy1 = y;
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= lw || yy >= lh) continue; const o = yy * lw + xx; if (D[o] && !comp[o]) { comp[o] = id; q[t++] = o; } } }
+      const bw = cx1 - cx0 + 1, bh = cy1 - cy0 + 1;
+      if (bw >= gw * 0.3 && bw <= gw * 1.3 && bh < gh * 0.4 && t / (bw * bh) < 0.35 && (!best || bw > best.bw)) best = { id, bw, bh, cx0, cy0, cx1, cy1, n: t };
+    }
+    if (!best) return false;
+    const k = w / lw, kh = h / lh;
+    this.hg = { cx: (best.cx0 + best.cx1 + 1) / 2 * k, ty: (best.cy1 + 0.5) * kh, w: best.bw / 0.857 * k };
+    // the drawn hanger replaces the real one: take the real hanger out of the cut-out
+    const m = this.mask, er = this.er, rad = Math.ceil(k * 1.5);
+    for (let y = best.cy0; y <= best.cy1; y++) for (let x = best.cx0; x <= best.cx1; x++) { if (comp[y * lw + x] !== best.id) continue; const X0 = Math.max(0, Math.floor(x * k) - rad), X1 = Math.min(w - 1, Math.ceil((x + 1) * k) + rad), Y0 = Math.max(0, Math.floor(y * kh) - rad), Y1 = Math.min(h - 1, Math.ceil((y + 1) * kh) + rad); for (let yy = Y0; yy <= Y1; yy++) for (let xx = X0; xx <= X1; xx++) { const j = yy * w + xx, d = this.src.data, r = d[j * 4], g = d[j * 4 + 1], b = d[j * 4 + 2]; if (r * 0.299 + g * 0.587 + b * 0.114 < 95) { m[j] = 0; er[j] = 255; } } }
+    this.redraw(); this.placeHanger(); return true;
+  }
+  autoCut() {
+    const { lw, lh, w, h } = this, n = lw * lh, px = this.lowPx;
+    const lab = new Float32Array(n * 3), f = t => t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116, lin = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+    for (let i = 0; i < n; i++) { const r = lin(px[i * 4]), g = lin(px[i * 4 + 1]), b = lin(px[i * 4 + 2]); const X = f((r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047), Y = f(r * 0.2126 + g * 0.7152 + b * 0.0722), Z = f((r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883); lab[i * 3] = 116 * Y - 16; lab[i * 3 + 1] = 500 * (X - Y); lab[i * 3 + 2] = 200 * (Y - Z); }
+    const mg = Math.max(2, Math.round(Math.min(lw, lh) * 0.03)), smp = [];
+    for (let y = 0; y < lh; y += 2) for (let x = 0; x < lw; x += 2) if (x < mg || y < mg || x >= lw - mg || y >= lh - mg) smp.push(y * lw + x);
+    const dist = (i, c) => { const a = (lab[i * 3] - c[0]) * 0.55, b = lab[i * 3 + 1] - c[1], d = lab[i * 3 + 2] - c[2]; return Math.sqrt(a * a + b * b + d * d); };
+    let C = []; for (let k = 0; k < 6; k++) { const i = smp[Math.floor((k + 0.5) * smp.length / 6)]; C.push([lab[i * 3], lab[i * 3 + 1], lab[i * 3 + 2], 0]); }
+    for (let it = 0; it < 8; it++) { const sm = C.map(() => [0, 0, 0, 0]); for (const i of smp) { let bk = 0, bd = 1e9; C.forEach((c, k) => { const dd = dist(i, c); if (dd < bd) { bd = dd; bk = k; } }); const q = sm[bk]; q[0] += lab[i * 3]; q[1] += lab[i * 3 + 1]; q[2] += lab[i * 3 + 2]; q[3]++; } C = C.map((c, k) => sm[k][3] ? [sm[k][0] / sm[k][3], sm[k][1] / sm[k][3], sm[k][2] / sm[k][3], sm[k][3]] : c); }
+    C = C.filter(c => c[3] >= smp.length * 0.04);
+    let cand = new Uint8Array(n); for (let i = 0; i < n; i++) { let b = 1e9; for (const c of C) { const dd = dist(i, c); if (dd < b) b = dd; } cand[i] = b > 16 ? 1 : 0; }
+    cand = morph(morph(cand, lw, lh, 1), lw, lh, -3); // drop specks, then close small gaps
+    const comp = new Int32Array(n), q = new Int32Array(n); let id = 0, best = null;
+    for (let i = 0; i < n; i++) {
+      if (!cand[i] || comp[i]) continue; id++; let hd = 0, t = 0, x0 = lw, y0 = lh, x1 = -1, y1 = -1; q[t++] = i; comp[i] = id;
+      while (hd < t) { const p = q[hd++], x = p % lw, y = (p / lw) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; for (const o of [x > 0 ? p - 1 : -1, x < lw - 1 ? p + 1 : -1, p >= lw ? p - lw : -1, p < n - lw ? p + lw : -1]) if (o >= 0 && cand[o] && !comp[o]) { comp[o] = id; q[t++] = o; } }
+      if (!best || t > best.n) best = { n: t, x0, y0, x1, y1 };
+    }
+    const inset = f => ({ x0: w * f, y0: h * f, x1: w * (1 - f), y1: h * (1 - f) }), cands = [];
+    if (best && best.n >= n * 0.03) {
+      const px_ = (best.x1 - best.x0) * 0.06 + 3, py_ = (best.y1 - best.y0) * 0.05 + 3;
+      const F = { x0: Math.max(0, best.x0 - px_) * w / lw, y0: Math.max(0, best.y0 - py_) * h / lh, x1: Math.min(lw, best.x1 + 1 + px_) * w / lw, y1: Math.min(lh, best.y1 + 1 + py_) * h / lh };
+      if (!(F.x1 - F.x0 > w * 0.95 && F.y1 - F.y0 > h * 0.95)) cands.push(F);
+    }
+    cands.push(inset(0.1)); if (cands.length < 2) cands.push(inset(0.03));
+    // try each frame, keep the cut that sits most freely inside its frame (a piece surrounded by background)
+    let pick = null;
+    for (const F of cands) {
+      const L = new Uint8Array(n), fx0 = F.x0 * lw / w, fx1 = F.x1 * lw / w, fy0 = F.y0 * lh / h, fy1 = F.y1 * lh / h;
+      const eb = Math.max(3, Math.round(Math.min(lw, lh) * 0.02));
+      for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) { const inF = x >= fx0 && x < fx1 && y >= fy0 && y < fy1, edge = x < eb || y < eb || x >= lw - eb || y >= lh - eb; L[y * lw + x] = inF && !edge ? 3 : 0; }
+      grabCut(this.lowPx, lw, lh, L, 3);
+      let fgc = 0, band = 0, touch = 0; const b0x = Math.max(eb, Math.ceil(fx0)), b1x = Math.min(lw - eb, Math.floor(fx1)) - 1, b0y = Math.max(eb, Math.ceil(fy0)), b1y = Math.min(lh - eb, Math.floor(fy1)) - 1;
+      for (let y = b0y; y <= b1y; y++) for (let x = b0x; x <= b1x; x++) { const f = L[y * lw + x] & 1; fgc += f; if (x - b0x < 3 || b1x - x < 3 || y - b0y < 3 || b1y - y < 3) { band++; touch += f; } }
+      const frac = fgc / n, score = (band ? touch / band : 1) + (frac < 0.03 ? 2 : 0) + (frac > 0.85 ? 1 : 0);
+      if (!pick || score < pick.score) pick = { score, L, F, eb };
+    }
+    // nothing gets cropped off: outside the guessed area becomes 'probably background', so parts of the piece that stick out come back
+    { const L = pick.L, eb = pick.eb; for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) { const i = y * lw + x; if (L[i] === 0 && x >= eb && y >= eb && x < lw - eb && y < lh - eb) L[i] = 2; } }
+    this.push(); this.frame = pick.F; this.labels = pick.L; this.er.fill(0); this.rs.fill(0); this.runCut(2);
+    this.stack = []; this.onChange();
+  }
   cutFromFrame() {
     this.push(); const { lw, lh, w, h } = this, F = this.frame, L = new Uint8Array(lw * lh);
     const fx0 = F.x0 * lw / w, fx1 = F.x1 * lw / w, fy0 = F.y0 * lh / h, fy1 = F.y1 * lh / h;
@@ -1200,7 +1283,7 @@ class Cutout {
       if (this.ptrs.size > 2) return;
       if (this.tool === 'frame') { this.frameDown(e); return; }
       if (this.tool === 'hanger') { if (this.htype === 'none') return; if (!this.hg) this.autoHanger(); this.push(); const p = this.toImg(e); this.hdrag = { sx: p.x, sy: p.y, g0: { ...this.hg }, moved: false }; return; }
-      if ((this.tool === 'keep' || this.tool === 'remove') && !this.ensureLabels()) { toast('Frame the piece and tap Cut out first.'); return; }
+      if ((this.tool === 'keep' || this.tool === 'remove') && !this.ensureLabels()) { toast('Wait a moment for the cut-out to finish.'); return; }
       const p = this.toImg(e); this.push(); this.stroking = true; this.dirtyStroke = false; this.sb = null; this.last = p; this.dab(p.x, p.y, this.brushPx());
     });
     W.addEventListener('pointermove', e => {
@@ -1227,14 +1310,14 @@ class Cutout {
     W.addEventListener('pointerup', up); W.addEventListener('pointercancel', up);
     W.addEventListener('wheel', e => {
       if (!this.src) return; e.preventDefault(); const r = W.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
-      const s0 = this.z.s, s = clamp(s0 * Math.exp(-e.deltaY * 0.002), 1, 6), cx = (mx - this.z.x) / s0, cy = (my - this.z.y) / s0;
+      const s0 = this.z.s, s = clamp(s0 * Math.exp(-e.deltaY * 0.002), 1, 12), cx = (mx - this.z.x) / s0, cy = (my - this.z.y) / s0;
       this.z = { s, x: clamp(mx - cx * s, r.width - r.width * s, 0), y: clamp(my - cy * s, r.height - r.height * s, 0) }; this.applyZoom();
     }, { passive: false });
   }
   startPinch() { const [a, b] = [...this.ptrs.values()], r = this.wrap.getBoundingClientRect(); this.pinch0 = { ...this.z }; this.pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, mx0: (a.x + b.x) / 2 - r.left, my0: (a.y + b.y) / 2 - r.top, s0: this.z.s, x0: this.z.x, y0: this.z.y }; }
   updatePinch() {
     const P = this.pinch, [a, b] = [...this.ptrs.values()], r = this.wrap.getBoundingClientRect();
-    const mx = (a.x + b.x) / 2 - r.left, my = (a.y + b.y) / 2 - r.top, s = clamp(P.s0 * Math.hypot(a.x - b.x, a.y - b.y) / P.d0, 1, 6);
+    const mx = (a.x + b.x) / 2 - r.left, my = (a.y + b.y) / 2 - r.top, s = clamp(P.s0 * Math.hypot(a.x - b.x, a.y - b.y) / P.d0, 1, 12);
     const cx = (P.mx0 - P.x0) / P.s0, cy = (P.my0 - P.y0) / P.s0;
     this.z = { s, x: clamp(mx - cx * s, r.width - r.width * s, 0), y: clamp(my - cy * s, r.height - r.height * s, 0) }; this.applyZoom();
   }
@@ -1324,7 +1407,7 @@ const TOOL_HINT = {
   remove: 'Paint over leftover background, like the hanger or a door edge. Updates when you lift.',
   erase: 'Erases exactly where you paint. Pinch with two fingers to zoom.',
   restore: 'Paints back exactly where you paint. Removed areas show faintly.',
-  hangerBack: 'Put the hanger where the back hangs from. On the rack the back is resized to fit the front hanger exactly.',
+  hangerBack: 'The faint image is the front. Drag the hanger and use the size slider until the back lines up with it; then front and back match when you flip.',
   hanger: 'Pick a hanger, then drag it to where the piece hangs from: across the straps or shoulders, clips on the waistband, or a hook through a bag handle.'
 };
 async function openEditor({ item = null, file = null, pre = null, onSaved = null }) {
@@ -1341,7 +1424,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     <header class="sheet-head"><button class="btn ghost sm" data-e="cancel">Cancel</button><h2>${isNew ? 'New piece' : 'Edit piece'}</h2><button class="btn primary sm" data-e="save">Save</button></header>
     <div class="sheet-body">
       <div class="side-row"><div class="seg" role="group" aria-label="Side"><button data-side="front" aria-pressed="true">Front</button><button data-side="back" aria-pressed="false">Back</button></div><div class="side-acts"><button class="btn sm icon-only" data-e="rotate" aria-label="Rotate photo">${ic('rotate', 18)}</button><button class="btn sm" data-e="replace">${ic('photo', 18)}<span>Replace photo</span></button></div></div>
-      <div class="stage"><div class="canvas-wrap"><div class="layer"><div class="hgr" hidden>${HANG_SVG}</div><canvas class="img"></canvas><canvas class="ov"></canvas><div class="frame" hidden><i></i><i></i><i></i><i></i></div></div><div class="busy">Loading photo…</div><div class="side-empty" hidden><p>Add a photo of the back, so you can flip the piece around on the rack.</p><button class="btn primary sm" data-e="addback">${ic('camera', 18)}Add back photo</button></div><button class="zoom-reset" hidden>Fit</button><button class="fx-btn" data-e="fx" aria-label="Photo filters" aria-expanded="false">${ic('sliders', 20)}</button></div>
+      <div class="stage"><div class="canvas-wrap"><div class="layer"><div class="hgr" hidden>${HANG_SVG}</div><canvas class="img"></canvas><img class="ghost" alt="" hidden><canvas class="ov"></canvas><div class="frame" hidden><i></i><i></i><i></i><i></i></div></div><div class="busy">Loading photo…</div><div class="side-empty" hidden><p>Add a photo of the back, so you can flip the piece around on the rack.</p><button class="btn primary sm" data-e="addback">${ic('camera', 18)}Add back photo</button></div><button class="zoom-reset" hidden>Fit</button><button class="fx-btn" data-e="fx" aria-label="Photo filters" aria-expanded="false">${ic('sliders', 20)}</button></div>
         <div class="fx-panel" id="e-fx" hidden>
         <label class="check" style="margin:4px 2px 6px"><input type="checkbox" id="e-smooth" ${st.smooth ? 'checked' : ''}><span>Smooth out wrinkles a little</span></label>
         <label class="check" style="margin:10px 2px 6px"><input type="checkbox" id="e-pop" ${st.pop ? 'checked' : ''}><span>Make colors pop (auto)</span></label>
@@ -1350,7 +1433,6 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       </div>
         <p class="hint" id="e-hint"></p><button class="btn primary" id="e-cut" hidden>${ic('sparkle', 20)}Cut out</button></div>
       <div class="tools" role="toolbar" aria-label="Cut-out tools">
-        <button class="tool" data-tool="frame">${ic('frame')}Frame</button>
         <button class="tool" data-tool="keep">${ic('plusc')}Keep</button>
         <button class="tool" data-tool="remove">${ic('minusc')}Remove</button>
         <button class="tool" data-tool="erase">${ic('eraser')}Erase</button>
@@ -1403,18 +1485,24 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     if (t === 'hanger' && ed.htype === 'none') $('#e-slider-row', el).hidden = true;
     if (t === 'hanger') { if (!ed.hg) ed.autoHanger(); const b = ed.gBox(); $('#e-slabel', el).textContent = ed.htype === 'hook' ? 'Hook size' : 'Hanger size'; slider.min = ed.htype === 'hook' ? 6 : 15; slider.max = ed.htype === 'hook' ? 40 : 140; slider.value = b && ed.hg ? Math.round(ed.hg.w / (b.x1 - b.x0 + 1) * 100) : 80; }
     else { $('#e-slabel', el).textContent = 'Brush size'; slider.min = 6; slider.max = 70; slider.value = ed.brush; }
-    cutBtn.hidden = t !== 'frame' || !sideHas(); cutBtn.textContent = ''; cutBtn.insertAdjacentHTML('beforeend', `${ic('sparkle', 20)}${ed.cut && ed.labels ? 'Cut out again' : 'Cut out'}`);
+    cutBtn.hidden = true;
     hint.textContent = sideHas() ? (t === 'hanger' && st.side === 'back' ? TOOL_HINT.hangerBack : TOOL_HINT[t]) : ''; ed.placeFrame(); ed.placeHanger(); ed.redraw();
   };
   const showSide = () => {
     $$('[data-side]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.side === st.side));
     empty.hidden = sideHas(); $('.fx-btn', el).hidden = !sideHas(); if (!sideHas()) $('#e-fx', el).hidden = true; $('.tools', el).style.opacity = sideHas() ? '' : '.4'; $('[data-e="replace"] span', el).textContent = sideHas() ? 'Replace photo' : 'Add photo';
     let rb = $('[data-e="rmback"]', el); if (st.side === 'back' && sideHas()) { if (!rb) $('.side-acts', el).insertAdjacentHTML('beforeend', `<button class="btn sm danger" data-e="rmback" aria-label="Remove back photo">${ic('trash', 18)}</button>`); } else if (rb) rb.remove();
-    setTool(sideHas() ? (ed.cut ? (ed.tool === 'frame' ? 'remove' : ed.tool) : 'frame') : 'frame');
+    setTool(ed.tool === 'frame' ? 'remove' : ed.tool);
   };
   const work = async (msg, fn) => { busy.textContent = msg; busy.hidden = false; await new Promise(r => setTimeout(r, 60)); try { fn(); } catch (e) { console.error(e); toast("Couldn't process that photo."); } busy.hidden = true; };
   const detectColor = () => { if (!st.colorTouched && st.side === 'front') { const c = ed.dominant(); if (c) { $('#f-color', el).value = c; $('#f-color-note', el).textContent = 'Detected from the photo'; } } };
-  const loadPhoto = async f => { busy.textContent = 'Loading photo…'; busy.hidden = false; try { const im = await loadImage(await fileToDataURL(f)); ed.setSource(im); ed.htype = ed.htype || 'hanger'; showSide(); setTool('frame'); } catch (e) { console.error(e); toast("Couldn't open that photo. Try a JPEG or PNG."); } busy.hidden = true; };
+  const autoCut = async () => {
+    let foundHanger = false; await work('Cutting out…', () => { ed.autoCut(); foundHanger = ed.detectHanger(); if (!foundHanger) ed.autoHanger(); });
+    showSide(); setTool('remove');
+    hint.textContent = ed.fgFraction() < 0.01 ? "Couldn't find the piece. Try a photo with a bit more contrast." : (foundHanger ? 'Done, and I put the hanger where yours was. ' : 'Done. ') + 'Leftover background? Paint it with Remove. A missing strap? Paint it with Keep. Pinch to zoom in for detail.';
+    detectColor();
+  };
+  const loadPhoto = async f => { busy.textContent = 'Loading photo…'; busy.hidden = false; try { const im = await loadImage(await fileToDataURL(f)); ed.setSource(im); ed.htype = ed.htype || 'hanger'; busy.hidden = true; await autoCut(); } catch (e) { console.error(e); toast("Couldn't open that photo. Try a JPEG or PNG."); } busy.hidden = true; };
   cutBtn.addEventListener('click', async () => {
     await work('Cutting out…', () => { ed.cutFromFrame(); ed.autoHanger(); });
     const f = ed.fgFraction(); setTool('remove');
@@ -1437,7 +1525,12 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   let adjRaf = 0;
   $$('[data-adj]', el).forEach(inp => inp.addEventListener('input', () => { st.adj[inp.dataset.adj] = +inp.value; cancelAnimationFrame(adjRaf); adjRaf = requestAnimationFrame(() => ed.setAdj(st.adj)); }));
   ed.htype = item ? hangerType(item) : defaultHanger({ cat: st.cat }); ed.smooth = st.smooth; ed.pop = st.pop; ed.adj = { ...st.adj };
-  const switchSide = side => { if (side === st.side) return; st.states[st.side] = ed.getState(); st.side = side; ed.setState(st.states[side]); showSide(); };
+  const frontGuide = () => { // a faint copy of the front, placed by the back hanger, so the back can be matched in size and position
+    let fr = null; try { if (st.side === 'front') { if (ed.src && ed.cut) fr = ed.result(); } else if (st.states.front) { const cur = ed.getState(); ed.setState(st.states.front); fr = ed.cut ? ed.result() : null; ed.setState(cur); } } catch {}
+    if (!fr && item?.img && item.hang?.cx != null) fr = { img: item.img, hang: item.hang, aspect: item.aspect };
+    return fr && fr.hang && fr.hang.cx != null ? { img: fr.img, hang: fr.hang, aspect: fr.aspect || 0.8 } : null;
+  };
+  const switchSide = side => { if (side === st.side) return; const guide = side === 'back' ? frontGuide() : null; st.states[st.side] = ed.getState(); st.side = side; ed.ghostRef = guide; ed.setState(st.states[side]); ed.placeGhost(); showSide(); };
   const resultOf = side => { if (side === st.side) return ed.src ? (ed.cut ? ed.result() : 'uncut') : null; const S0 = st.states[side]; if (!S0) return null; const cur = ed.getState(); ed.setState(S0); const r = ed.cut ? ed.result() : 'uncut'; ed.setState(cur); return r; };
   pasteTarget = f => { if (!ed.src) loadPhoto(f); else toast('Use Replace photo to swap this photo.'); };
   const close = () => { pasteTarget = null; closeSheet(el); };
@@ -1445,11 +1538,11 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   el.addEventListener('click', async e => {
     const t = e.target.closest('button'); if (!t) return;
     if (t.dataset.side) { switchSide(t.dataset.side); return; }
-    if (t.dataset.tool) { if (!ed.src) return; if (t.dataset.tool !== 'frame' && !ed.cut) { toast('Frame the piece and tap Cut out first.'); return; } setTool(t.dataset.tool); return; }
-    if (t.dataset.cmd === 'undo') { ed.undo(); if (!ed.cut && ed.tool !== 'frame') setTool('frame'); else setTool(ed.tool); return; }
+    if (t.dataset.tool) { if (!ed.src) return; if (!ed.cut) return; setTool(t.dataset.tool); return; }
+    if (t.dataset.cmd === 'undo') { ed.undo(); setTool(ed.tool === 'frame' ? 'remove' : ed.tool); return; }
     if (t.dataset.e === 'fx') { const pnl = $('#e-fx', el); pnl.hidden = !pnl.hidden; t.setAttribute('aria-expanded', !pnl.hidden); t.classList.toggle('on', !pnl.hidden); return; }
     if (t.dataset.e === 'adjreset') { st.adj = { b: 0, s: 0, w: 0, c: 0 }; $$('[data-adj]', el).forEach(i => { i.value = 0; }); ed.setAdj(st.adj); return; }
-    if (t.dataset.e === 'rotate') { if (!ed.src) return; await work('Rotating…', () => ed.rotate()); setTool(ed.cut ? (ed.tool === 'frame' ? 'remove' : ed.tool) : 'frame'); return; }
+    if (t.dataset.e === 'rotate') { if (!ed.src) return; await work('Rotating…', () => ed.rotate()); setTool(ed.tool === 'frame' ? 'remove' : ed.tool); return; }
     if (t.dataset.e === 'replace' || t.dataset.e === 'addback') { const f = await choosePhoto(st.side === 'back' ? 'Photo of the back' : (ed.src ? 'Replace photo' : 'Add a photo')); if (f) loadPhoto(f); return; }
     if (t.dataset.e === 'rmback') { if (!(await confirmDanger('Remove the back photo?', 'The front stays as it is.', 'Remove'))) return; ed.clear(); st.states.back = null; showSide(); return; }
     if (t.dataset.pickc) {
@@ -1500,8 +1593,8 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       let front, back; try { front = resultOf('front'); back = resultOf('back'); } catch (err) { console.error(err); }
       busy.hidden = true; t.disabled = false;
       if (!front) { if (st.side !== 'front') switchSide('front'); toast('Add a photo of the front first.'); return; }
-      if (front === 'uncut') { if (st.side !== 'front') switchSide('front'); toast('Frame the front and tap Cut out first.'); return; }
-      if (back === 'uncut') { if (st.side !== 'back') switchSide('back'); toast('Cut out the back too, or remove it.'); return; }
+      if (front === 'uncut') { if (st.side !== 'front') switchSide('front'); toast('Wait a moment for the cut-out to finish.'); return; }
+      if (back === 'uncut') { if (st.side !== 'back') switchSide('back'); toast('Wait a moment for the back to finish cutting out.'); return; }
       const now = Date.now();
       const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: front.img, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 6, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.pop, adj: { ...st.adj }, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
         back: back ? { img: back.img, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang } : null };
@@ -1516,7 +1609,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
 
   const mapHang = (cb, g) => (cb && g && g.cx != null && (g.type || 'hanger') === ed.htype) ? { cx: cb.sx + g.cx * cb.sw, ty: cb.sy + g.ty * cb.sh, w: g.w * cb.sw } : null;
   try {
-    if (file) { const im = await loadImage(await fileToDataURL(file)); ed.setSource(im); busy.hidden = true; showSide(); setTool('frame'); }
+    if (file) { const im = await loadImage(await fileToDataURL(file)); ed.setSource(im); busy.hidden = true; await autoCut(); }
     else {
       if (item.back?.img) { // prepare the back first, then the front
         if (item.back.orig && item.back.mask) { const [o, m] = await Promise.all([loadImage(item.back.orig), loadImage(item.back.mask)]); ed.setSource(o, m); } else ed.setSource(await loadImage(item.back.img), null, true);
@@ -1607,7 +1700,8 @@ const DRESS_RE = /dress|jurk|jumpsuit/i;
 const itemText = it => [it.name, ...catsOf(it).map(catName)].join(' ');
 const isDress = it => !!it && DRESS_RE.test(itemText(it));
 function dressPools() {
-  const pools = DRESS_STAGES.map(st => S.items.filter(it => st.re.test(itemText(it)) && !(st.key === 'shirt' && DRESS_STAGES[1].re.test(catsOf(it).map(catName).join(' ')) && !/t-?shirt|tee|top/i.test(itemText(it)))));
+  const layer = it => DRESS_STAGES[1].re.test(itemText(it)) && !/\bt-?shirt|\btee\b|blouse|\btank\b|\bpolo\b/i.test(it.name || '');
+  const pools = DRESS_STAGES.map(st => S.items.filter(it => st.re.test(itemText(it)) && !(st.key === 'shirt' && layer(it))));
   const used = new Set(pools.flat().map(i => i.id)); S.items.forEach(it => { if (!used.has(it.id)) pools[0].push(it); });
   // simple black t-shirt first
   const blackTee = it => /t-?shirt|tee/i.test(itemText(it)) && colorFamily(it.color) === 'Black';
