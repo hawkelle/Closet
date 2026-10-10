@@ -354,6 +354,8 @@ img{max-width:100%}
 .layer .ghost{position:absolute;opacity:.3;pointer-events:none;z-index:1;filter:brightness(0)}
 .rack-flip{position:absolute;top:-6px;z-index:4;width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid var(--line);color:var(--ink);display:grid;place-items:center;box-shadow:0 6px 14px -8px rgba(0,0,0,.35)}
 .rack-flip.on{background:var(--ink);color:var(--mauve-ink);border-color:var(--ink)}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.sw{width:30px;height:30px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
 #toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
@@ -1031,7 +1033,7 @@ class Cutout {
   cropBox() { const b = this.gBox(); if (!b) return null; const { w, h } = this, pad = Math.round(Math.max(b.x1 - b.x0, b.y1 - b.y0) * 0.04), sx = Math.max(0, b.x0 - pad), sy = b.y0, ex = Math.min(w, b.x1 + 1 + pad), ey = Math.min(h, b.y1 + 1 + pad); return { sx, sy, sw: ex - sx, sh: ey - sy }; }
   placeGhost() {
     const el = $('.ghost', this.wrap); if (!el) return; const G = this.ghostRef, g = this.hg;
-    if (!G || !g || !this.src || !this.cut || this.htype === 'none') { el.hidden = true; return; }
+    if (!G || !g || !this.src || !this.cut || this.htype === 'none' || this.tool !== 'hanger') { el.hidden = true; return; }
     const fw = g.w / Math.max(0.05, G.hang.w), fh = fw / G.aspect, left = g.cx - G.hang.cx * fw, top = g.ty - G.hang.ty * fh;
     if (el.getAttribute('src') !== G.img) el.src = G.img;
     el.style.left = (left / this.w * 100) + '%'; el.style.top = (top / this.h * 100) + '%'; el.style.width = (fw / this.w * 100) + '%'; el.style.height = (fh / this.h * 100) + '%'; el.hidden = false;
@@ -1269,6 +1271,7 @@ class Cutout {
     const W = this.wrap;
     W.addEventListener('pointerdown', e => {
       if (!this.src || e.target.closest('button')) return; e.preventDefault();
+      if (e.isPrimary || this.ptrs.size >= 2) { this.ptrs.clear(); this.pinch = null; this.tap2 = null; if (this.stroking) { this.stroking = false; if (this.dirtyStroke) { this.dirtyStroke = false; this.onStroke(); } } this.hdrag = null; this.fdrag = null; }
       try { W.setPointerCapture(e.pointerId); } catch {}
       this.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (this.onPick && this.ptrs.size === 1) { this.picking = true; this.showLoupe(e); return; }
@@ -1307,7 +1310,8 @@ class Cutout {
         if (this.stroking) { this.stroking = false; if (this.dirtyStroke) { this.dirtyStroke = false; this.onStroke(); } }
       }
     };
-    W.addEventListener('pointerup', up); W.addEventListener('pointercancel', up);
+    W.addEventListener('pointerup', up); W.addEventListener('pointercancel', up); W.addEventListener('lostpointercapture', up);
+    W.addEventListener('touchend', e => { if (!e.touches.length && this.ptrs.size) { this.ptrs.clear(); this.pinch = null; } }, { passive: true });
     W.addEventListener('wheel', e => {
       if (!this.src) return; e.preventDefault(); const r = W.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
       const s0 = this.z.s, s = clamp(s0 * Math.exp(-e.deltaY * 0.002), 1, 12), cx = (mx - this.z.x) / s0, cy = (my - this.z.y) / s0;
@@ -1427,6 +1431,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       <div class="stage"><div class="canvas-wrap"><div class="layer"><div class="hgr" hidden>${HANG_SVG}</div><canvas class="img"></canvas><img class="ghost" alt="" hidden><canvas class="ov"></canvas><div class="frame" hidden><i></i><i></i><i></i><i></i></div></div><div class="busy">Loading photo…</div><div class="side-empty" hidden><p>Add a photo of the back, so you can flip the piece around on the rack.</p><button class="btn primary sm" data-e="addback">${ic('camera', 18)}Add back photo</button></div><button class="zoom-reset" hidden>Fit</button><button class="fx-btn" data-e="fx" aria-label="Photo filters" aria-expanded="false">${ic('sliders', 20)}</button></div>
         <div class="fx-panel" id="e-fx" hidden>
         <label class="check" style="margin:4px 2px 6px"><input type="checkbox" id="e-smooth" ${st.smooth ? 'checked' : ''}><span>Smooth out wrinkles a little</span></label>
+        <p class="muted" style="font-size:12px;margin:0 2px 6px">These apply to the front and the back.</p>
         <label class="check" style="margin:10px 2px 6px"><input type="checkbox" id="e-pop" ${st.pop ? 'checked' : ''}><span>Make colors pop (auto)</span></label>
         ${[['b', 'Darker', 'Brighter'], ['s', 'Muted', 'Vivid'], ['w', 'Cooler', 'Warmer'], ['c', 'Softer', 'Crisper']].map(([k, lo, hi]) => `<label class="slider adj"><span>${lo}</span><input type="range" min="-50" max="50" step="1" value="${st.adj[k] | 0}" data-adj="${k}" aria-label="${lo} to ${hi}"><span>${hi}</span></label>`).join('')}
         <button class="btn sm ghost" data-e="adjreset" style="margin:2px 0 0">Reset colors</button>
@@ -1447,7 +1452,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       <div class="form">
         <label class="field"><span>Name</span><input type="text" id="f-name" placeholder="Long fine-knit cardigan" value="${esc(v0.name || '')}"></label>
         <div class="field"><span>Categories <span style="opacity:.7">(pick one or more, the first is the main one)</span></span><div class="chips wrap" id="f-cats"></div></div>
-        <div class="field"><span>Color</span><div class="color-row"><input type="color" id="f-color" value="${esc(v0.color || '#c9b49b')}" aria-label="Main color"><button class="chip" data-pickc="1">${ic('drop', 16)}Pick from photo</button><span class="muted" id="f-color-note"></span></div></div>
+        <div class="field"><span>Color</span><div class="color-row"><input type="color" id="f-color" value="${esc(v0.color || '#c9b49b')}" aria-label="Main color"><button class="chip" data-pickc="1">${ic('drop', 16)}Pick from photo</button><span class="muted" id="f-color-note"></span></div><div class="swatches" data-sw="1"></div></div>
         <div class="field" id="f-color2-field"></div>
         <div class="field"><span>Material</span><div class="chips wrap" id="f-mat"></div></div>
         <div class="field"><span>How you got it</span><div class="chips wrap" id="f-src"><button class="chip" data-src="new" aria-pressed="${st.second === false}">New</button><button class="chip" data-src="second" aria-pressed="${st.second === true}">Secondhand</button><button class="chip" data-src="gift" aria-pressed="${st.second === 'gift'}">${ic('gift', 16)}Gift</button></div></div>
@@ -1469,13 +1474,15 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     $('#f-mat', el).innerHTML = list.map(m => `<button class="chip" data-mat="${esc(m)}" aria-pressed="${st.mats.has(m)}">${esc(m)}</button>`).join('') + `<button class="chip" data-newmat>${ic('plus', 16)}Add material</button>`;
   };
   const renderColor2 = () => {
-    $('#f-color2-field', el).innerHTML = st.color2 ? `<span>Second color</span><div class="color-row"><input type="color" id="f-color2" value="${esc(st.color2)}" aria-label="Second color"><button class="chip" data-pickc="2">${ic('drop', 16)}Pick from photo</button><button class="chip" data-c2="remove">${ic('x', 15)}Remove</button></div>` : `<div><button class="chip" data-c2="add">${ic('plus', 16)}Add a second color</button></div>`;
+    $('#f-color2-field', el).innerHTML = st.color2 ? `<span>Second color</span><div class="color-row"><input type="color" id="f-color2" value="${esc(st.color2)}" aria-label="Second color"><button class="chip" data-pickc="2">${ic('drop', 16)}Pick from photo</button><button class="chip" data-c2="remove">${ic('x', 15)}Remove</button></div><div class="swatches" data-sw="2"></div>` : `<div><button class="chip" data-c2="add">${ic('plus', 16)}Add a second color</button></div>`;
     const i2 = $('#f-color2', el); if (i2) i2.addEventListener('input', () => { st.color2 = i2.value; });
+    renderSwatches();
   };
+  const renderSwatches = () => { $$('.swatches', el).forEach(box => { box.innerHTML = favColors().map(c => `<button class="sw" data-swc="${c.hex}" data-which="${box.dataset.sw}" style="background:${c.hex}" aria-label="${c.name}" title="${c.name}"></button>`).join(''); }); };
   const renderDetails = () => {
     $('#f-details', el).innerHTML = st.details.map((d, i) => `<div class="dthumb"><img src="${d}" alt="Detail photo ${i + 1}"><button class="dx" data-ddel="${i}" aria-label="Remove detail photo ${i + 1}">${ic('x', 14)}</button><button class="dx dr" data-drot="${i}" aria-label="Rotate detail photo ${i + 1}">${ic('rotate', 13)}</button></div>`).join('') + `<button class="dadd" data-dadd aria-label="Add detail photo">${ic('plus', 22)}<span>Add</span></button>`;
   };
-  renderCats(); renderMats(); renderColor2(); renderDetails();
+  renderCats(); renderMats(); renderColor2(); renderDetails(); renderSwatches();
   const sideHas = () => !!ed.src;
   const setTool = t => {
     ed.tool = t; $$('[data-tool]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.tool === t));
@@ -1551,6 +1558,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       ed.onPick = c => { hint.textContent = prev; if (which === '1') { $('#f-color', el).value = c; st.colorTouched = true; $('#f-color-note', el).textContent = 'Picked from the photo'; } else { st.color2 = c; renderColor2(); } toast('Color picked'); };
       return;
     }
+    if (t.dataset.swc) { if (t.dataset.which === '2') { st.color2 = t.dataset.swc; renderColor2(); } else { $('#f-color', el).value = t.dataset.swc; st.colorTouched = true; $('#f-color-note', el).textContent = ''; } return; }
     if (t.dataset.c2 === 'add') { st.color2 = '#e8d8c8'; renderColor2(); return; }
     if (t.dataset.c2 === 'remove') { st.color2 = ''; renderColor2(); return; }
     if (t.hasAttribute('data-dadd')) { const f = await choosePhoto('Add a detail photo', 'A close-up of the print, a label, buttons, the lining…'); if (f) { try { st.details.push(await compressPhoto(f)); renderDetails(); } catch { toast("Couldn't open that photo."); } } return; }
@@ -1957,6 +1965,15 @@ function donutCard(id, title, entries, { ramp, colors, note = 'pieces', scope = 
   return `<section class="panel chart open" data-chart="${id}" aria-expanded="true"><div class="chart-head"><h2>${esc(title)}</h2><button class="icon-btn" data-chart-close aria-label="Close ${esc(title)}">${ic('x', 20)}</button></div><div class="chart-body">${donutSVG(entries, total, note)}<p class="muted chart-note">Tap a name to see those pieces in your closet, or a photo to open it.</p></div><ul class="legend">${rows}</ul></section>`;
 }
 const priceNum = p => { const m = String(p || '').replace(/\s/g, '').match(/\d+(?:[.,]\d{1,2})?/); return m ? parseFloat(m[0].replace(',', '.')) : NaN; };
+function favColors() { // black and white first, then the colours you use most
+  const fam = new Map();
+  S.items.forEach(i => [i.color, i.color2].forEach(c => { const f = colorFamily(c); if (!f) return; if (!fam.has(f)) fam.set(f, []); fam.get(f).push(c); }));
+  const avg = list => { const s = [0, 0, 0]; list.forEach(x => { s[0] += parseInt(x.slice(1, 3), 16); s[1] += parseInt(x.slice(3, 5), 16); s[2] += parseInt(x.slice(5, 7), 16); }); return hex(s[0] / list.length, s[1] / list.length, s[2] / list.length); };
+  const out = [{ name: 'Black', hex: '#141414' }, { name: 'White', hex: '#F7F6F2' }];
+  [...fam.entries()].filter(([f]) => f !== 'Black' && f !== 'White').sort((a, b) => b[1].length - a[1].length).slice(0, 7).forEach(([f, list]) => out.push({ name: f, hex: avg(list) }));
+  [['Gray', '#8E8E8E'], ['Navy', '#1F2A44'], ['Beige', '#D8C6A8'], ['Brown', '#6E4B34'], ['Red', '#B3262E'], ['Green', '#4F6B47']].forEach(([n, h]) => { if (out.length < 9 && !out.some(o => colorFamily(o.hex) === colorFamily(h))) out.push({ name: n, hex: h }); });
+  return out;
+}
 function renderInsights() {
   const v = $('#view-insights'); if (!v) return; const n = S.items.length;
   const head = `<div class="page-head"><h1>Insights</h1><button class="btn sm" data-go="settings">${ic('sliders', 18)}Settings</button></div>`;
