@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Closet</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -42,12 +42,13 @@
   --shadow:0 12px 30px -20px rgba(0,0,0,.7); color-scheme:dark;
 }
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);touch-action:manipulation;-webkit-text-size-adjust:100%}
 *,*::before,*::after{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{background-color:var(--bg);background-image:var(--pattern);background-size:160px 240px;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow:hidden;-webkit-tap-highlight-color:transparent}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;background-color:var(--bg);background-image:var(--pattern);background-size:160px 240px;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;overflow:hidden;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
-input,textarea{font:inherit;color:inherit}
+input,textarea{font:inherit;color:inherit;-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+img,canvas,svg{-webkit-user-drag:none;-webkit-touch-callout:none}
 img{max-width:100%}
 :focus-visible{outline:2px solid var(--mauve);outline-offset:2px}
 [hidden]{display:none!important}
@@ -55,14 +56,14 @@ img{max-width:100%}
 
 #app{height:100%;max-width:760px;margin:0 auto;position:relative}
 #views{position:absolute;inset:0}
-.view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:120px;-webkit-overflow-scrolling:touch}
+.view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding-bottom:96px;-webkit-overflow-scrolling:touch}
 
 /* nav */
-.nav{position:absolute;left:14px;right:14px;bottom:10px;height:70px;background:var(--surface);border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:5}
-.nav button{width:50px;height:50px;border-radius:18px;display:grid;place-items:center;color:var(--muted);position:relative}
+.nav{position:absolute;left:18px;right:18px;bottom:4px;height:56px;background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-around;padding:0 6px;z-index:5}
+.nav button{width:44px;height:44px;border-radius:16px;display:grid;place-items:center;color:var(--muted);position:relative}
 .nav button.active{color:var(--mauve)}
 .nav button.active::after{content:"";position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:var(--mauve)}
-.nav .add{width:58px;height:68px;border-radius:29px 29px 16px 16px;background:var(--mauve);color:var(--mauve-ink);transform:translateY(-22px);border:4px solid var(--bg);box-shadow:0 12px 22px -12px rgba(0,0,0,.45)}
+.nav .add{width:50px;height:58px;border-radius:25px 25px 14px 14px;background:var(--mauve);color:var(--mauve-ink);transform:translateY(-14px);border:4px solid var(--bg);box-shadow:0 12px 22px -12px rgba(0,0,0,.45)}
 
 /* buttons, chips */
 .btn{height:46px;padding:0 20px;border-radius:999px;background:var(--surface-2);font-weight:500;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
@@ -81,37 +82,39 @@ img{max-width:100%}
 .chips.wrap{flex-wrap:wrap;overflow:visible;padding:0}
 
 /* rack */
-.arc{position:relative;padding:26px 0 8px;color:var(--ink);text-align:center}
-.arc h1{font-family:var(--serif);font-weight:400;font-size:30px;letter-spacing:.05em;text-transform:uppercase;line-height:1;margin:0}
-.arc .count{font-size:13px;color:var(--muted);margin-top:6px;display:block}
-.arc .chips{justify-content:safe center;padding-top:14px}
-.rack-stage{position:relative;margin-top:8px}
-.arch-win{position:absolute;left:50%;top:0;transform:translateX(-50%);background:var(--surface-2);border-radius:999px 999px 22px 22px;pointer-events:none}
+.arc{position:relative;padding:14px 0 2px;color:var(--ink);text-align:center}
+.arc h1{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:.05em;text-transform:uppercase;line-height:1;margin:0}
+.arc .count{font-size:12px;color:var(--muted);margin-top:3px;display:block}
+.arc .chips{justify-content:safe center;padding-top:8px;padding-bottom:6px}
+.rack-stage{position:relative;margin-top:30px}
+.arch-win{position:absolute;left:50%;top:-30px;transform:translateX(-50%);background:var(--surface-2);border-radius:999px 999px 22px 22px;pointer-events:none}
 .rail{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 19%;margin-top:0;scrollbar-width:none;outline:none}
 .rail::-webkit-scrollbar{display:none}
-.slide{flex:0 0 100%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;transform-origin:50% 36px;padding-top:30px}
-.rail-bar{position:absolute;left:12px;right:12px;top:35px;height:3px;border-radius:3px;background:var(--ink);pointer-events:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;transform-origin:50% 64px;padding-top:58px}
+.rail-bar{position:absolute;left:50%;transform:translateX(-50%);top:63px;height:3px;border-radius:3px;background:var(--ink);pointer-events:none}
 .rail-bar::before,.rail-bar::after{content:"";position:absolute;top:-3.5px;width:10px;height:10px;border-radius:50%;background:var(--ink)}
 .rail-bar::before{left:-4px}.rail-bar::after{right:-4px}
-.swing{animation:swing 5.8s ease-in-out infinite alternate}
-@keyframes swing{from{transform:rotate(-1.3deg)}to{transform:rotate(1.3deg)}}
+.swing{}
+@keyframes swing{0%,100%{transform:rotate(-.9deg) translateZ(0)}50%{transform:rotate(.9deg) translateZ(0)}}
 .slide.flipping .hang{animation:flipin .45s ease}
 @keyframes flipin{from{transform:perspective(600px) rotateY(80deg);opacity:.3}to{transform:perspective(600px) rotateY(0);opacity:1}}
 .hang{position:relative;margin:0 auto;flex:none}
 .hang .hk{position:absolute;top:0;color:var(--ink);z-index:0;display:block}
 .hang .hk svg{display:block;width:100%;height:auto;overflow:visible}
 .hang img{position:absolute;left:0;z-index:1;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
-.tag{margin:14px auto 0;width:min(80%,360px);background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:24px 20px 18px;text-align:center;position:relative;box-shadow:var(--shadow);animation:tagin .25s ease}
+.tag{margin:-12px auto 0;z-index:2;width:min(84%,360px);background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:20px 18px 14px;text-align:center;position:relative;box-shadow:var(--shadow);animation:tagin .25s ease}
 @keyframes tagin{from{opacity:.4;transform:translateY(4px)}}
 .tag .badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--surface-2);color:#141414;font-size:12.5px;padding:4px 13px;border-radius:999px;font-weight:500;white-space:nowrap}
-.tag h3{font-weight:500;font-size:19px;margin:0;display:flex;align-items:center;justify-content:center;gap:8px}
+.tag h3{font-weight:500;font-size:18px;margin:0;display:flex;align-items:center;justify-content:center;gap:8px}
 .dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
-.tag .brand{margin:2px 0 0;color:var(--muted);font-size:14px}
+.tag .meta{margin:3px 0 0;display:flex;justify-content:center;align-items:baseline;gap:10px;font-size:14px;color:var(--muted)}
+.tag .meta .size{padding:1px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink);font-size:12.5px}
+.tag .meta strong{color:var(--ink);font-weight:600;font-size:16px}
 .tag .price{margin:4px 0 0;color:var(--teal);font-weight:600;font-size:21px}
-.mini-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:10px}
+.mini-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:8px}
 .mini-tags span{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--teal-soft);color:#141414}
-.tag-actions{display:flex;gap:8px;justify-content:center;margin-top:16px}
-.rail-pos{text-align:center;font-size:12.5px;color:var(--muted);margin:12px 0 0}
+.tag-actions{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.rail-pos{text-align:center;font-size:12px;color:var(--muted);margin:8px 0 0}
 
 /* empty */
 .empty{text-align:center;padding:36px 28px 0;max-width:360px;margin:0 auto}
@@ -280,7 +283,7 @@ img{max-width:100%}
 .slice-items button{flex:none;width:46px;height:56px;border-radius:12px;background:var(--bg);padding:5px;display:grid;place-items:center}
 .slice-items img{max-width:100%;max-height:100%;object-fit:contain}
 .slice-items .more{align-self:center;font-size:13px;color:var(--muted);padding:0 6px}
-.paste-zone{min-height:96px;border:1.5px dashed var(--line);border-radius:20px;display:grid;place-items:center;text-align:center;padding:16px;color:var(--muted);font-size:14.5px;outline:none;-webkit-user-select:text;user-select:text}
+.paste-zone{min-height:96px;border:1.5px dashed var(--line);border-radius:20px;display:grid;place-items:center;text-align:center;padding:16px;color:var(--muted);font-size:16px;outline:none;-webkit-user-select:text;user-select:text}
 .paste-zone:focus{border-color:var(--ink)}
 .canvas-wrap.picking{cursor:crosshair;box-shadow:0 0 0 3px var(--ink)}
 .side-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 10px}
@@ -294,8 +297,8 @@ img{max-width:100%}
 .dx{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:rgba(20,20,20,.7);color:#fff;display:grid;place-items:center}
 .dadd{width:76px;height:76px;border-radius:16px;border:1.5px dashed var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--muted)}
 .sheet.full.lb{background:#0E0E0E;background-image:none}
-.lightbox{position:relative;width:100%;height:100%;display:grid;place-items:center;touch-action:pan-y}
-.lightbox img{max-width:100%;max-height:100%;object-fit:contain}
+.lightbox{position:relative;width:100%;height:100%;display:grid;place-items:center;touch-action:none;overflow:hidden}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center;will-change:transform}
 .lb-x,.lb-prev,.lb-next{position:absolute;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center}
 .lb-x{top:14px;right:14px}.lb-prev{left:12px;top:50%}.lb-next{right:12px;top:50%;transform:scaleX(-1)}
 .lb-n{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:#ddd;font-size:13px;margin:0}
@@ -307,7 +310,24 @@ img{max-width:100%}
 .wish-photo{position:relative;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--surface-2);border-radius:999px 999px 26px 26px;padding:40px 16px 16px;min-height:200px;justify-content:center}
 .wish-photo img{max-height:42vh;max-width:100%;object-fit:contain;border-radius:12px}
 .wish-add-photo{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-size:14.5px;padding:30px}
-#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
+.loupe{position:fixed;z-index:120;width:132px;pointer-events:none;filter:drop-shadow(0 10px 18px rgba(0,0,0,.28))}
+.loupe canvas{display:block;width:132px;height:132px;border-radius:50%;border:3px solid #fff;background:#fff}
+.loupe-lab{margin:6px auto 0;display:flex;align-items:center;justify-content:center;gap:6px;background:#141414;color:#fff;border-radius:999px;padding:4px 10px 4px 5px;font-size:12px;width:max-content;font-variant-numeric:tabular-nums}
+.loupe-sw{width:16px;height:16px;border-radius:50%;border:1.5px solid #fff}
+.side-acts{display:flex;gap:6px}
+.btn.icon-only{width:38px;padding:0}
+.dx.dr{top:auto;bottom:4px}
+.colors-panel{margin:10px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:4px 14px 10px}
+.colors-panel summary{list-style:none;display:flex;align-items:center;gap:8px;padding:10px 0 6px;font-weight:500;cursor:pointer}
+.colors-panel summary::-webkit-details-marker{display:none}
+.slider.adj{padding:4px 0}
+.slider.adj span{width:62px;font-size:12.5px}
+.slider.adj span:last-child{text-align:right}
+.fx-btn{position:absolute;right:10px;bottom:10px;width:40px;height:40px;border-radius:50%;background:var(--surface);color:var(--ink);display:grid;place-items:center;box-shadow:0 6px 16px -6px rgba(0,0,0,.35);z-index:3}
+.fx-btn.on{background:var(--ink);color:var(--mauve-ink)}
+.fx-panel{width:100%;max-width:420px;margin:10px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:8px 14px 8px}
+.fx-panel .slider.adj span{width:62px;font-size:12.5px}
+#toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
 @media (min-width:640px){.rail{padding:0 27%}}
@@ -383,16 +403,20 @@ const P = {
   drop:'<path d="M12 3.5s5.5 6 5.5 10a5.5 5.5 0 0 1-11 0c0-4 5.5-10 5.5-10Z"/>',
   link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
   heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.5 4.5 0 0 1 12 7.2 4.5 4.5 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10Z"/>',
+  rotate:'<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20.5 4v4.5H16"/>',
+  gift:'<rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5V20h14v-7.5M12 8.5V20"/><path d="M12 8.5S10.5 4 8 4.5 7 8.5 12 8.5ZM12 8.5S13.5 4 16 4.5 17 8.5 12 8.5Z"/>',
   upload:'<path d="M12 20V9M7.5 13.5 12 9l4.5 4.5M5 4h14"/>'
 };
 const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
 const HANG_SVG = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="2.6" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M53 11a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v4"/><path vector-effect="non-scaling-stroke" d="M60 25 12 45c-3 1.3-2.2 4.5 1 4.5h94c3.2 0 4-3.2 1-4.5Z"/></svg>';
 const CLIP_SVG = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M53 9a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v6"/><path vector-effect="non-scaling-stroke" d="M7 25.5h106"/><path vector-effect="non-scaling-stroke" d="M14 25.5v4M106 25.5v4"/><rect x="9.5" y="29.5" width="9" height="16" rx="2" fill="currentColor" stroke="none"/><rect x="101.5" y="29.5" width="9" height="16" rx="2" fill="currentColor" stroke="none"/><path d="M11.5 36h5M103.5 36h5" stroke-width="1" style="stroke:var(--surface)" vector-effect="non-scaling-stroke"/></svg>';
-const HANGERS = { hanger: { svg: () => HANG_SVG, anchor: 0.905, front: false }, clip: { svg: () => CLIP_SVG, anchor: 0.86, front: true } };
-const NO_HANGER_RE = /shoe|sneaker|boot|heel|sandal|slipper|schoen|jewel|sieraad|ring|necklace|earring|bracelet|watch|horloge|bag|purse|tas|accessor|hat|cap|sock|sok|belt|riem|sunglass|bril|scarf|sjaal/i;
+const HOOK_SVG = '<svg viewBox="0 0 40 60" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M14 9a6 6 0 1 1 6 6v25"/><path vector-effect="non-scaling-stroke" d="M20 40v7a7 7 0 0 1-14 0v-4"/></svg>';
+const HANGERS = { hanger: { svg: () => HANG_SVG, anchor: 0.905, front: false, ar: 52 / 120, ax: 0.5 }, clip: { svg: () => CLIP_SVG, anchor: 0.86, front: true, ar: 52 / 120, ax: 0.5 }, hook: { svg: () => HOOK_SVG, anchor: 0.88, front: true, ar: 1.5, ax: 0.33 } };
+const HOOK_RE = /bag|purse|tote|handbag|clutch|\btas/i;
+const NO_HANGER_RE = /shoe|sneaker|boot|heel|sandal|slipper|schoen|jewel|sieraad|ring|necklace|earring|bracelet|watch|horloge|accessor|hat|cap|sock|sok|belt|riem|sunglass|bril|scarf|sjaal/i;
 const CLIP_RE = /bottom|pant|trouser|jean|short|skirt|legging|broek|rok/i;
-const defaultHanger = it => { const n = catName(catOf(it)); return NO_HANGER_RE.test(n) ? 'none' : CLIP_RE.test(n) ? 'clip' : 'hanger'; };
-const hangerType = it => (it.hanger === 'hanger' || it.hanger === 'clip' || it.hanger === 'none') ? it.hanger : defaultHanger(it);
+const defaultHanger = it => { const n = catName(catOf(it)); return HOOK_RE.test(n) ? 'hook' : NO_HANGER_RE.test(n) ? 'none' : CLIP_RE.test(n) ? 'clip' : 'hanger'; };
+const hangerType = it => ['hanger', 'clip', 'hook', 'none'].includes(it.hanger) ? it.hanger : defaultHanger(it);
 const MATERIALS = ['Cotton', 'Linen', 'Wool', 'Cashmere', 'Silk', 'Denim', 'Leather', 'Viscose', 'Polyester', 'Nylon', 'Elastane', 'Other'];
 const HANGER = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M53 11a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v4"/><path d="M60 25 12 45c-3 1.3-2.2 4.5 1 4.5h94c3.2 0 4-3.2 1-4.5Z"/></svg>';
 
@@ -502,9 +526,10 @@ function autoHang(alpha, W, H, thr, type = 'hanger') {
   let x0 = W, x1 = -1, y0 = H, y1 = -1;
   for (let y = 0; y < H; y++) for (let i = 0; i < W; i++) if (alpha(y * W + i) > thr) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (y < y0) y0 = y; if (y > y1) y1 = y; }
   if (x1 < 0) return null;
-  const clip = type === 'clip', gh = y1 - y0 + 1, band = Math.min(H, y0 + Math.max(2, Math.round(gh * (clip ? 0.04 : 0.1)))); let l = W, r = -1;
+  const clip = type === 'clip', hook = type === 'hook', gh = y1 - y0 + 1, band = Math.min(H, y0 + Math.max(2, Math.round(gh * (hook ? 0.03 : clip ? 0.04 : 0.1)))); let l = W, r = -1;
   for (let y = y0; y < band; y++) for (let i = 0; i < W; i++) if (alpha(y * W + i) > thr) { if (i < l) l = i; if (i > r) r = i; }
   const span = Math.max((r - l + 1), (x1 - x0 + 1) * 0.3);
+  if (hook) return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.012, w: (x1 - x0 + 1) * 0.14, box: { x0, y0, x1, y1 } };
   if (clip) return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.025, w: span * 0.8 / 0.767, box: { x0, y0, x1, y1 } };
   return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.06, w: span / 0.84, box: { x0, y0, x1, y1 } };
 }
@@ -518,26 +543,30 @@ async function hangOf(src, type = 'hanger') {
 function hangNorm(g, type = 'hanger') {
   if (g && g.cx != null && (g.type || 'hanger') === type) return g;
   if (type === 'hanger' && g && g.l != null) return { cx: (g.l + g.r) / 2, ty: 0.06, w: (g.r - g.l) / 0.84 };
-  return type === 'clip' ? { type, cx: 0.5, ty: 0.025, w: 0.85 } : { type, cx: 0.5, ty: 0.06, w: 0.8 };
+  return type === 'hook' ? { type, cx: 0.5, ty: 0.012, w: 0.14 } : type === 'clip' ? { type, cx: 0.5, ty: 0.025, w: 0.85 } : { type, cx: 0.5, ty: 0.06, w: 0.8 };
 }
 function hangHTML(it, maxW, maxH) {
-  const type = hangerType(it), a = it.aspect || 0.75; if (type === 'none') maxH *= 0.72;
+  const type = hangerType(it), a = it.aspect || 0.75;
+  if (type === 'none') { // sits on the floor of the arch, a bit smaller
+    let ih = maxH * 0.52, iw = ih * a; if (iw > maxW * 0.78) { iw = maxW * 0.78; ih = iw / a; }
+    const top = Math.max(0, maxH - 6 - ih);
+    return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${(ih + top).toFixed(1)}px"><img src="${it.img}" alt="" style="top:${top.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px"></div>`;
+  }
   let ih = maxH, iw = ih * a; if (iw > maxW) { iw = maxW; ih = iw / a; }
-  if (type === 'none') { const top = Math.round(maxH * 0.22); return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${(ih + top).toFixed(1)}px"><img src="${it.img}" alt="" style="top:${top}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px"></div>`; }
   const H = HANGERS[type], g = hangNorm(it.hang, type);
-  const hw = clamp(g.w * iw, 56, maxW * 1.1), hh = hw * 52 / 120, cx = g.cx * iw;
+  const hw = type === 'hook' ? clamp(g.w * iw, 22, 56) : clamp(g.w * iw, 56, maxW * 1.1), hh = hw * H.ar, cx = g.cx * iw, left = cx - hw * H.ax, pivot = left + hw * 0.5;
   const over = Math.max(0, hh * H.anchor - g.ty * ih);
-  return `<div class="hang swing" style="width:${iw.toFixed(1)}px;height:${(ih + over).toFixed(1)}px;transform-origin:${cx.toFixed(1)}px 2px;animation-delay:-${(Math.random() * 6).toFixed(2)}s;animation-duration:${(5.2 + Math.random() * 1.6).toFixed(2)}s"><span class="hk" style="left:${(cx - hw / 2).toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img src="${it.img}" alt="" style="top:${over.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px"></div>`;
+  return `<div class="hang swing" style="width:${iw.toFixed(1)}px;height:${(ih + over).toFixed(1)}px;transform-origin:${pivot.toFixed(1)}px 2px;animation-delay:-${(Math.random() * 7).toFixed(2)}s"><span class="hk" style="left:${left.toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img src="${it.img}" alt="" style="top:${over.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px"></div>`;
 }
 const sideOf = (it, side) => side === 'back' && it.back?.img ? { ...it, img: it.back.img, aspect: it.back.aspect || it.aspect, hang: it.back.hang || it.hang } : it;
-const rackDims = () => { const vw = Math.min(window.innerWidth, 760), pad = vw >= 640 ? 0.27 : 0.19; return [vw * (1 - 2 * pad), clamp(window.innerHeight * 0.38, 200, 380)]; };
+const rackDims = () => { const vw = Math.min(window.innerWidth, 760), pad = vw >= 640 ? 0.27 : 0.19, vh = $('#view-rack')?.clientHeight || window.innerHeight, free = vh - 440, mh = clamp(free * 0.8, 180, 400); return [vw * (1 - 2 * pad), mh, clamp(free - mh, 0, 120)]; };
 const rackItems = () => S.items.filter(i => S.rackCat === 'all' || catOf(i) === S.rackCat);
 function renderRack() {
   const v = $('#view-rack'); const items = rackItems(); const total = S.items.length;
   let body;
   if (!total) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Your rack is empty</h2><p>Photograph a piece, frame it, and it'll hang here with the background removed.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add your first piece</button></div>`;
   else if (!items.length) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Nothing here yet</h2><p>No pieces in ${esc(catName(S.rackCat))} so far.</p><button class="btn primary" data-act="add">${ic('plus', 20)}Add a piece</button></div>`;
-  else { const [mw, mh] = rackDims(); body = `<div class="rack-stage"><div class="arch-win" style="width:${Math.round(Math.min(mw + 44, 340))}px;height:${Math.round(mh + 74)}px"></div><div class="rail-bar"></div><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map(it => `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangHTML(sideOf(it, S.flip[it.id] ? 'back' : 'front'), mw, mh)}</button>`).join('')}</div></div><div id="rack-tag"></div><p class="rail-pos" id="rail-pos"></p>`; }
+  else { const [mw, mh, ex] = rackDims(); const top = 30 + ex, aw = Math.min(mw + 44, 340), ar = aw / 2, ry = 64.5 + top, half = ry < ar ? Math.sqrt(ar * ar - (ar - ry) * (ar - ry)) : ar; body = `<div class="rack-stage" style="margin-top:${Math.round(top)}px"><div class="arch-win" style="top:${-Math.round(top)}px;width:${Math.round(aw)}px;height:${Math.round(mh + 104 + top)}px"></div><div class="rail-bar" style="width:${Math.round(2 * (half - 10))}px"></div><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map(it => `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangHTML(sideOf(it, S.flip[it.id] ? 'back' : 'front'), mw, mh)}</button>`).join('')}</div></div><div id="rack-tag"></div><p class="rail-pos" id="rail-pos"></p>`; }
   v.innerHTML = `<header class="arc"><h1>My closet</h1><span class="count">${total} ${total === 1 ? 'piece' : 'pieces'}</span>${total ? chipRow(S.rackCat, 'rack') : ''}</header>${body}`;
   if (items.length) wireRail(items);
 }
@@ -548,7 +577,7 @@ function wireRail(items) {
     raf = 0; const rc = rail.getBoundingClientRect(); const cx = rc.left + rc.width / 2; let best = 0, bd = 1e9;
     slides.forEach((s, i) => {
       const r = s.getBoundingClientRect(); const d = (r.left + r.width / 2 - cx) / (r.width || 1); const ad = Math.min(Math.abs(d), 1);
-      s.style.transform = `scale(${(1 - 0.22 * ad).toFixed(3)})`; s.style.opacity = (1 - 0.5 * ad).toFixed(2);
+      s.style.opacity = (1 - 0.6 * ad).toFixed(2);
       if (Math.abs(d) < bd) { bd = Math.abs(d); best = i; }
     });
     if (best !== shown) { shown = best; S.rackIndex = best; renderTag(items[best]); $('#rail-pos').textContent = `${best + 1} of ${items.length}`; }
@@ -562,7 +591,7 @@ function wireRail(items) {
 function metaTags(it) { return [...(it.seasons || []), ...(it.occasions || []), ...(it.materials || [])].map(t => `<span style="background:${tagLight(t)}">${esc(t)}</span>`).join(''); }
 function renderTag(it) {
   const el = $('#rack-tag'); if (!el || !it) return; const tags = metaTags(it);
-  el.innerHTML = `<article class="tag"><span class="badge" style="background:${catLight(catOf(it))}">${esc(catName(catOf(it)))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${it.color2 ? `<span class="dot" style="background:${esc(it.color2)};margin-left:-12px"></span>` : ''}${esc(itemName(it))}</h3>${it.brand ? `<p class="brand">${esc(it.brand)}</p>` : ''}${it.price ? `<p class="price">${esc(it.price)}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions">${it.back?.img ? `<button class="btn sm" data-act="flip" data-id="${it.id}" aria-label="Show the ${S.flip[it.id] ? 'front' : 'back'}">${ic('flip', 18)}${S.flip[it.id] ? 'Front' : 'Back'}</button>` : ''}<button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
+  el.innerHTML = `<article class="tag"><span class="badge" style="background:${catLight(catOf(it))}">${esc(catName(catOf(it)))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${it.color2 ? `<span class="dot" style="background:${esc(it.color2)};margin-left:-12px"></span>` : ''}${esc(itemName(it))}</h3>${it.brand || it.size ? `<p class="meta">${it.brand ? `<span>${esc(it.brand)}</span>` : ''}${it.size ? `<span class="size">Size ${esc(it.size)}</span>` : ''}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions">${it.back?.img ? `<button class="btn sm" data-act="flip" data-id="${it.id}" aria-label="Show the ${S.flip[it.id] ? 'front' : 'back'}">${ic('flip', 18)}${S.flip[it.id] ? 'Front' : 'Back'}</button>` : ''}<button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
 }
 
 function renderCloset() {
@@ -574,7 +603,7 @@ function renderCloset() {
   }
   renderClosetResults();
 }
-const tileHTML = it => `<button class="tile" data-act="detail" data-id="${it.id}"><div class="ph"><img src="${it.img}" alt="" loading="lazy"></div><p class="nm">${esc(itemName(it))}</p><p class="sub">${esc([it.brand, it.price].filter(Boolean).join(', ') || catName(catOf(it)))}</p></button>`;
+const tileHTML = it => `<button class="tile" data-act="detail" data-id="${it.id}"><div class="ph"><img src="${it.img}" alt="" loading="lazy"></div><p class="nm">${esc(itemName(it))}</p><p class="sub">${esc([it.brand, it.size && 'size ' + it.size, it.price].filter(Boolean).join(', ') || catName(catOf(it)))}</p></button>`;
 function renderClosetResults() {
   $$('[data-ctab]').forEach(b => b.setAttribute('aria-pressed', b.dataset.ctab === S.ctab));
   if (S.ctab === 'wish') { renderWish(); return; }
@@ -582,7 +611,7 @@ function renderClosetResults() {
   const out = $('#closet-results'); const q = S.q.trim().toLowerCase();
   if (!S.items.length) { out.innerHTML = `<div class="empty"><h2>Start your closet</h2><p>Each piece you add shows up here, sorted by category.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add a piece</button></div>`; return; }
   let items = S.items;
-  if (q) items = items.filter(i => [i.name, i.brand, i.notes, i.price, catName(catOf(i)), colorFamily(i.color), colorFamily(i.color2), i.secondhand === true ? 'secondhand' : '', ...(i.seasons || []), ...(i.occasions || []), ...(i.materials || [])].join(' ').toLowerCase().includes(q));
+  if (q) items = items.filter(i => [i.name, i.brand, i.notes, i.price, i.size, catName(catOf(i)), colorFamily(i.color), colorFamily(i.color2), i.secondhand === true ? 'secondhand' : '', i.gift ? 'gift' : '', ...(i.seasons || []), ...(i.occasions || []), ...(i.materials || [])].join(' ').toLowerCase().includes(q));
   if (S.closetCat !== 'all') items = items.filter(i => catOf(i) === S.closetCat);
   if (!items.length) { out.innerHTML = `<p class="muted" style="padding:24px 22px">No pieces match${q ? ` "${esc(S.q)}"` : ''}.</p>`; return; }
   if (S.closetCat === 'all' && !q) {
@@ -600,7 +629,7 @@ function renderWish() {
   if (!S.wish.length) { out.innerHTML = `<div class="empty"><h2>Nothing on your wishlist</h2><p>Save pieces you're eyeing, with a link to the shop. They stay out of your closet and charts until you buy them.</p><button class="btn primary" data-act="wish-add">${ic('heart', 20)}Add a wish</button></div>`; return; }
   let list = S.wish; if (q) list = list.filter(w => [w.name, w.brand, w.notes, w.price, w.link, catName(w.cat)].join(' ').toLowerCase().includes(q));
   if (!list.length) { out.innerHTML = `<p class="muted" style="padding:24px 22px">No wishes match "${esc(S.q)}".</p>`; return; }
-  out.innerHTML = `<div class="grid">${list.map(w => `<div class="wcard"><button class="tile" data-wish="${w.id}"><div class="ph">${w.img ? `<img src="${w.img}" alt="" loading="lazy">` : `<span class="wph">${ic('heart', 34)}</span>`}</div><p class="nm">${esc(w.name || 'Untitled wish')}</p><p class="sub">${esc([w.brand, w.price].filter(Boolean).join(', ') || shopName(w.link) || catName(w.cat))}</p></button>${w.link ? `<a class="btn sm wlink" href="${esc(w.link)}" target="_blank" rel="noopener noreferrer">${ic('link', 16)}${esc(shopName(w.link) || 'Shop')}</a>` : ''}</div>`).join('')}</div>`;
+  out.innerHTML = `<div class="grid">${list.map(w => `<div class="wcard"><button class="tile" data-wish="${w.id}"><div class="ph">${w.img ? `<img src="${w.img}" alt="" loading="lazy">` : `<span class="wph">${ic('heart', 34)}</span>`}</div><p class="nm">${esc(w.name || 'Untitled wish')}</p><p class="sub">${esc([w.brand, w.size && 'size ' + w.size, w.price].filter(Boolean).join(', ') || shopName(w.link) || catName(w.cat))}</p></button>${w.link ? `<a class="btn sm wlink" href="${esc(w.link)}" target="_blank" rel="noopener noreferrer">${ic('link', 16)}${esc(shopName(w.link) || 'Shop')}</a>` : ''}</div>`).join('')}</div>`;
 }
 function openWish(w) {
   const isNew = !w, st = { img: w?.img || '', cat: w?.cat || null };
@@ -612,6 +641,7 @@ function openWish(w) {
         <label class="field"><span>Name</span><input type="text" id="w-name" value="${esc(w?.name || '')}" placeholder="Linen wrap dress"></label>
         <label class="field"><span>Link</span><input type="text" id="w-link" inputmode="url" autocapitalize="off" autocorrect="off" value="${esc(w?.link || '')}" placeholder="Paste the shop link"></label>
         <div class="two"><label class="field"><span>Brand</span><input type="text" id="w-brand" value="${esc(w?.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="w-price" inputmode="decimal" value="${esc(w?.price || '')}" placeholder="$79"></label></div>
+        <div class="two"><label class="field"><span>Size</span><input type="text" id="w-size" value="${esc(w?.size || '')}" placeholder="M, 38, W28 L32"></label><span></span></div>
         <div class="field"><span>Category</span><div class="chips wrap" id="w-cats"></div></div>
         <label class="field"><span>Notes</span><textarea id="w-notes" rows="3" placeholder="Size, color, waiting for a sale…">${esc(w?.notes || '')}</textarea></label>
       </div>
@@ -622,7 +652,7 @@ function openWish(w) {
   renderPhoto(); renderCats();
   pasteTarget = async f => { try { st.img = await compressPhoto(f, 1200); renderPhoto(); } catch { toast("Couldn't open that image."); } };
   const close = () => { pasteTarget = null; closeSheet(el); };
-  const collect = () => ({ ...(w || {}), id: w?.id || uid(), created: w?.created || Date.now(), updated: Date.now(), name: $('#w-name', el).value.trim(), link: safeLink($('#w-link', el).value), brand: $('#w-brand', el).value.trim(), price: $('#w-price', el).value.trim(), cat: st.cat, notes: $('#w-notes', el).value.trim(), img: st.img });
+  const collect = () => ({ ...(w || {}), id: w?.id || uid(), created: w?.created || Date.now(), updated: Date.now(), name: $('#w-name', el).value.trim(), link: safeLink($('#w-link', el).value), brand: $('#w-brand', el).value.trim(), price: $('#w-price', el).value.trim(), size: $('#w-size', el).value.trim(), cat: st.cat, notes: $('#w-notes', el).value.trim(), img: st.img });
   el.addEventListener('click', async e => {
     const c = e.target.closest('[data-wcat]'); if (c) { st.cat = st.cat === c.dataset.wcat ? null : c.dataset.wcat; renderCats(); return; }
     const b = e.target.closest('[data-w]'); if (!b) return; const a = b.dataset.w;
@@ -641,7 +671,7 @@ function openWish(w) {
       const nw = collect(); let blob = nw.img ? await fetchless(nw.img) : await choosePhoto('Photo of your new piece', 'Take a photo of it, then frame and cut it out.');
       if (!blob) return;
       close();
-      openEditor({ file: blob, pre: { name: nw.name, brand: nw.brand, price: nw.price, cat: nw.cat, notes: [nw.notes, nw.link].filter(Boolean).join('\n') }, onSaved: async () => { await safe(store.del('wish', nw.id)); S.wish = S.wish.filter(x => x.id !== nw.id); renderClosetResults(); toast('Moved from your wishlist to your closet'); } });
+      openEditor({ file: blob, pre: { name: nw.name, brand: nw.brand, price: nw.price, size: nw.size, cat: nw.cat, notes: [nw.notes, nw.link].filter(Boolean).join('\n') }, onSaved: async () => { await safe(store.del('wish', nw.id)); S.wish = S.wish.filter(x => x.id !== nw.id); renderClosetResults(); toast('Moved from your wishlist to your closet'); } });
     }
   });
 }
@@ -820,6 +850,30 @@ function keepMain(m, w, h) { // m: Uint8 0/1, drop small fg islands
   for (let i = 0; i < n; i++) { if (!m[i] || lbl[i]) continue; id++; let a = 0, b = 0; q[b++] = i; lbl[i] = id; while (a < b) { const p = q[a++], x = p % w; if (x > 0 && m[p - 1] && !lbl[p - 1]) { lbl[p - 1] = id; q[b++] = p - 1; } if (x < w - 1 && m[p + 1] && !lbl[p + 1]) { lbl[p + 1] = id; q[b++] = p + 1; } if (p >= w && m[p - w] && !lbl[p - w]) { lbl[p - w] = id; q[b++] = p - w; } if (p < n - w && m[p + w] && !lbl[p + w]) { lbl[p + w] = id; q[b++] = p + w; } } sizes[id] = b; if (b > big) big = b; }
   const thr = big * 0.004; for (let i = 0; i < n; i++) if (m[i] && sizes[lbl[i]] < thr) m[i] = 0; return m;
 }
+function popColors(d, mask) { // gentle auto-levels, a touch brighter, livelier colours
+  const n = d.length / 4, hist = new Uint32Array(256); let cnt = 0;
+  for (let i = 0; i < n; i += 3) { if (mask && mask[i] < 128) continue; hist[Math.round(d[i * 4] * 0.299 + d[i * 4 + 1] * 0.587 + d[i * 4 + 2] * 0.114)]++; cnt++; }
+  let lo = 0, hi = 255, acc = 0; if (cnt) { for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= cnt * 0.01) { lo = v; break; } } acc = 0; for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc >= cnt * 0.005) { hi = v; break; } } }
+  const span = Math.max(40, hi - lo), a = 0.55 * (255 / span) + 0.45, b = 0.55 * (-lo * 255 / span);
+  const lut = new Uint8ClampedArray(256); for (let v = 0; v < 256; v++) { const x = Math.min(255, Math.max(0, a * v + b)); lut[v] = 255 * Math.pow(x / 255, 0.9); }
+  const o = new Uint8ClampedArray(d.length);
+  for (let i = 0; i < d.length; i += 4) {
+    let r = lut[d[i]], g = lut[d[i + 1]], bl = lut[d[i + 2]]; const mx = Math.max(r, g, bl), mn = Math.min(r, g, bl), avg = (r + g + bl) / 3, amt = 0.32 * (1 - (mx - mn) / 255);
+    o[i] = r + (r - avg) * amt; o[i + 1] = g + (g - avg) * amt; o[i + 2] = bl + (bl - avg) * amt; o[i + 3] = d[i + 3];
+  }
+  return o;
+}
+function adjustColors(d, A) { // b brightness, s saturation (muted..vivid), w warmth, c contrast; each -50..50
+  const b = (A.b | 0) / 100, sat = 1 + (A.s | 0) / 50, w = (A.w | 0) / 100, c = 1 + (A.c | 0) / 100, g = Math.pow(2, -b * 1.2), lut = new Float32Array(256);
+  for (let v = 0; v < 256; v++) { let x = 255 * Math.pow(v / 255, g); x = (x - 128) * c + 128; lut[v] = x; }
+  const o = new Uint8ClampedArray(d.length), wr = w * 26, wb = -w * 26, wg = w * 6;
+  for (let i = 0; i < d.length; i += 4) {
+    const r = lut[d[i]] + wr, gg = lut[d[i + 1]] + wg, bl = lut[d[i + 2]] + wb, avg = r * 0.299 + gg * 0.587 + bl * 0.114;
+    o[i] = avg + (r - avg) * sat; o[i + 1] = avg + (gg - avg) * sat; o[i + 2] = avg + (bl - avg) * sat; o[i + 3] = d[i + 3];
+  }
+  return o;
+}
+function rotateDataURL(url) { return loadImage(url).then(im => { const c = mk(im.naturalHeight, im.naturalWidth), x = c.getContext('2d'); x.translate(c.width, 0); x.rotate(Math.PI / 2); x.drawImage(im, 0, 0); return c.toDataURL('image/jpeg', 0.88); }); }
 function morph(m, w, h, t) { // t>0 erode, t<0 dilate (low-res pixels)
   let a = m;
   for (let k = 0; k < Math.abs(t); k++) {
@@ -882,18 +936,39 @@ class Cutout {
     const k = Math.min(1, LOW / Math.max(w, h)); this.lw = Math.max(2, Math.round(w * k)); this.lh = Math.max(2, Math.round(h * k));
     const lc = mk(this.lw, this.lh), lx = lc.getContext('2d', { willReadFrequently: true }); lx.imageSmoothingQuality = 'high'; lx.drawImage(c, 0, 0, this.lw, this.lh);
     this.lowPx = lx.getImageData(0, 0, this.lw, this.lh).data;
-    this.view = this.ctx.createImageData(w, h); this.view.data.set(d); this.smoothed = null; if (this.smooth) this.setSmooth(true);
+    this.view = this.ctx.createImageData(w, h); this.view.data.set(d); this.smoothed = null; this._pop = null; this._sc = null; if (this.smooth || this.pop) this.refreshView();
     this.frame = { x0: w * 0.12, y0: h * 0.05, x1: w * 0.88, y1: h * 0.96 }; this.placeFrame();
     this.wrap.style.aspectRatio = `${w} / ${h}`; this.wrap.style.width = `min(100%, calc(50vh * ${(w / h).toFixed(4)}))`;
     this.resetZoom(); this.redraw(); this.onChange();
   }
   autoHanger() { if (this.htype === 'none') { this.placeHanger(); return; } const g = autoHang(i => this.mask[i], this.w, this.h, 128, this.htype); if (g) this.hg = { cx: g.cx, ty: g.ty, w: g.w }; this.placeHanger(); }
-  setSmooth(on) {
-    this.smooth = on; if (!this.src) return;
-    if (on && !this.smoothed) this.smoothed = smoothWrinkles(this.src.data, this.w, this.h, 0.004, 0.85);
-    const s = on ? this.smoothed : this.src.data, d = this.view.data;
-    for (let i = 0; i < d.length; i += 4) { d[i] = s[i]; d[i + 1] = s[i + 1]; d[i + 2] = s[i + 2]; }
-    this.redraw();
+  px() {
+    if (this.smooth && !this.smoothed) this.smoothed = smoothWrinkles(this.src.data, this.w, this.h, 0.004, 0.85);
+    const base = this.smooth && this.smoothed ? this.smoothed : this.src.data;
+    let out = base;
+    if (this.pop) { if (!this._pop || this._popBase !== base) { this._pop = popColors(base, this.cut ? this.mask : null); this._popBase = base; } out = this._pop; }
+    const A = this.adj || {}, key = [A.b | 0, A.s | 0, A.w | 0, A.c | 0].join(',');
+    if (key === '0,0,0,0') return out;
+    if (!this._adj || this._adjKey !== key || this._adjBase !== out) { this._adj = adjustColors(out, A); this._adjKey = key; this._adjBase = out; }
+    return this._adj;
+  }
+  setAdj(a) { this.adj = { ...a }; this.refreshView(); }
+  refreshView() { if (!this.src || !this.view) return; const s = this.px(), d = this.view.data; for (let i = 0; i < d.length; i += 4) { d[i] = s[i]; d[i + 1] = s[i + 1]; d[i + 2] = s[i + 2]; } this._sc = null; this.redraw(); }
+  setSmooth(on) { this.smooth = on; this.refreshView(); }
+  setPop(on) { this.pop = on; this._pop = null; this.refreshView(); }
+  rotate() { // 90 degrees clockwise; keeps the cut-out
+    if (!this.src) return; const { w, h } = this, W = h, H = w, n = w * h, d = this.src.data, nd = new Uint8ClampedArray(n * 4), m = new Uint8ClampedArray(n), er = new Uint8ClampedArray(n), rs = new Uint8ClampedArray(n);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * w + x, j = x * W + (W - 1 - y); nd[j * 4] = d[i * 4]; nd[j * 4 + 1] = d[i * 4 + 1]; nd[j * 4 + 2] = d[i * 4 + 2]; nd[j * 4 + 3] = 255; m[j] = this.mask[i]; er[j] = this.er[i]; rs[j] = this.rs[i]; }
+    this.w = W; this.h = H; this.src = new ImageData(nd, W, H); this.mask = m; this.er = er; this.rs = rs;
+    this.canvas.width = this.ov.width = W; this.canvas.height = this.ov.height = H;
+    const c = mk(W, H); c.getContext('2d').putImageData(this.src, 0, 0);
+    const k = Math.min(1, LOW / Math.max(W, H)); this.lw = Math.max(2, Math.round(W * k)); this.lh = Math.max(2, Math.round(H * k));
+    const lc = mk(this.lw, this.lh), lx = lc.getContext('2d', { willReadFrequently: true }); lx.imageSmoothingQuality = 'high'; lx.drawImage(c, 0, 0, this.lw, this.lh); this.lowPx = lx.getImageData(0, 0, this.lw, this.lh).data;
+    this.labels = null; this.lowBin = null; this.smoothed = null; this._pop = null; this._sc = null; this.stack = [];
+    this.view = this.ctx.createImageData(W, H); this.view.data.set(nd);
+    this.frame = { x0: W * 0.12, y0: H * 0.05, x1: W * 0.88, y1: H * 0.96 };
+    this.wrap.style.aspectRatio = `${W} / ${H}`; this.wrap.style.width = `min(100%, calc(50vh * ${(W / H).toFixed(4)}))`;
+    this.resetZoom(); this.refreshView(); this.placeFrame(); if (this.cut) this.autoHanger(); this.onChange();
   }
   gBox() { const { w, h } = this, m = this.mask; let x0 = w, y0 = h, x1 = -1, y1 = -1; for (let y = 0; y < h; y++) { const row = y * w; for (let x = 0; x < w; x++) if (m[row + x] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } } return x1 < 0 ? null : { x0, y0, x1, y1 }; }
   cropBox() { const b = this.gBox(); if (!b) return null; const { w, h } = this, pad = Math.round(Math.max(b.x1 - b.x0, b.y1 - b.y0) * 0.04), sx = Math.max(0, b.x0 - pad), sy = b.y0, ex = Math.min(w, b.x1 + 1 + pad), ey = Math.min(h, b.y1 + 1 + pad); return { sx, sy, sw: ex - sx, sh: ey - sy }; }
@@ -901,8 +976,8 @@ class Cutout {
     const el = $('.hgr', this.wrap); if (!el) return; const g = this.hg, H = HANGERS[this.htype];
     if (!g || !H || this.tool !== 'hanger') { el.hidden = true; return; }
     if (el.dataset.type !== this.htype) { el.innerHTML = H.svg(); el.dataset.type = this.htype; }
-    const hh = g.w * 52 / 120; el.hidden = false; el.style.zIndex = H.front ? 2 : 0;
-    el.style.left = ((g.cx - g.w / 2) / this.w * 100) + '%'; el.style.top = ((g.ty - hh * H.anchor) / this.h * 100) + '%'; el.style.width = (g.w / this.w * 100) + '%';
+    const hh = g.w * H.ar; el.hidden = false; el.style.zIndex = H.front ? 2 : 0;
+    el.style.left = ((g.cx - g.w * H.ax) / this.w * 100) + '%'; el.style.top = ((g.ty - hh * H.anchor) / this.h * 100) + '%'; el.style.width = (g.w / this.w * 100) + '%';
   }
   placeFrame() {
     const F = this.frame, el = this.frameEl;
@@ -950,9 +1025,29 @@ class Cutout {
     for (let i = 0; i < w * h; i++) { let v = r[i]; if (er[i] && v > 255 - er[i]) v = 255 - er[i]; if (rs[i] > v) v = rs[i]; m[i] = v; }
     this.cut = true; this.redraw(); this.onChange();
   }
-  sample(x, y) {
-    const d = this.smooth && this.smoothed ? this.smoothed : this.src.data, w = this.w, h = this.h; let R = 0, G = 0, B = 0, n = 0;
-    for (let yy = Math.max(0, Math.round(y) - 3); yy <= Math.min(h - 1, Math.round(y) + 3); yy++) for (let xx = Math.max(0, Math.round(x) - 3); xx <= Math.min(w - 1, Math.round(x) + 3); xx++) { const i = (yy * w + xx) * 4; R += d[i]; G += d[i + 1]; B += d[i + 2]; n++; }
+  srcCanvas() {
+    if (this._sc && this._scSmooth === this.smooth && this._scSrc === this.src && this._scPop === this.pop) return this._sc;
+    const c = mk(this.w, this.h), d = new ImageData(new Uint8ClampedArray(this.px()), this.w, this.h);
+    for (let i = 3; i < d.data.length; i += 4) d.data[i] = 255; c.getContext('2d').putImageData(d, 0, 0);
+    this._sc = c; this._scSmooth = this.smooth; this._scSrc = this.src; this._scPop = this.pop; return c;
+  }
+  showLoupe(e) {
+    let L = this.loupe;
+    if (!L) { L = this.loupe = document.createElement('div'); L.className = 'loupe'; L.innerHTML = '<canvas width="264" height="264"></canvas><div class="loupe-lab"><span class="loupe-sw"></span><span class="loupe-hex"></span></div>'; document.body.append(L); }
+    const p = this.toImg(e), x = clamp(p.x, 0, this.w - 1), y = clamp(p.y, 0, this.h - 1), R = 11, cv = L.querySelector('canvas'), g = cv.getContext('2d');
+    g.imageSmoothingEnabled = false; g.fillStyle = '#ffffff'; g.fillRect(0, 0, 264, 264);
+    g.drawImage(this.srcCanvas(), Math.round(x) - R, Math.round(y) - R, R * 2 + 1, R * 2 + 1, 0, 0, 264, 264);
+    const cell = 264 / (R * 2 + 1), o = R * cell; g.lineWidth = 3; g.strokeStyle = '#141414'; g.strokeRect(o - 1, o - 1, cell + 2, cell + 2); g.lineWidth = 1.5; g.strokeStyle = '#ffffff'; g.strokeRect(o + 1.5, o + 1.5, cell - 3, cell - 3);
+    const c = this.sample(x, y, 1); this.loupeColor = c;
+    L.querySelector('.loupe-sw').style.background = c; L.querySelector('.loupe-hex').textContent = (c || '').toUpperCase();
+    const vw = window.innerWidth, size = 132; let left = e.clientX - size / 2, top = e.clientY - size - 86;
+    if (top < 8) top = e.clientY + 60; left = clamp(left, 8, vw - size - 8);
+    L.style.left = left + 'px'; L.style.top = top + 'px'; L.hidden = false;
+  }
+  hideLoupe() { if (this.loupe) this.loupe.hidden = true; }
+  sample(x, y, rad = 3) {
+    const d = this.px(), w = this.w, h = this.h; let R = 0, G = 0, B = 0, n = 0;
+    for (let yy = Math.max(0, Math.round(y) - rad); yy <= Math.min(h - 1, Math.round(y) + rad); yy++) for (let xx = Math.max(0, Math.round(x) - rad); xx <= Math.min(w - 1, Math.round(x) + rad); xx++) { const i = (yy * w + xx) * 4; R += d[i]; G += d[i + 1]; B += d[i + 2]; n++; }
     return n ? hex(R / n, G / n, B / n) : null;
   }
   getState() { const k = ['src', 'mask', 'er', 'rs', 'labels', 'lowPx', 'lw', 'lh', 'w', 'h', 'cut', 'frame', 'hg', 'stack', 'smoothed', 'view', 'lowBin', 'trim']; const o = {}; k.forEach(x => { o[x] = this[x]; }); return this.src ? o : null; }
@@ -961,13 +1056,34 @@ class Cutout {
     Object.assign(this, o); const { w, h } = this;
     this.canvas.width = this.ov.width = w; this.canvas.height = this.ov.height = h;
     this.wrap.style.aspectRatio = `${w} / ${h}`; this.wrap.style.width = `min(100%, calc(50vh * ${(w / h).toFixed(4)}))`;
-    if (this.smooth && !this.smoothed) this.setSmooth(true); else if (this.view) { const s = this.smooth && this.smoothed ? this.smoothed : this.src.data, d = this.view.data; for (let i = 0; i < d.length; i += 4) { d[i] = s[i]; d[i + 1] = s[i + 1]; d[i + 2] = s[i + 2]; } }
+    this._pop = null; this.refreshView();
     this.resetZoom(); this.placeFrame(); this.placeHanger(); this.redraw(); this.onChange();
   }
   clear() {
     this.src = null; this.mask = null; this.labels = null; this.lowBin = null; this.cut = false; this.hg = null; this.stack = []; this.trim = 0;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); this.octx.clearRect(0, 0, this.ov.width, this.ov.height);
     this.frameEl.hidden = true; const hg = $('.hgr', this.wrap); if (hg) hg.hidden = true; this.wrap.style.aspectRatio = '3 / 4'; this.wrap.style.width = 'min(100%, calc(50vh * 0.75))'; this.onChange();
+  }
+  removeHoles() { // background enclosed by the piece (inside a strap or handle loop) that the cut kept
+    const { lw, lh } = this, n = lw * lh, L = this.labels, px = this.lowPx; if (!L) return 0;
+    const lab = new Float32Array(n * 3), f = t => t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116, lin = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+    for (let i = 0; i < n; i++) { const r = lin(px[i * 4]), g = lin(px[i * 4 + 1]), b = lin(px[i * 4 + 2]); const X = f((r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047), Y = f(r * 0.2126 + g * 0.7152 + b * 0.0722), Z = f((r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883); lab[i * 3] = 116 * Y - 16; lab[i * 3 + 1] = 500 * (X - Y); lab[i * 3 + 2] = 200 * (Y - Z); }
+    const bgIdx = []; for (let i = 0; i < n; i++) if (L[i] === 0) bgIdx.push(i);
+    if (bgIdx.length < 400) return 0;
+    const step = Math.max(1, Math.floor(bgIdx.length / 15000)), smp = []; for (let i = 0; i < bgIdx.length; i += step) smp.push(bgIdx[i]);
+    const dist = (i, c) => { const a = (lab[i * 3] - c[0]) * 0.55, b = lab[i * 3 + 1] - c[1], d = lab[i * 3 + 2] - c[2]; return Math.sqrt(a * a + b * b + d * d); };
+    let C = []; for (let k = 0; k < 5; k++) { const i = smp[Math.floor((k + 0.5) * smp.length / 5)]; C.push([lab[i * 3], lab[i * 3 + 1], lab[i * 3 + 2], 0]); }
+    for (let it = 0; it < 8; it++) { const sm = C.map(() => [0, 0, 0, 0]); for (const i of smp) { let bk = 0, bd = 1e9; C.forEach((c, k) => { const dd = dist(i, c); if (dd < bd) { bd = dd; bk = k; } }); const q = sm[bk]; q[0] += lab[i * 3]; q[1] += lab[i * 3 + 1]; q[2] += lab[i * 3 + 2]; q[3]++; } C = C.map((c, k) => sm[k][3] ? [sm[k][0] / sm[k][3], sm[k][1] / sm[k][3], sm[k][2] / sm[k][3], sm[k][3]] : c); }
+    C = C.filter(c => c[3] >= smp.length * 0.05);
+    const cand = new Uint8Array(n); let fgCount = 0;
+    for (let i = 0; i < n; i++) { if (!(L[i] & 1)) continue; fgCount++; let b = 1e9; for (const c of C) { const dd = dist(i, c); if (dd < b) b = dd; } if (b < 13) cand[i] = 1; }
+    const comp = new Int32Array(n), q = new Int32Array(n); let id = 0, removed = 0;
+    for (let i = 0; i < n; i++) {
+      if (!cand[i] || comp[i]) continue; id++; let h = 0, t = 0, bgN = 0, fgN = 0; q[t++] = i; comp[i] = id;
+      while (h < t) { const p = q[h++], x = p % lw; for (const o of [x > 0 ? p - 1 : -1, x < lw - 1 ? p + 1 : -1, p >= lw ? p - lw : -1, p < n - lw ? p + lw : -1]) { if (o < 0) { bgN++; continue; } if (cand[o]) { if (!comp[o]) { comp[o] = id; q[t++] = o; } } else if (L[o] & 1) fgN++; else bgN++; } }
+      if (t > n * 0.002 && t < fgCount * 0.6 && bgN <= (bgN + fgN) * 0.04) { for (let j = 0; j < t; j++) L[q[j]] = 0; removed += t; }
+    }
+    return removed;
   }
   cutFromFrame() {
     this.push(); const { lw, lh, w, h } = this, F = this.frame, L = new Uint8Array(lw * lh);
@@ -1024,8 +1140,9 @@ class Cutout {
       if (!this.src || e.target.closest('button')) return; e.preventDefault();
       try { W.setPointerCapture(e.pointerId); } catch {}
       this.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      if (this.onPick && this.ptrs.size === 1) { const p = this.toImg(e), c = this.sample(clamp(p.x, 0, this.w - 1), clamp(p.y, 0, this.h - 1)), cb = this.onPick; this.onPick = null; this.wrap.classList.remove('picking'); if (c) cb(c); this.pickedNow = true; return; }
+      if (this.onPick && this.ptrs.size === 1) { this.picking = true; this.showLoupe(e); return; }
       if (this.ptrs.size === 2) {
+        if (this.picking) { this.picking = false; this.hideLoupe(); }
         this.tap2 = { t: Date.now(), start: [...this.ptrs.values()].map(q => ({ ...q })), moved: false };
         if (this.hdrag) { this.hg = this.hdrag.g0; this.stack.pop(); this.hdrag = null; this.placeHanger(); }
         if (this.stroking) { this.stroking = false; this.dirtyStroke = false; this.undo(); }
@@ -1040,6 +1157,7 @@ class Cutout {
     });
     W.addEventListener('pointermove', e => {
       if (!this.ptrs.has(e.pointerId)) return; this.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.picking) { this.showLoupe(e); return; }
       if (this.tap2 && !this.tap2.moved) { const now = [...this.ptrs.values()]; if (this.tap2.start.some((q, i) => now[i] && Math.hypot(now[i].x - q.x, now[i].y - q.y) > 12)) this.tap2.moved = true; }
       if (this.pinch && this.ptrs.size >= 2) this.updatePinch(); else if (this.hdrag) { const p = this.toImg(e), D = this.hdrag; D.moved = true; this.hg = { ...D.g0, cx: clamp(D.g0.cx + p.x - D.sx, 0, this.w), ty: clamp(D.g0.ty + p.y - D.sy, 0, this.h) }; this.placeHanger(); } else if (this.fdrag) this.frameMove(e); else if (this.stroking) this.strokeTo(this.toImg(e));
     });
@@ -1047,7 +1165,11 @@ class Cutout {
       if (!this.ptrs.has(e.pointerId)) return; this.ptrs.delete(e.pointerId);
       if (this.pinch && this.ptrs.size < 2) this.pinch = null;
       if (this.ptrs.size === 0) {
-        if (this.pickedNow) { this.pickedNow = false; return; }
+        if (this.picking) {
+          this.picking = false; const c = this.loupeColor, cb = this.onPick; this.hideLoupe();
+          if (c && cb) { this.onPick = null; this.wrap.classList.remove('picking'); cb(c); }
+          return;
+        }
         if (this.tap2) { const T = this.tap2; this.tap2 = null; if (!T.moved && Date.now() - T.t < 400) { if (this.pinch0) { this.z = this.pinch0; this.applyZoom(); } this.undo(); if (this.onTapUndo) this.onTapUndo(); return; } }
         if (this.fdrag) this.frameUp();
         if (this.hdrag) { if (!this.hdrag.moved) this.stack.pop(); this.hdrag = null; this.onChange(); }
@@ -1092,7 +1214,7 @@ class Cutout {
     for (let y = 0; y < h; y++) { const row = y * w; for (let x = 0; x < w; x++) if (m[row + x] > 12) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
     if (x1 < 0) return null;
     const pad = Math.round(Math.max(x1 - x0, y1 - y0) * 0.04), sx = Math.max(0, x0 - pad), sy = y0, ex = Math.min(w, x1 + 1 + pad), ey = Math.min(h, y1 + 1 + pad), sw = ex - sx, sh = ey - sy;
-    const full = mk(w, h), id = new ImageData(new Uint8ClampedArray(this.smooth && this.smoothed ? this.smoothed : this.src.data), w, h);
+    this._pop = null; const full = mk(w, h), id = new ImageData(new Uint8ClampedArray(this.px()), w, h);
     for (let i = 0; i < w * h; i++) id.data[i * 4 + 3] = m[i]; full.getContext('2d').putImageData(id, 0, 0);
     const k = Math.min(1, 900 / Math.max(sw, sh)), ow = Math.max(1, Math.round(sw * k)), oh = Math.max(1, Math.round(sh * k)), out = mk(ow, oh), ox = out.getContext('2d');
     ox.imageSmoothingQuality = 'high'; ox.drawImage(full, sx, sy, sw, sh, 0, 0, ow, oh);
@@ -1154,20 +1276,29 @@ const TOOL_HINT = {
   remove: 'Paint over leftover background, like the hanger or a door edge. Updates when you lift.',
   erase: 'Erases exactly where you paint. Pinch with two fingers to zoom.',
   restore: 'Paints back exactly where you paint. Removed areas show faintly.',
-  hanger: 'Pick a hanger, then drag it to where the piece hangs from: across the straps or shoulders, or clips on the waistband.'
+  hanger: 'Pick a hanger, then drag it to where the piece hangs from: across the straps or shoulders, clips on the waistband, or a hook through a bag handle.'
 };
 async function openEditor({ item = null, file = null, pre = null, onSaved = null }) {
   const isNew = !item, v0 = item || pre || {};
   const defCat = S.rackCat !== 'all' && S.rackCat !== 'none' ? S.rackCat : (S.closetCat !== 'all' && S.closetCat !== 'none' ? S.closetCat : (S.cats[0]?.id || null));
-  const st = { cat: item ? (catOf(item) === 'none' ? null : item.cat) : (pre?.cat && S.cats.some(c => c.id === pre.cat) ? pre.cat : defCat), seasons: new Set(v0.seasons || []), occ: new Set(v0.occasions || []), colorTouched: !!v0.color, mats: new Set(v0.materials || []), second: v0.secondhand ?? null, hManual: !!v0.hangerManual,
+  const st = { cat: item ? (catOf(item) === 'none' ? null : item.cat) : (pre?.cat && S.cats.some(c => c.id === pre.cat) ? pre.cat : defCat), seasons: new Set(v0.seasons || []), occ: new Set(v0.occasions || []), colorTouched: !!v0.color, mats: new Set(v0.materials || []), second: v0.gift ? 'gift' : v0.secondhand === true ? true : v0.secondhand === false ? false : null, hManual: !!v0.hangerManual,
     color2: v0.color2 || '', details: [...(v0.details || [])], side: 'front', states: { front: null, back: null } };
   let smoothPref = true; try { smoothPref = localStorage.getItem('closet-smooth') !== '0'; } catch {}
   st.smooth = item ? !!item.smooth : smoothPref;
+  let popPref = false; try { popPref = localStorage.getItem('closet-pop') === '1'; } catch {}
+  st.pop = item ? !!item.pop : popPref;
+  st.adj = { b: 0, s: 0, w: 0, c: 0, ...(item?.adj || {}) };
   const el = openSheet(`<div class="sheet-inner" role="dialog" aria-modal="true" aria-label="${isNew ? 'New piece' : 'Edit piece'}">
     <header class="sheet-head"><button class="btn ghost sm" data-e="cancel">Cancel</button><h2>${isNew ? 'New piece' : 'Edit piece'}</h2><button class="btn primary sm" data-e="save">Save</button></header>
     <div class="sheet-body">
-      <div class="side-row"><div class="seg" role="group" aria-label="Side"><button data-side="front" aria-pressed="true">Front</button><button data-side="back" aria-pressed="false">Back</button></div><button class="btn sm" data-e="replace">${ic('photo', 18)}<span>Replace photo</span></button></div>
-      <div class="stage"><div class="canvas-wrap"><div class="layer"><div class="hgr" hidden>${HANG_SVG}</div><canvas class="img"></canvas><canvas class="ov"></canvas><div class="frame" hidden><i></i><i></i><i></i><i></i></div></div><div class="busy">Loading photo…</div><div class="side-empty" hidden><p>Add a photo of the back, so you can flip the piece around on the rack.</p><button class="btn primary sm" data-e="addback">${ic('camera', 18)}Add back photo</button></div><button class="zoom-reset" hidden>Fit</button></div>
+      <div class="side-row"><div class="seg" role="group" aria-label="Side"><button data-side="front" aria-pressed="true">Front</button><button data-side="back" aria-pressed="false">Back</button></div><div class="side-acts"><button class="btn sm icon-only" data-e="rotate" aria-label="Rotate photo">${ic('rotate', 18)}</button><button class="btn sm" data-e="replace">${ic('photo', 18)}<span>Replace photo</span></button></div></div>
+      <div class="stage"><div class="canvas-wrap"><div class="layer"><div class="hgr" hidden>${HANG_SVG}</div><canvas class="img"></canvas><canvas class="ov"></canvas><div class="frame" hidden><i></i><i></i><i></i><i></i></div></div><div class="busy">Loading photo…</div><div class="side-empty" hidden><p>Add a photo of the back, so you can flip the piece around on the rack.</p><button class="btn primary sm" data-e="addback">${ic('camera', 18)}Add back photo</button></div><button class="zoom-reset" hidden>Fit</button><button class="fx-btn" data-e="fx" aria-label="Photo filters" aria-expanded="false">${ic('sliders', 20)}</button></div>
+        <div class="fx-panel" id="e-fx" hidden>
+        <label class="check" style="margin:4px 2px 6px"><input type="checkbox" id="e-smooth" ${st.smooth ? 'checked' : ''}><span>Smooth out wrinkles a little</span></label>
+        <label class="check" style="margin:10px 2px 6px"><input type="checkbox" id="e-pop" ${st.pop ? 'checked' : ''}><span>Make colors pop (auto)</span></label>
+        ${[['b', 'Darker', 'Brighter'], ['s', 'Muted', 'Vivid'], ['w', 'Cooler', 'Warmer'], ['c', 'Softer', 'Crisper']].map(([k, lo, hi]) => `<label class="slider adj"><span>${lo}</span><input type="range" min="-50" max="50" step="1" value="${st.adj[k] | 0}" data-adj="${k}" aria-label="${lo} to ${hi}"><span>${hi}</span></label>`).join('')}
+        <button class="btn sm ghost" data-e="adjreset" style="margin:2px 0 0">Reset colors</button>
+      </div>
         <p class="hint" id="e-hint"></p><button class="btn primary" id="e-cut" hidden>${ic('sparkle', 20)}Cut out</button></div>
       <div class="tools" role="toolbar" aria-label="Cut-out tools">
         <button class="tool" data-tool="frame">${ic('frame')}Frame</button>
@@ -1178,10 +1309,9 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
         <button class="tool" data-tool="hanger">${ic('hanger')}Hanger</button>
         <button class="tool" data-cmd="undo">${ic('undo')}Undo</button>
       </div>
-      <label class="slider trim" id="e-trim-row" hidden><span>Delete less</span><input type="range" id="e-trim" min="-3" max="3" step="1" value="0" aria-label="Background removal, delete less or more"><span>Delete more</span></label>
-      <div class="seg" id="e-htype" role="group" aria-label="Hanger type" style="margin:4px 0 8px" hidden><button data-htype="hanger">Hanger</button><button data-htype="clip">Clips</button><button data-htype="none">No hanger</button></div>
       <label class="slider" id="e-slider-row"><span id="e-slabel">Brush size</span><input type="range" id="e-slider" min="6" max="70" step="1" value="22"></label>
-      <label class="check" style="margin:8px 6px 0"><input type="checkbox" id="e-smooth" ${st.smooth ? 'checked' : ''}><span>Smooth out wrinkles a little</span></label>
+      <label class="slider trim" id="e-trim-row" hidden><span>Delete less</span><input type="range" id="e-trim" min="-3" max="3" step="1" value="0" aria-label="Background removal, delete less or more"><span>Delete more</span></label>
+      <div class="seg" id="e-htype" role="group" aria-label="Hanger type" style="margin:2px 0 8px" hidden><button data-htype="hanger">Hanger</button><button data-htype="clip">Clips</button><button data-htype="hook">Hook</button><button data-htype="none">No hanger</button></div>
       <p class="muted" style="font-size:12.5px;margin:4px 6px 0">Tip: tap with two fingers to undo.</p>
       <div class="form">
         <label class="field"><span>Name</span><input type="text" id="f-name" placeholder="Long fine-knit cardigan" value="${esc(v0.name || '')}"></label>
@@ -1189,8 +1319,9 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
         <div class="field"><span>Color</span><div class="color-row"><input type="color" id="f-color" value="${esc(v0.color || '#c9b49b')}" aria-label="Main color"><button class="chip" data-pickc="1">${ic('drop', 16)}Pick from photo</button><span class="muted" id="f-color-note"></span></div></div>
         <div class="field" id="f-color2-field"></div>
         <div class="field"><span>Material</span><div class="chips wrap" id="f-mat"></div></div>
-        <div class="field"><span>Bought</span><div class="chips wrap" id="f-src"><button class="chip" data-src="new" aria-pressed="${st.second === false}">New</button><button class="chip" data-src="second" aria-pressed="${st.second === true}">Secondhand</button></div></div>
+        <div class="field"><span>How you got it</span><div class="chips wrap" id="f-src"><button class="chip" data-src="new" aria-pressed="${st.second === false}">New</button><button class="chip" data-src="second" aria-pressed="${st.second === true}">Secondhand</button><button class="chip" data-src="gift" aria-pressed="${st.second === 'gift'}">${ic('gift', 16)}Gift</button></div></div>
         <div class="two"><label class="field"><span>Brand</span><input type="text" id="f-brand" value="${esc(v0.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="f-price" inputmode="decimal" value="${esc(v0.price || '')}" placeholder="$29.99"></label></div>
+        <div class="two"><label class="field"><span>Size</span><input type="text" id="f-size" value="${esc(v0.size || '')}" placeholder="M, 38, W28 L32"></label><span></span></div>
         <div class="field"><span>Season</span><div class="chips wrap" id="f-season">${SEASONS.map(s => `<button class="chip" data-season="${s}" aria-pressed="${st.seasons.has(s)}">${s}</button>`).join('')}</div></div>
         <div class="field"><span>Occasion</span><div class="chips wrap" id="f-occ">${OCCASIONS.map(s => `<button class="chip" data-occ="${s}" aria-pressed="${st.occ.has(s)}">${s}</button>`).join('')}</div></div>
         <div class="field"><span>Detail photos</span><div class="details-row" id="f-details"></div></div>
@@ -1211,25 +1342,25 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     const i2 = $('#f-color2', el); if (i2) i2.addEventListener('input', () => { st.color2 = i2.value; });
   };
   const renderDetails = () => {
-    $('#f-details', el).innerHTML = st.details.map((d, i) => `<div class="dthumb"><img src="${d}" alt="Detail photo ${i + 1}"><button class="dx" data-ddel="${i}" aria-label="Remove detail photo ${i + 1}">${ic('x', 14)}</button></div>`).join('') + `<button class="dadd" data-dadd aria-label="Add detail photo">${ic('plus', 22)}<span>Add</span></button>`;
+    $('#f-details', el).innerHTML = st.details.map((d, i) => `<div class="dthumb"><img src="${d}" alt="Detail photo ${i + 1}"><button class="dx" data-ddel="${i}" aria-label="Remove detail photo ${i + 1}">${ic('x', 14)}</button><button class="dx dr" data-drot="${i}" aria-label="Rotate detail photo ${i + 1}">${ic('rotate', 13)}</button></div>`).join('') + `<button class="dadd" data-dadd aria-label="Add detail photo">${ic('plus', 22)}<span>Add</span></button>`;
   };
   renderCats(); renderMats(); renderColor2(); renderDetails();
   const sideHas = () => !!ed.src;
   const setTool = t => {
     ed.tool = t; $$('[data-tool]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.tool === t));
     $('#e-slider-row', el).hidden = t === 'frame' || !sideHas();
-    $('#e-trim-row', el).hidden = !ed.cut || t === 'frame' || !sideHas();
+    $('#e-trim-row', el).hidden = !ed.cut || t === 'frame' || t === 'hanger' || !sideHas();
     $('#e-htype', el).hidden = t !== 'hanger'; $$('[data-htype]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.htype === ed.htype));
     if (t === 'hanger' && ed.htype === 'none') $('#e-slider-row', el).hidden = true;
-    if (t === 'hanger') { if (!ed.hg) ed.autoHanger(); const b = ed.gBox(); $('#e-slabel', el).textContent = 'Hanger size'; slider.min = 15; slider.max = 140; slider.value = b && ed.hg ? Math.round(ed.hg.w / (b.x1 - b.x0 + 1) * 100) : 80; }
+    if (t === 'hanger') { if (!ed.hg) ed.autoHanger(); const b = ed.gBox(); $('#e-slabel', el).textContent = ed.htype === 'hook' ? 'Hook size' : 'Hanger size'; slider.min = ed.htype === 'hook' ? 6 : 15; slider.max = ed.htype === 'hook' ? 40 : 140; slider.value = b && ed.hg ? Math.round(ed.hg.w / (b.x1 - b.x0 + 1) * 100) : 80; }
     else { $('#e-slabel', el).textContent = 'Brush size'; slider.min = 6; slider.max = 70; slider.value = ed.brush; }
     cutBtn.hidden = t !== 'frame' || !sideHas(); cutBtn.textContent = ''; cutBtn.insertAdjacentHTML('beforeend', `${ic('sparkle', 20)}${ed.cut && ed.labels ? 'Cut out again' : 'Cut out'}`);
     hint.textContent = sideHas() ? TOOL_HINT[t] : ''; ed.placeFrame(); ed.placeHanger(); ed.redraw();
   };
   const showSide = () => {
     $$('[data-side]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.side === st.side));
-    empty.hidden = sideHas(); $('.tools', el).style.opacity = sideHas() ? '' : '.4'; $('[data-e="replace"] span', el).textContent = sideHas() ? 'Replace photo' : 'Add photo';
-    let rb = $('[data-e="rmback"]', el); if (st.side === 'back' && sideHas()) { if (!rb) $('.side-row', el).insertAdjacentHTML('beforeend', `<button class="btn sm danger" data-e="rmback" aria-label="Remove back photo">${ic('trash', 18)}</button>`); } else if (rb) rb.remove();
+    empty.hidden = sideHas(); $('.fx-btn', el).hidden = !sideHas(); if (!sideHas()) $('#e-fx', el).hidden = true; $('.tools', el).style.opacity = sideHas() ? '' : '.4'; $('[data-e="replace"] span', el).textContent = sideHas() ? 'Replace photo' : 'Add photo';
+    let rb = $('[data-e="rmback"]', el); if (st.side === 'back' && sideHas()) { if (!rb) $('.side-acts', el).insertAdjacentHTML('beforeend', `<button class="btn sm danger" data-e="rmback" aria-label="Remove back photo">${ic('trash', 18)}</button>`); } else if (rb) rb.remove();
     setTool(sideHas() ? (ed.cut ? (ed.tool === 'frame' ? 'remove' : ed.tool) : 'frame') : 'frame');
   };
   const work = async (msg, fn) => { busy.textContent = msg; busy.hidden = false; await new Promise(r => setTimeout(r, 60)); try { fn(); } catch (e) { console.error(e); toast("Couldn't process that photo."); } busy.hidden = true; };
@@ -1253,7 +1384,10 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   $('#f-color', el).addEventListener('input', () => { st.colorTouched = true; $('#f-color-note', el).textContent = ''; });
   $('.zoom-reset', el).addEventListener('click', () => ed.resetZoom());
   $('#e-smooth', el).addEventListener('change', e => { st.smooth = e.target.checked; try { localStorage.setItem('closet-smooth', st.smooth ? '1' : '0'); } catch {} ed.setSmooth(st.smooth); });
-  ed.htype = item ? hangerType(item) : defaultHanger({ cat: st.cat }); ed.smooth = st.smooth;
+  $('#e-pop', el).addEventListener('change', e => { st.pop = e.target.checked; try { localStorage.setItem('closet-pop', st.pop ? '1' : '0'); } catch {} ed.setPop(st.pop); });
+  let adjRaf = 0;
+  $$('[data-adj]', el).forEach(inp => inp.addEventListener('input', () => { st.adj[inp.dataset.adj] = +inp.value; cancelAnimationFrame(adjRaf); adjRaf = requestAnimationFrame(() => ed.setAdj(st.adj)); }));
+  ed.htype = item ? hangerType(item) : defaultHanger({ cat: st.cat }); ed.smooth = st.smooth; ed.pop = st.pop; ed.adj = { ...st.adj };
   const switchSide = side => { if (side === st.side) return; st.states[st.side] = ed.getState(); st.side = side; ed.setState(st.states[side]); showSide(); };
   const resultOf = side => { if (side === st.side) return ed.src ? (ed.cut ? ed.result() : 'uncut') : null; const S0 = st.states[side]; if (!S0) return null; const cur = ed.getState(); ed.setState(S0); const r = ed.cut ? ed.result() : 'uncut'; ed.setState(cur); return r; };
   pasteTarget = f => { if (!ed.src) loadPhoto(f); else toast('Use Replace photo to swap this photo.'); };
@@ -1264,22 +1398,26 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     if (t.dataset.side) { switchSide(t.dataset.side); return; }
     if (t.dataset.tool) { if (!ed.src) return; if (t.dataset.tool !== 'frame' && !ed.cut) { toast('Frame the piece and tap Cut out first.'); return; } setTool(t.dataset.tool); return; }
     if (t.dataset.cmd === 'undo') { ed.undo(); if (!ed.cut && ed.tool !== 'frame') setTool('frame'); else setTool(ed.tool); return; }
+    if (t.dataset.e === 'fx') { const pnl = $('#e-fx', el); pnl.hidden = !pnl.hidden; t.setAttribute('aria-expanded', !pnl.hidden); t.classList.toggle('on', !pnl.hidden); return; }
+    if (t.dataset.e === 'adjreset') { st.adj = { b: 0, s: 0, w: 0, c: 0 }; $$('[data-adj]', el).forEach(i => { i.value = 0; }); ed.setAdj(st.adj); return; }
+    if (t.dataset.e === 'rotate') { if (!ed.src) return; await work('Rotating…', () => ed.rotate()); setTool(ed.cut ? (ed.tool === 'frame' ? 'remove' : ed.tool) : 'frame'); return; }
     if (t.dataset.e === 'replace' || t.dataset.e === 'addback') { const f = await choosePhoto(st.side === 'back' ? 'Photo of the back' : (ed.src ? 'Replace photo' : 'Add a photo')); if (f) loadPhoto(f); return; }
     if (t.dataset.e === 'rmback') { if (!(await confirmDanger('Remove the back photo?', 'The front stays as it is.', 'Remove'))) return; ed.clear(); st.states.back = null; showSide(); return; }
     if (t.dataset.pickc) {
       if (!ed.src) { toast('Add a photo first.'); return; }
-      const which = t.dataset.pickc; el.querySelector('.sheet-body').scrollTo({ top: 0, behavior: 'smooth' }); ed.wrap.classList.add('picking'); const prev = hint.textContent; hint.textContent = 'Tap the photo to pick that color.';
+      const which = t.dataset.pickc; el.querySelector('.sheet-body').scrollTo({ top: 0, behavior: 'smooth' }); ed.wrap.classList.add('picking'); const prev = hint.textContent; hint.textContent = 'Touch the photo and slide to the exact color, then let go.';
       ed.onPick = c => { hint.textContent = prev; if (which === '1') { $('#f-color', el).value = c; st.colorTouched = true; $('#f-color-note', el).textContent = 'Picked from the photo'; } else { st.color2 = c; renderColor2(); } toast('Color picked'); };
       return;
     }
     if (t.dataset.c2 === 'add') { st.color2 = '#e8d8c8'; renderColor2(); return; }
     if (t.dataset.c2 === 'remove') { st.color2 = ''; renderColor2(); return; }
     if (t.hasAttribute('data-dadd')) { const f = await choosePhoto('Add a detail photo', 'A close-up of the print, a label, buttons, the lining…'); if (f) { try { st.details.push(await compressPhoto(f)); renderDetails(); } catch { toast("Couldn't open that photo."); } } return; }
+    if (t.dataset.drot != null) { const i = +t.dataset.drot; try { st.details[i] = await rotateDataURL(st.details[i]); renderDetails(); } catch {} return; }
     if (t.dataset.ddel != null) { st.details.splice(+t.dataset.ddel, 1); renderDetails(); return; }
     if (t.dataset.fcat) { st.cat = t.dataset.fcat; renderCats(); if (!st.hManual) { const ht = defaultHanger({ cat: st.cat }); if (ht !== ed.htype) { ed.htype = ht; ed.hg = null; if (ed.cut) ed.autoHanger(); if (ed.tool === 'hanger') setTool('hanger'); } } return; }
     if (t.dataset.htype) { st.hManual = true; ed.htype = t.dataset.htype; ed.hg = null; ed.autoHanger(); setTool('hanger'); return; }
     if (t.dataset.mat) { const m = t.dataset.mat; st.mats.has(m) ? st.mats.delete(m) : st.mats.add(m); t.setAttribute('aria-pressed', st.mats.has(m)); return; }
-    if (t.dataset.src) { const v = t.dataset.src === 'second'; st.second = st.second === v ? null : v; $$('[data-src]', el).forEach(b => b.setAttribute('aria-pressed', st.second === (b.dataset.src === 'second'))); return; }
+    if (t.dataset.src) { const map = { new: false, second: true, gift: 'gift' }, v = map[t.dataset.src]; st.second = st.second === v ? null : v; $$('[data-src]', el).forEach(b => b.setAttribute('aria-pressed', st.second === map[b.dataset.src])); return; }
     if (t.dataset.season) { const s = t.dataset.season; st.seasons.has(s) ? st.seasons.delete(s) : st.seasons.add(s); t.setAttribute('aria-pressed', st.seasons.has(s)); return; }
     if (t.dataset.occ) { const s = t.dataset.occ; st.occ.has(s) ? st.occ.delete(s) : st.occ.add(s); t.setAttribute('aria-pressed', st.occ.has(s)); return; }
     if (t.hasAttribute('data-newmat')) {
@@ -1316,7 +1454,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       if (front === 'uncut') { if (st.side !== 'front') switchSide('front'); toast('Frame the front and tap Cut out first.'); return; }
       if (back === 'uncut') { if (st.side !== 'back') switchSide('back'); toast('Cut out the back too, or remove it.'); return; }
       const now = Date.now();
-      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: front.img, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 5, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second, details: st.details,
+      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: front.img, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 6, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.pop, adj: { ...st.adj }, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
         back: back ? { img: back.img, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang } : null };
       if (!it.hang) { try { it.hang = await hangOf(front.img); } catch {} }
       const ok = await safe(store.put('items', it).then(() => true), "Couldn't save the piece. Your device may be out of space.");
@@ -1350,8 +1488,8 @@ function openDetail(it) {
     ['Category', esc(catName(catOf(it)))],
     it.color && ['Color', `<span class="dot" style="background:${esc(it.color)}"></span>${esc(it.color.toUpperCase())}`],
     it.color2 && ['Second color', `<span class="dot" style="background:${esc(it.color2)}"></span>${esc(it.color2.toUpperCase())}`],
-    it.materials?.length && ['Material', esc(it.materials.join(', '))], it.secondhand != null && ['Bought', it.secondhand ? 'Secondhand' : 'New'],
-    it.brand && ['Brand', esc(it.brand)], it.price && ['Price', esc(it.price)],
+    it.materials?.length && ['Material', esc(it.materials.join(', '))], (it.gift || it.secondhand != null) && ['Got it', it.gift ? 'Gift' : it.secondhand ? 'Secondhand' : 'New'],
+    it.brand && ['Brand', esc(it.brand)], it.size && ['Size', esc(it.size)], it.price && ['Price', esc(it.price)],
     it.seasons?.length && ['Season', esc(it.seasons.join(', '))], it.occasions?.length && ['Occasion', esc(it.occasions.join(', '))],
     used.length && ['In outfits', esc(used.map(o => o.name || 'Untitled').join(', '))]
   ].filter(Boolean);
@@ -1382,11 +1520,30 @@ function openDetail(it) {
 }
 
 function openLightbox(list, i) {
-  const el = openSheet(`<div class="lightbox" role="dialog" aria-modal="true" aria-label="Detail photo"><img alt=""><button class="lb-x" aria-label="Close">${ic('x', 22)}</button>${list.length > 1 ? `<button class="lb-prev" aria-label="Previous photo">${ic('back', 24)}</button><button class="lb-next" aria-label="Next photo">${ic('back', 24)}</button><p class="lb-n"></p>` : ''}</div>`, 'full lb');
-  const show = () => { $('img', el).src = list[i]; const n = $('.lb-n', el); if (n) n.textContent = `${i + 1} of ${list.length}`; };
-  show(); let sx = null;
-  el.addEventListener('click', e => { if (e.target.closest('.lb-x')) closeSheet(el); else if (e.target.closest('.lb-prev')) { i = (i - 1 + list.length) % list.length; show(); } else if (e.target.closest('.lb-next')) { i = (i + 1) % list.length; show(); } });
-  el.addEventListener('pointerdown', e => { sx = e.clientX; }); el.addEventListener('pointerup', e => { if (sx == null || list.length < 2) return; const dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 50) { i = (i + (dx < 0 ? 1 : -1) + list.length) % list.length; show(); } });
+  const el = openSheet(`<div class="lightbox" role="dialog" aria-modal="true" aria-label="Detail photo"><img alt="" draggable="false"><button class="lb-x" aria-label="Close">${ic('x', 22)}</button>${list.length > 1 ? `<button class="lb-prev" aria-label="Previous photo">${ic('back', 24)}</button><button class="lb-next" aria-label="Next photo">${ic('back', 24)}</button>` : ''}<p class="lb-n"></p></div>`, 'full lb');
+  const box = $('.lightbox', el), img = $('img', el); let z = { s: 1, x: 0, y: 0 };
+  const apply = () => { img.style.transform = `translate(${z.x}px,${z.y}px) scale(${z.s})`; };
+  const fit = () => { const r = box.getBoundingClientRect(), mx = Math.max(0, (img.offsetWidth * z.s - r.width) / 2), my = Math.max(0, (img.offsetHeight * z.s - r.height) / 2); z.x = clamp(z.x, -mx, mx); z.y = clamp(z.y, -my, my); };
+  const show = () => { img.src = list[i]; z = { s: 1, x: 0, y: 0 }; apply(); $('.lb-n', el).textContent = list.length > 1 ? `${i + 1} of ${list.length}  ·  pinch or double-tap to zoom` : 'Pinch or double-tap to zoom'; };
+  const go = d => { i = (i + d + list.length) % list.length; show(); };
+  show();
+  el.addEventListener('click', e => { if (e.target.closest('.lb-x')) closeSheet(el); else if (e.target.closest('.lb-prev')) go(-1); else if (e.target.closest('.lb-next')) go(1); });
+  const P = new Map(); let pinch = null, pan = null, swipeX = null, lastTap = 0;
+  const zoomAt = (s, cx, cy) => { const r = box.getBoundingClientRect(), ox = cx - (r.left + r.width / 2), oy = cy - (r.top + r.height / 2), k = s / z.s; z.x = ox - (ox - z.x) * k; z.y = oy - (oy - z.y) * k; z.s = s; fit(); apply(); };
+  box.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) return; box.setPointerCapture(e.pointerId); P.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (P.size === 2) { const [a, b] = [...P.values()]; pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, s0: z.s }; pan = null; swipeX = null; return; }
+    const now = Date.now(); if (now - lastTap < 300) { zoomAt(z.s > 1.05 ? 1 : 2.6, e.clientX, e.clientY); if (z.s === 1) { z.x = z.y = 0; apply(); } lastTap = 0; return; } lastTap = now;
+    if (z.s > 1.01) pan = { sx: e.clientX, sy: e.clientY, x0: z.x, y0: z.y }; else swipeX = e.clientX;
+  });
+  box.addEventListener('pointermove', e => {
+    if (!P.has(e.pointerId)) return; P.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && P.size >= 2) { const [a, b] = [...P.values()]; zoomAt(clamp(pinch.s0 * Math.hypot(a.x - b.x, a.y - b.y) / pinch.d0, 1, 5), (a.x + b.x) / 2, (a.y + b.y) / 2); }
+    else if (pan) { z.x = pan.x0 + e.clientX - pan.sx; z.y = pan.y0 + e.clientY - pan.sy; fit(); apply(); }
+  });
+  const up = e => { if (!P.has(e.pointerId)) return; P.delete(e.pointerId); if (P.size < 2) pinch = null; if (!P.size) { if (swipeX != null && list.length > 1 && z.s <= 1.01) { const dx = e.clientX - swipeX; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); } swipeX = null; pan = null; if (z.s < 1.02) { z = { s: 1, x: 0, y: 0 }; apply(); } } };
+  box.addEventListener('pointerup', up); box.addEventListener('pointercancel', up);
+  box.addEventListener('wheel', e => { e.preventDefault(); zoomAt(clamp(z.s * Math.exp(-e.deltaY * 0.002), 1, 5), e.clientX, e.clientY); }, { passive: false });
 }
 
 /* ---------- outfit board ---------- */
@@ -1561,7 +1718,7 @@ function renderInsights() {
   const head = `<div class="page-head"><h1>Insights</h1><button class="btn sm" data-go="settings">${ic('sliders', 18)}Settings</button></div>`;
   if (!n) { v.innerHTML = head + `<div class="empty"><h2>Nothing to count yet</h2><p>Add a few pieces and you'll see your closet broken down by category, color, season, material, and more.</p><button class="btn primary" data-act="add">${ic('plus', 20)}Add a piece</button></div>`; return; }
   const prices = S.items.map(i => priceNum(i.price)).filter(x => !isNaN(x)), value = prices.reduce((a, b) => a + b, 0);
-  const shKnown = S.items.filter(i => i.secondhand != null), sh = shKnown.filter(i => i.secondhand).length;
+  const shKnown = S.items.filter(i => i.secondhand != null || i.gift), sh = shKnown.filter(i => i.secondhand).length;
   const styled = new Set(S.outfits.flatMap(o => o.pieces.map(p => p.itemId))), never = S.items.filter(i => !styled.has(i.id));
   const stats = [[n, n === 1 ? 'piece' : 'pieces'], [S.outfits.length, S.outfits.length === 1 ? 'outfit' : 'outfits'], [shKnown.length ? Math.round(sh / shKnown.length * 100) + '%' : '–', 'secondhand'], [prices.length ? Math.round(value).toLocaleString() : '–', prices.length < n && prices.length ? `spent on ${prices.length} priced` : 'total spent']];
   // brands: top 6 + other
@@ -1570,7 +1727,7 @@ function renderInsights() {
   const cats = tally(i => catName(catOf(i)));
   const colors = tally(i => colorFamily(i.color) || 'Not set');
   const seasons = tally(i => i.seasons || []);
-  const bought = tally(i => i.secondhand == null ? 'Not set' : i.secondhand ? 'Secondhand' : 'New');
+  const bought = tally(i => i.gift ? 'Gift' : i.secondhand == null ? 'Not set' : i.secondhand ? 'Secondhand' : 'New');
   const mats = tally(i => i.materials || []);
   const occ = tally(i => i.occasions || []);
   // things worth a look
@@ -1581,7 +1738,7 @@ function renderInsights() {
   const tagged = S.items.filter(i => i.seasons?.length).length;
   if (tagged >= 3) { const low = SEASONS.map(x => [x, S.items.filter(i => i.seasons?.includes(x)).length]).sort((a, b) => a[1] - b[1])[0]; if (low[1] <= Math.max(1, tagged * 0.15)) tips.push(`Only ${low[1]} ${low[1] === 1 ? 'piece' : 'pieces'} for ${low[0]}.`); }
   const fam = colors.filter(c => c.label !== 'Not set'); if (fam.length && n >= 5 && fam[0].count / n >= 0.5) tips.push(`${Math.round(fam[0].count / n * 100)}% of your closet is ${fam[0].label.toLowerCase()}.`);
-  const missing = [['season', i => !i.seasons?.length], ['material', i => !i.materials?.length], ['brand', i => !i.brand], ['new or secondhand', i => i.secondhand == null]].map(([k, f]) => [k, S.items.filter(f).length]).filter(x => x[1]);
+  const missing = [['season', i => !i.seasons?.length], ['material', i => !i.materials?.length], ['brand', i => !i.brand], ['how you got it', i => i.secondhand == null && !i.gift]].map(([k, f]) => [k, S.items.filter(f).length]).filter(x => x[1]);
   if (missing.length) tips.push(`To sharpen these charts, fill in ${missing.map(([k, c]) => `${k} (${c})`).join(', ')}.`);
   v.innerHTML = head + `<div class="stat-row">${stats.map(([a, b]) => `<div class="stat"><strong>${esc(a)}</strong><span>${esc(b)}</span></div>`).join('')}</div>`
     + (tips.length ? `<section class="panel"><h2>Worth a look</h2><ul class="tips">${tips.map(t => `<li>${esc(t)}</li>`).join('')}</ul></section>` : '')
@@ -1589,7 +1746,7 @@ function renderInsights() {
     + donutCard('cat', 'Category', cats, { colors: e => { const c = S.cats.find(x => x.name === e.label); return c ? catColor(c.id) : '#D6D6D6'; }, ramp: PASTEL, scope: 'cat' })
     + donutCard('color', 'Color', colors, { colors: e => avgColor(e.items) || FAMILY[e.label], ramp: PASTEL })
     + donutCard('season', 'Season', seasons, { colors: e => SEASON_COL[e.label], ramp: PASTEL, note: 'tags' })
-    + donutCard('bought', 'New or secondhand', bought.sort((x, y) => (x.label === 'Not set') - (y.label === 'Not set') || (x.label === 'Secondhand' ? -1 : 1)), { colors: e => e.label === 'Secondhand' ? '#8FD0CF' : '#C3A9EC', ramp: PASTEL })
+    + donutCard('bought', 'How you got it', bought.sort((x, y) => (x.label === 'Not set') - (y.label === 'Not set') || y.count - x.count), { colors: e => ({ Secondhand: '#8FD0CF', New: '#C3A9EC', Gift: '#F4A9B8' })[e.label], ramp: PASTEL })
     + donutCard('brand', 'Brand', brands, { ramp: RAMPS.brand })
     + donutCard('mat', 'Material', mats, { ramp: RAMPS.mat, note: 'tags' })
     + donutCard('occ', 'Occasion', occ, { ramp: RAMPS.occ, note: 'tags' })
@@ -1632,21 +1789,21 @@ async function importBackup(file) {
   const str = v => typeof v === 'string' ? v.slice(0, 2000) : '';
   const items = data.items.filter(i => i && typeof i.id === 'string' && IMG_RE.test(i.img || '')).map(i => ({
     id: i.id, created: +i.created || Date.now(), updated: +i.updated || Date.now(), name: str(i.name), cat: typeof i.cat === 'string' ? i.cat : null,
-    color: /^#[0-9a-f]{6}$/i.test(i.color || '') ? i.color : '', brand: str(i.brand), price: str(i.price), notes: str(i.notes),
+    color: /^#[0-9a-f]{6}$/i.test(i.color || '') ? i.color : '', brand: str(i.brand), price: str(i.price), size: str(i.size).slice(0, 40), notes: str(i.notes),
     seasons: Array.isArray(i.seasons) ? i.seasons.filter(s => SEASONS.includes(s)) : [], occasions: Array.isArray(i.occasions) ? i.occasions.filter(s => OCCASIONS.includes(s)) : [],
     img: i.img, orig: IMG_RE.test(i.orig || '') ? i.orig : undefined, mask: IMG_RE.test(i.mask || '') ? i.mask : undefined, aspect: +i.aspect || 0.8,
-    hang: (i.hang && [i.hang.cx, i.hang.ty, i.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip'].includes(i.hang.type) ? i.hang.type : 'hanger', cx: clamp(i.hang.cx, -1, 2), ty: clamp(i.hang.ty, -1, 2), w: clamp(i.hang.w, 0.05, 3) } : undefined,
-    hanger: ['hanger', 'clip', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: !!i.smooth,
-    materials: Array.isArray(i.materials) ? i.materials.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim().slice(0, 40)) : [], secondhand: typeof i.secondhand === 'boolean' ? i.secondhand : null,
+    hang: (i.hang && [i.hang.cx, i.hang.ty, i.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.hang.type) ? i.hang.type : 'hanger', cx: clamp(i.hang.cx, -1, 2), ty: clamp(i.hang.ty, -1, 2), w: clamp(i.hang.w, 0.05, 3) } : undefined,
+    hanger: ['hanger', 'clip', 'hook', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: !!i.smooth, pop: !!i.pop, adj: i.adj && typeof i.adj === 'object' ? Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+i.adj[k] || 0, -50, 50)])) : undefined,
+    materials: Array.isArray(i.materials) ? i.materials.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim().slice(0, 40)) : [], secondhand: typeof i.secondhand === 'boolean' ? i.secondhand : null, gift: !!i.gift,
     color2: /^#[0-9a-f]{6}$/i.test(i.color2 || '') ? i.color2 : '', details: Array.isArray(i.details) ? i.details.filter(d => IMG_RE.test(d || '')).slice(0, 30) : [],
-    back: i.back && IMG_RE.test(i.back.img || '') ? { img: i.back.img, orig: IMG_RE.test(i.back.orig || '') ? i.back.orig : undefined, mask: IMG_RE.test(i.back.mask || '') ? i.back.mask : undefined, aspect: +i.back.aspect || 0.8, hang: (i.back.hang && [i.back.hang.cx, i.back.hang.ty, i.back.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip'].includes(i.back.hang.type) ? i.back.hang.type : 'hanger', cx: clamp(i.back.hang.cx, -1, 2), ty: clamp(i.back.hang.ty, -1, 2), w: clamp(i.back.hang.w, 0.05, 3) } : undefined } : null
+    back: i.back && IMG_RE.test(i.back.img || '') ? { img: i.back.img, orig: IMG_RE.test(i.back.orig || '') ? i.back.orig : undefined, mask: IMG_RE.test(i.back.mask || '') ? i.back.mask : undefined, aspect: +i.back.aspect || 0.8, hang: (i.back.hang && [i.back.hang.cx, i.back.hang.ty, i.back.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.back.hang.type) ? i.back.hang.type : 'hanger', cx: clamp(i.back.hang.cx, -1, 2), ty: clamp(i.back.hang.ty, -1, 2), w: clamp(i.back.hang.w, 0.05, 3) } : undefined } : null
   }));
   const cats = (Array.isArray(data.categories) ? data.categories : []).filter(c => c && typeof c.id === 'string' && typeof c.name === 'string').map(c => ({ id: c.id, name: c.name.slice(0, 60) }));
   const outfits = (Array.isArray(data.outfits) ? data.outfits : []).filter(o => o && typeof o.id === 'string' && Array.isArray(o.pieces)).map(o => ({
     id: o.id, name: str(o.name), created: +o.created || Date.now(), updated: +o.updated || Date.now(),
     pieces: o.pieces.filter(p => p && typeof p.itemId === 'string').map(p => ({ k: uid(), itemId: p.itemId, x: clamp(+p.x || 0.5, 0, 1), y: clamp(+p.y || 0.5, 0, 1), w: clamp(+p.w || 0.4, 0.04, 1.5), z: +p.z || 1 }))
   }));
-  const wishes = (Array.isArray(data.wish) ? data.wish : []).filter(w => w && typeof w.id === 'string').map(w => ({ id: w.id, created: +w.created || Date.now(), updated: +w.updated || Date.now(), name: str(w.name), link: safeLink(w.link), brand: str(w.brand), price: str(w.price), cat: typeof w.cat === 'string' ? w.cat : null, notes: str(w.notes), img: IMG_RE.test(w.img || '') ? w.img : '' }));
+  const wishes = (Array.isArray(data.wish) ? data.wish : []).filter(w => w && typeof w.id === 'string').map(w => ({ id: w.id, created: +w.created || Date.now(), updated: +w.updated || Date.now(), name: str(w.name), link: safeLink(w.link), brand: str(w.brand), price: str(w.price), size: str(w.size).slice(0, 40), cat: typeof w.cat === 'string' ? w.cat : null, notes: str(w.notes), img: IMG_RE.test(w.img || '') ? w.img : '' }));
   const mode = await choose('Import backup', `${items.length} pieces, ${outfits.length} outfits and ${wishes.length} wishes found.`, [{ v: 'merge', label: 'Add to my closet', primary: true }, { v: 'replace', label: 'Replace my closet', danger: true }]);
   if (!mode) return;
   try {
@@ -1716,16 +1873,21 @@ async function trimTop(it) {
 async function migrate() {
   let changed = false;
   for (const it of S.items) {
-    if (it.v >= 5) continue;
+    if (it.v >= 6) continue;
     try {
       if (!(it.v >= 2)) await trimTop(it);
       const t = hangerType(it), g = it.hang;
       if (t !== 'none' && !(g && g.cx != null && (g.type || 'hanger') === t)) it.hang = await hangOf(it.img, t);
     } catch (e) { console.error(e); }
-    it.v = 5; await safe(store.put('items', it)); changed = true;
+    it.v = 6; await safe(store.put('items', it)); changed = true;
   }
   if (changed) renderAll();
 }
+/* stop accidental page zoom (pinch on the page, double-tap); pinch inside the photo editor and detail photos still works */
+['gesturestart', 'gesturechange', 'gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault(), { passive: false }));
+document.addEventListener('dblclick', e => { if (!e.target.closest('input, textarea')) e.preventDefault(); }, { passive: false });
+document.addEventListener('touchmove', e => { if (e.touches.length > 1 && !e.target.closest('.canvas-wrap, .lightbox, .board')) e.preventDefault(); }, { passive: false });
+window.addEventListener('wheel', e => { if (e.ctrlKey && !e.target.closest('.canvas-wrap, .lightbox')) e.preventDefault(); }, { passive: false });
 /* ---------- init ---------- */
 const navIcons = { rack: 'hanger', closet: 'grid', outfits: 'layers', insights: 'pie' };
 $$('.nav [data-go]').forEach(b => { b.innerHTML = ic(navIcons[b.dataset.go], 25); });
