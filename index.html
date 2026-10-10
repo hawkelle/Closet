@@ -1374,13 +1374,41 @@ class Cutout {
     const k = Math.min(1, 900 / Math.max(sw, sh)), ow = Math.max(1, Math.round(sw * k)), oh = Math.max(1, Math.round(sh * k)), out = mk(ow, oh), ox = out.getContext('2d');
     ox.imageSmoothingQuality = 'high'; ox.drawImage(full, sx, sy, sw, sh, 0, 0, ow, oh);
     let img = out.toDataURL('image/webp', 0.9); if (!img.startsWith('data:image/webp')) img = out.toDataURL('image/png');
-    const oc = mk(w, h); oc.getContext('2d').putImageData(this.src, 0, 0); const orig = oc.toDataURL('image/jpeg', 0.86);
+    const { imgJ, imgA } = splitCanvas(out);
+    const oc = mk(w, h); oc.getContext('2d').putImageData(this.src, 0, 0); const orig = oc.toDataURL('image/jpeg', 0.8);
     const mc = mk(w, h), mi = new ImageData(w, h); for (let i = 0; i < w * h; i++) mi.data[i * 4 + 3] = m[i]; mc.getContext('2d').putImageData(mi, 0, 0);
     if (!this.hg) this.autoHanger(); const g = this.hg;
     const hang = this.htype === 'none' ? { type: 'none' } : g ? { type: this.htype, cx: (g.cx - sx) / sw, ty: (g.ty - sy) / sh, w: g.w / sw } : null;
-    return { img, orig, mask: mc.toDataURL('image/png'), aspect: ow / oh, color: this.dominant(), hang };
+    return { img, imgJ, imgA, orig, mask: mc.toDataURL('image/png'), aspect: ow / oh, color: this.dominant(), hang };
   }
 }
+function splitCanvas(c) { // photo part as JPEG, see-through part as a small grey PNG; a fraction of a full PNG
+  const w = c.width, h = c.height, x = c.getContext('2d', { willReadFrequently: true }), d = x.getImageData(0, 0, w, h).data, n = w * h;
+  const rgb = new Float32Array(n * 3), known = new Uint8Array(n); let ar = 0, ag = 0, ab = 0, an = 0;
+  for (let i = 0; i < n; i++) { const a = d[i * 4 + 3]; if (a >= 128) { known[i] = 1; rgb[i * 3] = d[i * 4]; rgb[i * 3 + 1] = d[i * 4 + 1]; rgb[i * 3 + 2] = d[i * 4 + 2]; if (a > 200) { ar += d[i * 4]; ag += d[i * 4 + 1]; ab += d[i * 4 + 2]; an++; } } }
+  for (let pass = 0; pass < 4; pass++) { // let edge colours bleed outward so the JPEG has no grey halo
+    const add = [];
+    for (let i = 0; i < n; i++) { if (known[i]) continue; const xx = i % w; let r = 0, g = 0, b = 0, k = 0; for (const o of [xx > 0 ? i - 1 : -1, xx < w - 1 ? i + 1 : -1, i - w, i + w]) if (o >= 0 && o < n && known[o] === 1) { r += rgb[o * 3]; g += rgb[o * 3 + 1]; b += rgb[o * 3 + 2]; k++; } if (k) add.push(i, r / k, g / k, b / k); }
+    for (let j = 0; j < add.length; j += 4) { const i = add[j]; rgb[i * 3] = add[j + 1]; rgb[i * 3 + 1] = add[j + 2]; rgb[i * 3 + 2] = add[j + 3]; known[i] = 2; }
+    for (let i = 0; i < n; i++) if (known[i] === 2) known[i] = 1;
+  }
+  const fill = an ? [ar / an, ag / an, ab / an] : [200, 200, 200], jc = mk(w, h), jx = jc.getContext('2d'), jd = jx.createImageData(w, h), ac = mk(w, h), ax = ac.getContext('2d'), ad = ax.createImageData(w, h);
+  for (let i = 0; i < n; i++) { const k = known[i]; jd.data[i * 4] = k ? rgb[i * 3] : fill[0]; jd.data[i * 4 + 1] = k ? rgb[i * 3 + 1] : fill[1]; jd.data[i * 4 + 2] = k ? rgb[i * 3 + 2] : fill[2]; jd.data[i * 4 + 3] = 255; const a = d[i * 4 + 3]; ad.data[i * 4] = ad.data[i * 4 + 1] = ad.data[i * 4 + 2] = a; ad.data[i * 4 + 3] = 255; }
+  jx.putImageData(jd, 0, 0); ax.putImageData(ad, 0, 0);
+  return { imgJ: jc.toDataURL('image/jpeg', 0.86), imgA: ac.toDataURL('image/png') };
+}
+let blobOK = null;
+const canBlob = () => blobOK || (blobOK = (async () => { try { const c = mk(2, 2), b = await new Promise(r => c.toBlob(r, 'image/png')), u = URL.createObjectURL(b); await loadImage(u); return true; } catch { return false; } })());
+async function joinCutout(j, a) {
+  const [ij, ia] = await Promise.all([loadImage(j), loadImage(a)]), w = ij.naturalWidth, h = ij.naturalHeight;
+  const c = mk(w, h), x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(ia, 0, 0, w, h); const al = x.getImageData(0, 0, w, h).data;
+  x.clearRect(0, 0, w, h); x.drawImage(ij, 0, 0); const id = x.getImageData(0, 0, w, h); for (let i = 0; i < w * h; i++) id.data[i * 4 + 3] = al[i * 4]; x.putImageData(id, 0, 0);
+  if (await canBlob()) { const b = await new Promise(r => c.toBlob(r, 'image/png')); if (b) return URL.createObjectURL(b); }
+  return c.toDataURL('image/png');
+}
+async function splitSrc(src) { const im = await loadImage(src), c = mk(im.naturalWidth, im.naturalHeight); c.getContext('2d').drawImage(im, 0, 0); return splitCanvas(c); }
+const putItem = it => { const o = { ...it }; if (o.imgJ && o.imgA) delete o.img; if (o.back && o.back.imgJ && o.back.imgA) { o.back = { ...o.back }; delete o.back.img; } return store.put('items', o); };
+async function hydrate(it) { if (!it.img && it.imgJ && it.imgA) it.img = await joinCutout(it.imgJ, it.imgA); if (it.back && !it.back.img && it.back.imgJ && it.back.imgA) it.back.img = await joinCutout(it.back.imgJ, it.back.imgA); return it; }
 function loadImage(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('image')); i.src = src; }); }
 function fileToDataURL(f) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(f); }); }
 
@@ -1414,7 +1442,7 @@ function choosePhoto(title, msg) {
   });
 }
 function fetchless(dataUrl) { const [h, b64] = dataUrl.split(','), mime = (h.match(/data:([^;]+)/) || [])[1] || 'image/png', bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return Promise.resolve(new Blob([u], { type: mime })); }
-async function compressPhoto(blob, max = 1400, q = 0.85) {
+async function compressPhoto(blob, max = 1200, q = 0.8) {
   const im = await loadImage(await fileToDataURL(blob)), k = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
   const c = mk(Math.round(im.naturalWidth * k), Math.round(im.naturalHeight * k)); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); return c.toDataURL('image/jpeg', q);
 }
@@ -1636,10 +1664,10 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       if (front === 'uncut') { if (st.side !== 'front') switchSide('front'); toast('Wait a moment for the cut-out to finish.'); return; }
       if (back === 'uncut') { if (st.side !== 'back') switchSide('back'); toast('Wait a moment for the back to finish cutting out.'); return; }
       const now = Date.now();
-      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: front.img, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 6, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.fx.front.pop, adj: { ...st.fx.front.adj }, pockets: st.pockets, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
-        back: back ? { img: back.img, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang, fx: st.link ? null : { adj: { ...st.fx.back.adj }, pop: st.fx.back.pop } } : null };
+      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: front.img, imgJ: front.imgJ, imgA: front.imgA, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 7, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.fx.front.pop, adj: { ...st.fx.front.adj }, pockets: st.pockets, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
+        back: back ? { img: back.img, imgJ: back.imgJ, imgA: back.imgA, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang, fx: st.link ? null : { adj: { ...st.fx.back.adj }, pop: st.fx.back.pop } } : null };
       if (!it.hang) { try { it.hang = await hangOf(front.img); } catch {} }
-      const ok = await safe(store.put('items', it).then(() => true), "Couldn't save the piece. Your device may be out of space.");
+      const ok = await safe(putItem(it).then(() => true), "Couldn't save the piece. Your device may be out of space.");
       if (!ok) return;
       const idx = S.items.findIndex(x => x.id === it.id); if (idx >= 0) S.items[idx] = it; else S.items.push(it); sortItems();
       if (isNew) { S.rackIndex = Math.max(0, rackItems().findIndex(x => x.id === it.id)); if (S.items.length === 1) navigator.storage?.persist?.().catch(() => {}); }
@@ -2075,23 +2103,23 @@ async function saveFile(name, blob) {
 }
 async function exportBackup() {
   const inc = $('#inc-orig')?.checked !== false;
-  const data = { app: 'closet-index', version: 1, exported: new Date().toISOString(), categories: S.cats, customMaterials: S.customMats, items: S.items.map(i => { const o = { ...i }; if (!inc) { delete o.orig; delete o.mask; if (o.back) o.back = { ...o.back, orig: undefined, mask: undefined }; } return o; }), outfits: S.outfits, wish: S.wish };
+  const data = { app: 'closet-index', version: 1, exported: new Date().toISOString(), categories: S.cats, customMaterials: S.customMats, items: S.items.map(i => { const o = { ...i }; if (o.imgJ && o.imgA) delete o.img; if (o.back?.imgJ && o.back?.imgA) o.back = { ...o.back, img: undefined }; if (!inc) { delete o.orig; delete o.mask; if (o.back) o.back = { ...o.back, orig: undefined, mask: undefined }; } return o; }), outfits: S.outfits, wish: S.wish };
   await saveFile(`closet-backup-${new Date().toISOString().slice(0, 10)}.json`, new Blob([JSON.stringify(data)], { type: 'application/json' }));
 }
 async function importBackup(file) {
   let data; try { data = JSON.parse(await file.text()); } catch { toast("That file isn't a closet backup."); return; }
   if (!data || data.app !== 'closet-index' || !Array.isArray(data.items)) { toast("That file isn't a closet backup."); return; }
   const str = v => typeof v === 'string' ? v.slice(0, 2000) : '';
-  const items = data.items.filter(i => i && typeof i.id === 'string' && IMG_RE.test(i.img || '')).map(i => ({
+  const items = data.items.filter(i => i && typeof i.id === 'string' && (IMG_RE.test(i.img || '') || (IMG_RE.test(i.imgJ || '') && IMG_RE.test(i.imgA || '')))).map(i => ({
     id: i.id, created: +i.created || Date.now(), updated: +i.updated || Date.now(), name: str(i.name), cat: typeof i.cat === 'string' ? i.cat : null, cats: Array.isArray(i.cats) ? i.cats.filter(c => typeof c === 'string').slice(0, 10) : [],
     color: /^#[0-9a-f]{6}$/i.test(i.color || '') ? i.color : '', brand: str(i.brand), price: str(i.price), size: str(i.size).slice(0, 40), notes: str(i.notes),
     seasons: Array.isArray(i.seasons) ? i.seasons.filter(s => SEASONS.includes(s)) : [], occasions: Array.isArray(i.occasions) ? i.occasions.filter(s => OCCASIONS.includes(s)) : [],
-    img: i.img, orig: IMG_RE.test(i.orig || '') ? i.orig : undefined, mask: IMG_RE.test(i.mask || '') ? i.mask : undefined, aspect: +i.aspect || 0.8,
+    img: IMG_RE.test(i.img || '') ? i.img : '', imgJ: IMG_RE.test(i.imgJ || '') ? i.imgJ : undefined, imgA: IMG_RE.test(i.imgA || '') ? i.imgA : undefined, orig: IMG_RE.test(i.orig || '') ? i.orig : undefined, mask: IMG_RE.test(i.mask || '') ? i.mask : undefined, aspect: +i.aspect || 0.8,
     hang: (i.hang && [i.hang.cx, i.hang.ty, i.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.hang.type) ? i.hang.type : 'hanger', cx: clamp(i.hang.cx, -1, 2), ty: clamp(i.hang.ty, -1, 2), w: clamp(i.hang.w, 0.05, 3) } : undefined,
     hanger: ['hanger', 'clip', 'hook', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: !!i.smooth, pop: !!i.pop, adj: i.adj && typeof i.adj === 'object' ? Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+i.adj[k] || 0, -50, 50)])) : undefined,
     materials: Array.isArray(i.materials) ? i.materials.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim().slice(0, 40)) : [], secondhand: typeof i.secondhand === 'boolean' ? i.secondhand : null, gift: !!i.gift, pockets: typeof i.pockets === 'boolean' ? i.pockets : null,
     color2: /^#[0-9a-f]{6}$/i.test(i.color2 || '') ? i.color2 : '', details: Array.isArray(i.details) ? i.details.filter(d => IMG_RE.test(d || '')).slice(0, 30) : [],
-    back: i.back && IMG_RE.test(i.back.img || '') ? { img: i.back.img, orig: IMG_RE.test(i.back.orig || '') ? i.back.orig : undefined, mask: IMG_RE.test(i.back.mask || '') ? i.back.mask : undefined, aspect: +i.back.aspect || 0.8, fx: i.back.fx && typeof i.back.fx === 'object' ? { adj: Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+(i.back.fx.adj || {})[k] || 0, -50, 50)])), pop: !!i.back.fx.pop } : null, hang: (i.back.hang && [i.back.hang.cx, i.back.hang.ty, i.back.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.back.hang.type) ? i.back.hang.type : 'hanger', cx: clamp(i.back.hang.cx, -1, 2), ty: clamp(i.back.hang.ty, -1, 2), w: clamp(i.back.hang.w, 0.05, 3) } : undefined } : null
+    back: i.back && (IMG_RE.test(i.back.img || '') || (IMG_RE.test(i.back.imgJ || '') && IMG_RE.test(i.back.imgA || ''))) ? { img: IMG_RE.test(i.back.img || '') ? i.back.img : '', imgJ: IMG_RE.test(i.back.imgJ || '') ? i.back.imgJ : undefined, imgA: IMG_RE.test(i.back.imgA || '') ? i.back.imgA : undefined, orig: IMG_RE.test(i.back.orig || '') ? i.back.orig : undefined, mask: IMG_RE.test(i.back.mask || '') ? i.back.mask : undefined, aspect: +i.back.aspect || 0.8, fx: i.back.fx && typeof i.back.fx === 'object' ? { adj: Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+(i.back.fx.adj || {})[k] || 0, -50, 50)])), pop: !!i.back.fx.pop } : null, hang: (i.back.hang && [i.back.hang.cx, i.back.hang.ty, i.back.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.back.hang.type) ? i.back.hang.type : 'hanger', cx: clamp(i.back.hang.cx, -1, 2), ty: clamp(i.back.hang.ty, -1, 2), w: clamp(i.back.hang.w, 0.05, 3) } : undefined } : null
   }));
   const cats = (Array.isArray(data.categories) ? data.categories : []).filter(c => c && typeof c.id === 'string' && typeof c.name === 'string').map(c => ({ id: c.id, name: c.name.slice(0, 60) }));
   const outfits = (Array.isArray(data.outfits) ? data.outfits : []).filter(o => o && typeof o.id === 'string' && Array.isArray(o.pieces)).map(o => ({
@@ -2108,7 +2136,7 @@ async function importBackup(file) {
     if (mode === 'replace') S.customMats = [];
     const cm = new Set([...(Array.isArray(data.customMaterials) ? data.customMaterials : []), ...items.flatMap(i => i.materials)].filter(m => typeof m === 'string' && m && !MATERIALS.includes(m)).map(m => m.slice(0, 40)));
     cm.forEach(m => { if (!S.customMats.includes(m)) S.customMats.push(m); }); await saveMats();
-    for (const it of items) { await store.put('items', it); const i = S.items.findIndex(x => x.id === it.id); if (i >= 0) S.items[i] = it; else S.items.push(it); }
+    for (const it of items) { await hydrate(it); if (!it.img) continue; if (!it.imgJ) Object.assign(it, await splitSrc(it.img)); await putItem(it); const i = S.items.findIndex(x => x.id === it.id); if (i >= 0) S.items[i] = it; else S.items.push(it); }
     for (const o of outfits) { await store.put('outfits', o); const i = S.outfits.findIndex(x => x.id === o.id); if (i >= 0) S.outfits[i] = o; else S.outfits.push(o); }
     await saveCats(); sortItems(); sortOutfits(); S.rackIndex = 0; renderAll(); toast(`Imported ${items.length} pieces`); migrate();
   } catch (e) { console.error(e); toast("Import stopped partway. Your device may be out of space."); renderAll(); }
@@ -2169,13 +2197,14 @@ async function trimTop(it) {
 async function migrate() {
   let changed = false;
   for (const it of S.items) {
-    if (it.v >= 6) continue;
+    if (it.v >= 7) continue;
     try {
       if (!(it.v >= 2)) await trimTop(it);
       const t = hangerType(it), g = it.hang;
       if (t !== 'none' && !(g && g.cx != null && (g.type || 'hanger') === t)) it.hang = await hangOf(it.img, t);
     } catch (e) { console.error(e); }
-    it.v = 6; await safe(store.put('items', it)); changed = true;
+    try { if (!it.imgJ && it.img) Object.assign(it, await splitSrc(it.img)); if (it.back?.img && !it.back.imgJ) Object.assign(it.back, await splitSrc(it.back.img)); } catch (e) { console.error(e); }
+    it.v = 7; await safe(putItem(it)); changed = true;
   }
   if (changed) renderAll();
 }
@@ -2194,7 +2223,7 @@ applyTheme(getTheme());
   catch { useMem = true; setTimeout(() => toast("Storage isn't available here, so changes won't be kept after closing."), 600); }
   try {
     const [items, outfits, meta, wish] = await Promise.all([store.all('items'), store.all('outfits'), store.all('meta'), store.all('wish').catch(() => [])]);
-    S.items = items; S.outfits = outfits; S.wish = wish.sort((a, b) => b.created - a.created); sortItems(); sortOutfits();
+    await Promise.all(items.map(it => hydrate(it).catch(() => it))); S.items = items.filter(it => it.img); S.outfits = outfits; S.wish = wish.sort((a, b) => b.created - a.created); sortItems(); sortOutfits();
     const c = meta.find(m => m.id === 'categories'); S.cats = c ? c.list : DEFAULT_CATS(); if (!c) await saveCats();
     const mt = meta.find(m => m.id === 'materials'); S.customMats = Array.isArray(mt?.list) ? mt.list.filter(x => typeof x === 'string') : [];
   } catch (e) { console.error(e); S.cats = S.cats.length ? S.cats : DEFAULT_CATS(); }
