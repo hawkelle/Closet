@@ -360,7 +360,6 @@ img{max-width:100%}
 .fx-mini[hidden]{display:none}
 .fx-mini img{flex:none;width:58px;height:70px;object-fit:contain;background:var(--surface-2);border-radius:29px 29px 10px 10px;padding:5px}
 img[data-m]:not([data-mon]){opacity:0}
-img[data-m]{transition:opacity .15s}
 #toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
@@ -460,13 +459,13 @@ const OCCASIONS = ['Everyday', 'Work', 'Going out', 'Lounge', 'Active', 'Formal'
 const DEFAULT_CATS = () => ['Tops', 'Bottoms', 'Outerwear', 'Dresses', 'Shoes', 'Bags', 'Accessories'].map(name => ({ id: uid() + name.slice(0, 2), name }));
 
 /* ---------- storage ---------- */
-let useMem = false; const mem = { items: new Map(), outfits: new Map(), meta: new Map(), wish: new Map(), edits: new Map() };
+let useMem = false; const mem = { items: new Map(), outfits: new Map(), meta: new Map(), wish: new Map(), edits: new Map(), snap: new Map() };
 let dbp = null;
 function openDB() {
   if (dbp) return dbp;
   dbp = new Promise((res, rej) => {
-    const r = indexedDB.open('closet-index', 3);
-    r.onupgradeneeded = () => { const d = r.result; ['items', 'outfits', 'meta', 'wish', 'edits'].forEach(s => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: 'id' }); }); };
+    const r = indexedDB.open('closet-index', 4);
+    r.onupgradeneeded = () => { const d = r.result; ['items', 'outfits', 'meta', 'wish', 'edits', 'snap'].forEach(s => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: 'id' }); }); };
     r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => rej(new Error('blocked'));
   });
   return dbp;
@@ -592,13 +591,13 @@ function hangHTML(it, maxW, maxH) {
   if (type === 'none') { // sits on the floor of the arch, a bit smaller
     let ih = maxH * 0.52, iw = ih * a; if (iw > maxW * 0.78) { iw = maxW * 0.78; ih = iw / a; }
     const top = Math.max(0, maxH - 6 - ih);
-    return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${(ih + top).toFixed(1)}px"><img ${cutAttrs(it, `top:${top.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px`)} alt="" loading="lazy"></div>`;
+    return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${(ih + top).toFixed(1)}px"><img ${cutAttrs(it, `top:${top.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px`, true)} alt="" loading="lazy"></div>`;
   }
   let ih = maxH, iw = ih * a; if (iw > maxW) { iw = maxW; ih = iw / a; }
   const H = HANGERS[type], g = hangNorm(it.hang, type);
   const hw = type === 'hook' ? clamp(g.w * iw, 22, 56) : clamp(g.w * iw, 56, maxW * 1.1), hh = hw * H.ar, cx = g.cx * iw, left = cx - hw * H.ax, pivot = left + hw * 0.5;
   const over = Math.max(0, hh * H.anchor - g.ty * ih);
-  return `<div class="hang swing" style="width:${iw.toFixed(1)}px;height:${(ih + over).toFixed(1)}px;transform-origin:${pivot.toFixed(1)}px 2px;animation-delay:-${(Math.random() * 7).toFixed(2)}s"><span class="hk" style="left:${left.toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img ${cutAttrs(it, `top:${over.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px`)} alt="" loading="lazy"></div>`;
+  return `<div class="hang swing" style="width:${iw.toFixed(1)}px;height:${(ih + over).toFixed(1)}px;transform-origin:${pivot.toFixed(1)}px 2px;animation-delay:-${(Math.random() * 7).toFixed(2)}s"><span class="hk" style="left:${left.toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img ${cutAttrs(it, `top:${over.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px`, true)} alt="" loading="lazy"></div>`;
 }
 
 /* the back hangs on exactly the same hanger as the front: same size, same spot; the back photo is scaled and moved to fit it */
@@ -614,7 +613,7 @@ function hangSideHTML(it, side, maxW, maxH) {
   let biw = hw / Math.max(0.05, gb.w), bih = biw / ab;
   const cap = Math.min(1, (maxH * 1.25) / bih, (maxW * 1.35) / biw); biw *= cap; bih *= cap;
   const bl = ax - gb.cx * biw, bt = ay - gb.ty * bih;
-  return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${Math.max(ih + over, bt + bih).toFixed(1)}px"><span class="hk" style="left:${left.toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img ${cutAttrs(it.back, `left:${bl.toFixed(1)}px;top:${bt.toFixed(1)}px;width:${biw.toFixed(1)}px;height:${bih.toFixed(1)}px`)} alt=""></div>`;
+  return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${Math.max(ih + over, bt + bih).toFixed(1)}px"><span class="hk" style="left:${left.toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img ${cutAttrs(it.back, `left:${bl.toFixed(1)}px;top:${bt.toFixed(1)}px;width:${biw.toFixed(1)}px;height:${bih.toFixed(1)}px`, true)} alt=""></div>`;
 }
 const STICK = new Map(); let stickBusy = false;
 const isDark = () => { const t = document.documentElement.dataset.theme; return t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches); };
@@ -648,8 +647,8 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { 
 const hasCut = c => !!c && !!(c.img || ((c.imgJ || c.bJ || c._j) && (c.imgM || c.bM || c._m)));
 const sideOf = (it, side) => side === 'back' && hasCut(it.back) ? { ...it, img: it.back.img, imgJ: it.back.imgJ, imgM: it.back.imgM, imgMd: it.back.imgMd, bJ: it.back.bJ, bM: it.back.bM, bMd: it.back.bMd, _j: it.back._j, _m: it.back._m, _md: it.back._md, aspect: it.back.aspect || it.aspect, hang: it.back.hang || it.hang } : it;
 const DARKM = new Map();
-function cutAttrs(c, style = '') { // the photo with its see-through mask, drawn by the browser; nothing to rebuild
-  if (c && (c._j || c.imgJ) && (c._m || c.imgM)) { const m = (isDark() && (c._md || c.imgMd)) || c._m || c.imgM; return `src="${c._j || c.imgJ}" data-m="${m}" decoding="async"${style ? ` style="${style}"` : ''}`; }
+function cutAttrs(c, style = '', eager = false) { // the photo with its see-through mask, drawn by the browser; nothing to rebuild
+  if (c && (c._j || c.imgJ) && (c._m || c.imgM)) { const m = (isDark() && (c._md || c.imgMd)) || c._m || c.imgM; if (eager) return `src="${c._j || c.imgJ}" data-m="${m}" data-mon="${m}" decoding="async" style="${style}${style ? ';' : ''}-webkit-mask-image:url(${m});mask-image:url(${m});-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat"`; return `src="${c._j || c.imgJ}" data-m="${m}" decoding="async"${style ? ` style="${style}"` : ''}`; }
   return `src="${pic(c?.img || '')}" decoding="async"${style ? ` style="${style}"` : ''}`;
 }
 /* masks are only applied to pictures that are on (or near) the screen, so hundreds of pieces cost nothing until you scroll to them */
@@ -664,7 +663,7 @@ function renderRack() {
   let body;
   if (!total) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Your rack is empty</h2><p>Photograph a piece, frame it, and it'll hang here with the background removed.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add your first piece</button></div>`;
   else if (!items.length) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Nothing here yet</h2><p>No pieces in ${esc(catName(S.rackCat))} so far.</p><button class="btn primary" data-act="add">${ic('plus', 20)}Add a piece</button></div>`;
-  else { const [mw, mh] = rackDims(); const top = 32, aw = Math.min(mw + 44, 340), ar = aw / 2, ry = 26.5 + top, half = ry < ar ? Math.sqrt(ar * ar - (ar - ry) * (ar - ry)) : ar; body = `<div class="rack-stage" style="margin-top:${Math.round(top)}px"><div class="arch-win" style="top:${-Math.round(top)}px;width:${Math.round(aw)}px;height:${Math.round(mh + 70 + top)}px"><div class="rail-bar"></div></div><button class="rack-flip" id="rack-flip" data-act="flip" hidden style="left:calc(50% + ${Math.round(aw / 2 - 58)}px)">${ic('flip', 18)}</button><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map((it, i) => Math.abs(i - Math.min(S.rackIndex, items.length - 1)) <= 3 ? `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangSideHTML(it, S.flip[it.id] ? 'back' : 'front', mw, mh)}</button>` : `<button class="slide" data-id="${it.id}" data-empty="1" aria-label="${esc(itemName(it))}"><div class="hang" style="width:10px;height:${Math.round(mh + 30)}px"></div></button>`).join('')}</div></div><div id="rack-tag"></div>`; }
+  else { const [mw, mh] = rackDims(); const top = 32, aw = Math.min(mw + 44, 340), ar = aw / 2, ry = 26.5 + top, half = ry < ar ? Math.sqrt(ar * ar - (ar - ry) * (ar - ry)) : ar; body = `<div class="rack-stage" style="margin-top:${Math.round(top)}px"><div class="arch-win" style="top:${-Math.round(top)}px;width:${Math.round(aw)}px;height:${Math.round(mh + 70 + top)}px"><div class="rail-bar"></div></div><button class="rack-flip" id="rack-flip" data-act="flip" hidden style="left:calc(50% + ${Math.round(aw / 2 - 58)}px)">${ic('flip', 18)}</button><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map((it, i) => Math.abs(i - Math.min(S.rackIndex, items.length - 1)) <= 6 ? `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangSideHTML(it, S.flip[it.id] ? 'back' : 'front', mw, mh)}</button>` : `<button class="slide" data-id="${it.id}" data-empty="1" aria-label="${esc(itemName(it))}"><div class="hang" style="width:10px;height:${Math.round(mh + 30)}px"></div></button>`).join('')}</div></div><div id="rack-tag"></div>`; }
   v.innerHTML = `<header class="arc"><h1>My closet</h1><span class="count">${total} ${total === 1 ? 'piece' : 'pieces'}</span>${total ? chipRow(S.rackCat, 'rack') : ''}</header>${body}`;
   if (items.length) wireRail(items);
 }
@@ -674,7 +673,7 @@ function wireRail(items) {
   const offsetFor = i => slides[i].offsetLeft - (rail.clientWidth - slides[i].offsetWidth) / 2;
   const update = () => { // arithmetic only: works the same with 10 or 300 pieces
     raf = 0; const sw = slides[0]?.offsetWidth || 1, f = rail.scrollLeft / sw, n = slides.length; best = clamp(Math.round(f), 0, n - 1);
-    for (let i = Math.max(0, best - 3); i <= Math.min(n - 1, best + 3); i++) if (slides[i].dataset.empty) { const [mw, mh] = rackDims(); slides[i].innerHTML = hangSideHTML(items[i], S.flip[items[i].id] ? 'back' : 'front', mw, mh); delete slides[i].dataset.empty; }
+    for (let i = Math.max(0, best - 6); i <= Math.min(n - 1, best + 6); i++) if (slides[i].dataset.empty) { const [mw, mh] = rackDims(); slides[i].innerHTML = hangSideHTML(items[i], S.flip[items[i].id] ? 'back' : 'front', mw, mh); delete slides[i].dataset.empty; }
     for (let i = Math.max(0, Math.floor(f) - 3); i <= Math.min(n - 1, Math.ceil(f) + 3); i++) slides[i].style.opacity = (1 - 0.6 * Math.min(Math.abs(i - f), 1)).toFixed(2);
   };
   const settle = () => { // once the swipe has stopped: finish the snap if the browser left it halfway, then update the card
@@ -808,6 +807,11 @@ function renderSettings() {
   <section class="panel"><h2>Your materials</h2><p>Materials you added yourself. Add new ones while editing a piece.</p>
     ${S.customMats.length ? `<div class="chips wrap">${S.customMats.map(m => `<span class="chip">${esc(m)}<button class="icon-btn" style="width:24px;height:24px" data-matdel="${esc(m)}" aria-label="Remove ${esc(m)}">${ic('x', 15)}</button></span>`).join('')}</div>` : '<p style="margin:0">None yet.</p>'}
   </section>
+  <section class="panel"><h2>Storage</h2><p>Original photos are kept so you can redo a background removal later. You can delete them to save space; your pieces look exactly the same.</p>
+    <label class="check"><input type="checkbox" id="keep-orig" ${keepOrig() ? 'checked' : ''}><span>Keep original photos for new pieces</span></label>
+    <div class="row"><button class="btn" data-act="del-orig">${ic('trash', 20)}Delete original photos</button></div>
+    <div id="snap-row"></div>
+  </section>
   <section class="panel"><h2>Backup</h2><p>Everything lives on this device only. Export a backup now and then so you never lose your closet, or to move it to another device.</p>
     <label class="check"><input type="checkbox" id="inc-orig" checked><span>Include original photos, so backgrounds stay editable after importing (bigger file)</span></label>
     <div class="row"><button class="btn primary" data-act="export">${ic('download', 20)}Export backup</button><button class="btn" data-act="import">${ic('upload', 20)}Import backup</button></div>
@@ -815,6 +819,7 @@ function renderSettings() {
   </section>
   <section class="panel"><h2>Appearance</h2><div class="seg" role="group" aria-label="Theme">${['auto', 'light', 'dark'].map(x => `<button data-theme-opt="${x}" aria-pressed="${t === x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div></section>
   <section class="panel"><h2>Start over</h2><p>Permanently delete every piece, outfit, and category on this device.</p><button class="btn danger" data-act="wipe">${ic('trash', 20)}Delete everything</button></section>`;
+  store.get('snap', 'last').then(sn => { const r = $('#snap-row'); if (r && sn) r.innerHTML = `<p style="margin:14px 0 8px">A safety copy from ${new Date(sn.at).toLocaleString()} (before ${esc(sn.reason)}) is kept on this device.</p><button class="btn" data-act="restore-snap">${ic('undo', 20)}Restore that closet</button>`; }).catch(() => {});
   if (navigator.storage?.estimate) navigator.storage.estimate().then(({ usage }) => { const u = $('#usage'); if (u && usage) u.textContent = `Using about ${(usage / 1048576).toFixed(1)} MB on this device. ${S.items.length} pieces, ${S.outfits.length} outfits.`; }).catch(() => {});
 }
 
@@ -1748,6 +1753,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: '', imgJ: front.imgJ, imgM: front.imgM, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 10, imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, _j: undefined, _m: undefined, _md: undefined, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.fx.front.pop, adj: { ...st.fx.front.adj }, pockets: st.pockets, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
         back: back ? { img: '', imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, imgJ: back.imgJ, imgM: back.imgM, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang, fx: st.link ? null : { adj: { ...st.fx.back.adj }, pop: st.fx.back.pop } } : null };
       if (!it.hang) { try { it.hang = await hangOf(front.img); } catch {} }
+      if (!keepOrig()) { it.orig = undefined; it.mask = undefined; if (it.back) { it.back.orig = undefined; it.back.mask = undefined; } }
       await prepItem(it); const ok = await safe(putItem(it).then(() => true), "Couldn't save the piece. Your device may be out of space.");
       if (!ok) return;
       const lit = lighten(it).light; Object.assign(lit, { _j: it._j, _m: it._m }); if (lit.back && it.back) Object.assign(lit.back, { _j: it.back._j, _m: it.back._m });
@@ -1895,7 +1901,7 @@ function openMix() {
   };
   const fit = (it, box) => { const [bx, by, bw, bh] = box, a = it.aspect || 0.8; let w = bw * W, h = w / a; if (h > bh * H) { h = bh * H; w = h * a; } return { x: bx * W + (bw * W - w) / 2, y: by * H + (bh * H - h) / 2, w, h }; };
   const draw = enterDir => {
-    layers.innerHTML = zones().map(L => { const f = fit(L.it, L.box), active = L.st === stage && !DRESS_STAGES[stage].multi; return `<img class="dl${active ? ' active' : ''}${active && enterDir ? (enterDir > 0 ? ' in-r' : ' in-l') : ''}" data-st="${L.st}" ${cutAttrs(L.it, `left:${f.x.toFixed(1)}px;top:${f.y.toFixed(1)}px;width:${f.w.toFixed(1)}px;height:${f.h.toFixed(1)}px;z-index:${L.z}`)} alt="" draggable="false">`; }).join('');
+    layers.innerHTML = zones().map(L => { const f = fit(L.it, L.box), active = L.st === stage && !DRESS_STAGES[stage].multi; return `<img class="dl${active ? ' active' : ''}${active && enterDir ? (enterDir > 0 ? ' in-r' : ' in-l') : ''}" data-st="${L.st}" ${cutAttrs(L.it, `left:${f.x.toFixed(1)}px;top:${f.y.toFixed(1)}px;width:${f.w.toFixed(1)}px;height:${f.h.toFixed(1)}px;z-index:${L.z}`, true)} alt="" draggable="false">`; }).join('');
     const st = DRESS_STAGES[stage], it = cur(stage);
     $('.dress-name', el).textContent = st.multi ? (pick[4].size ? `${pick[4].size} extra${pick[4].size > 1 ? 's' : ''}` : 'No extras yet') : (it ? itemName(it) : `No ${st.label.toLowerCase()}`);
     $('.dress-hint', el).textContent = pools[stage].length ? st.hint : `No ${st.label.toLowerCase()} pieces in your closet yet.`;
@@ -2174,6 +2180,24 @@ document.addEventListener('click', e => {
   else { S.closetCat = 'all'; S.q = label; }
   go('closet'); const q = $('#closet-q'); if (q) q.value = S.q; renderClosetResults();
 });
+/* ---------- safety snapshot: everything as it was before the last import or wipe ---------- */
+async function takeSnapshot(reason) {
+  try { const [items, outfits, meta, wish, edits] = await Promise.all(['items', 'outfits', 'meta', 'wish', 'edits'].map(k => store.all(k))); if (!items.length && !wish.length) return; await store.put('snap', { id: 'last', at: Date.now(), reason, items, outfits, meta, wish, edits }); } catch (e) { console.error(e); }
+}
+async function restoreSnapshot() {
+  const snap = await store.get('snap', 'last').catch(() => null); if (!snap) { toast('Nothing to restore.'); return; }
+  if (!(await confirmDanger('Restore your earlier closet?', `This brings back your closet exactly as it was on ${new Date(snap.at).toLocaleString()}, before ${snap.reason}. What's in the app now will be replaced.`, 'Restore'))) return;
+  try {
+    for (const k of ['items', 'outfits', 'meta', 'wish', 'edits']) { await store.clear(k); for (const r of (snap[k] || [])) await store.put(k, r); }
+    toast('Restored. Reopening…'); setTimeout(() => location.reload(), 700);
+  } catch (e) { console.error(e); toast("Couldn't restore. Your device may be out of space."); }
+}
+const keepOrig = () => { try { return localStorage.getItem('closet-keeporig') !== '0'; } catch { return true; } };
+async function deleteOriginals() {
+  if (!(await confirmDanger('Delete original photos?', 'Your pieces stay exactly as they look now. You just can no longer redo their background removal from the original photo; touch-ups with Erase and Restore still work. Detail photos are kept.', 'Delete originals'))) return;
+  try { const all = await store.all('edits'); let n = 0; for (const ex of all) { if (ex.orig || ex.mask || ex.back?.orig || ex.back?.mask) { delete ex.orig; delete ex.mask; if (ex.back) { delete ex.back.orig; delete ex.back.mask; } await store.put('edits', ex); n++; } } toast(n ? `Original photos deleted from ${n} pieces` : 'No original photos to delete'); renderSettings(); }
+  catch (e) { console.error(e); toast("Couldn't delete them."); }
+}
 /* ---------- files ---------- */
 async function saveFile(name, blob) {
   const dl = await getDownloads();
@@ -2214,6 +2238,7 @@ async function importBackup(file) {
   const wishes = (Array.isArray(data.wish) ? data.wish : []).filter(w => w && typeof w.id === 'string').map(w => ({ id: w.id, created: +w.created || Date.now(), updated: +w.updated || Date.now(), name: str(w.name), link: safeLink(w.link), brand: str(w.brand), price: str(w.price), size: str(w.size).slice(0, 40), cat: typeof w.cat === 'string' ? w.cat : null, notes: str(w.notes), img: IMG_RE.test(w.img || '') ? w.img : '' }));
   const mode = await choose('Import backup', `${items.length} pieces, ${outfits.length} outfits and ${wishes.length} wishes found.`, [{ v: 'merge', label: 'Add to my closet', primary: true }, { v: 'replace', label: 'Replace my closet', danger: true }]);
   if (!mode) return;
+  await takeSnapshot('your last import');
   try {
     if (mode === 'replace') { await Promise.all(['items', 'outfits', 'wish'].map(s => store.clear(s))); S.items = []; S.outfits = []; S.cats = []; S.wish = []; }
     for (const w of wishes) { await store.put('wish', w); const i = S.wish.findIndex(x => x.id === w.id); if (i >= 0) S.wish[i] = w; else S.wish.push(w); }
@@ -2256,11 +2281,14 @@ document.addEventListener('click', async e => {
     case 'open-outfit': openBoard(S.outfits.find(o => o.id === a.dataset.id)); break;
     case 'add-cat': { const inp = $('#new-cat'); const name = inp.value.trim(); if (!name) { inp.focus(); return; } S.cats.push({ id: uid(), name: name.slice(0, 60) }); await saveCats(); renderAll(); toast(`Added ${name}`); break; }
     case 'export': exportBackup(); break;
+    case 'restore-snap': restoreSnapshot(); break;
+    case 'del-orig': deleteOriginals(); break;
     case 'import': $('#pick-backup').click(); break;
-    case 'wipe': if (await confirmDanger('Delete everything?', 'Every piece, outfit, and category on this device will be gone. Export a backup first if you might want them.', 'Delete everything')) { await safe(Promise.all(['items', 'outfits', 'meta', 'wish', 'edits'].map(s => store.clear(s)))); S.items = []; S.outfits = []; S.wish = []; S.cats = DEFAULT_CATS(); S.customMats = []; await saveCats(); S.rackCat = S.closetCat = 'all'; renderAll(); toast('Closet cleared'); } break;
+    case 'wipe': if (await confirmDanger('Delete everything?', 'Every piece, outfit, and category on this device will be gone. A safety copy is kept so you can undo this once from Settings.', 'Delete everything')) { await takeSnapshot('you deleted everything'); await safe(Promise.all(['items', 'outfits', 'meta', 'wish', 'edits'].map(s => store.clear(s)))); S.items = []; S.outfits = []; S.wish = []; S.cats = DEFAULT_CATS(); S.customMats = []; await saveCats(); S.rackCat = S.closetCat = 'all'; renderAll(); toast('Closet cleared'); } break;
   }
 });
 document.addEventListener('change', async e => {
+  if (e.target.id === 'keep-orig') { try { localStorage.setItem('closet-keeporig', e.target.checked ? '1' : '0'); } catch {} return; }
   const r = e.target.closest('[data-rename]');
   if (r) { const c = S.cats.find(x => x.id === r.dataset.rename); const v = r.value.trim(); if (c && v && v !== c.name) { c.name = v.slice(0, 60); await saveCats(); renderRack(); renderClosetResults(); } else if (c) r.value = c.name; }
 });
