@@ -82,7 +82,7 @@ img{max-width:100%}
 .chips.wrap{flex-wrap:wrap;overflow:visible;padding:0}
 
 /* rack */
-.arc{position:relative;padding:14px 0 2px;color:var(--ink);text-align:center}
+.arc{position:relative;padding:28px 0 2px;color:var(--ink);text-align:center}
 .arc h1{font-family:var(--serif);font-weight:400;font-size:22px;letter-spacing:.05em;text-transform:uppercase;line-height:1;margin:0}
 .arc .count{font-size:12px;color:var(--muted);margin-top:3px;display:block}
 .arc .chips{justify-content:safe center;padding-top:8px;padding-bottom:6px}
@@ -361,7 +361,7 @@ img{max-width:100%}
 .fx-mini[hidden]{display:none}
 .fx-mini img{flex:none;width:58px;height:70px;object-fit:contain;background:var(--surface-2);border-radius:29px 29px 10px 10px;padding:5px}
 img[data-m]:not([data-mon]){opacity:0}
-.order-btn{position:absolute;left:14px;top:8px;width:36px;height:36px;padding:0;justify-content:center;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);z-index:3}
+.order-btn{position:absolute;left:14px;top:22px;width:36px;height:36px;padding:0;justify-content:center;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);z-index:3}
 .mini-tags span.care{background:transparent;box-shadow:inset 0 0 0 1.5px var(--ink);color:var(--ink);display:inline-flex;align-items:center;gap:3px}
 .care-done{align-self:flex-start;margin-left:4px;height:32px;font-size:13px}
 .ctabs{max-width:420px}
@@ -512,6 +512,7 @@ const P = {
   folder:'<path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2Z"/>',
   tag:'<path d="M3.5 12.5V5a1.5 1.5 0 0 1 1.5-1.5h7.5l8 8a1.5 1.5 0 0 1 0 2.1l-6.4 6.4a1.5 1.5 0 0 1-2.1 0Z"/><circle cx="8.5" cy="8.5" r="1.5"/>',
   clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
   upload:'<path d="M12 20V9M7.5 13.5 12 9l4.5 4.5M5 4h14"/>'
 };
 const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
@@ -527,6 +528,9 @@ const hangerType = it => ['hanger', 'clip', 'hook', 'none'].includes(it.hanger) 
 const CARE = ['Needs washing', 'Deep clean', 'Dry clean', 'Needs fixing'];
 const SHOE_RE = /shoe|sneaker|boot|heel|sandal|slipper|loafer|schoen/i;
 const isShoe = it => catsOf(it).some(c => SHOE_RE.test(catName(c))) || (it.subs || []).some(x => SHOE_RE.test(subName(x)));
+const yearsOwned = it => { if (!/^\d{4}-\d{2}$/.test(it.acq || '')) return null; const [y, m] = it.acq.split('-').map(Number), n = new Date(); return Math.max(0, Math.floor(((n.getFullYear() - y) * 12 + (n.getMonth() + 1 - m)) / 12)); };
+const ownedLabel = it => { const y = yearsOwned(it); return y == null ? '' : y < 1 ? 'New (under a year)' : y >= 5 ? '5+ years' : `${y} ${y === 1 ? 'year' : 'years'}`; };
+const acqFor = n => { const d = new Date(); return `${d.getFullYear() - n}-${String(d.getMonth() + 1).padStart(2, '0')}`; };
 const dayStr = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const wornToday = it => (it.worn || []).includes(dayStr());
 const lastWorn = it => (it.worn || []).slice().sort().pop() || null;
@@ -582,7 +586,7 @@ const catsOf = it => { const p = catOf(it), extra = (it?.cats || []).filter(c =>
 const inCat = (it, id) => catsOf(it).includes(id);
 const subName = id => { for (const c of S.cats) { const x = (c.subs || []).find(s => s.id === id); if (x) return x.name; } return ''; };
 const subsOf = it => (it.subs || []).filter(id => subName(id));
-const itemName = it => (it.name && it.name.trim()) || subName(subsOf(it)[0]) || catName(catOf(it));
+const itemName = it => { if (it.name && it.name.trim()) return it.name.trim(); const kind = subName(subsOf(it)[0]) || (catOf(it) !== 'none' ? catName(catOf(it)) : 'piece'), cn = typeof colorName === 'function' ? colorName(it.color) : ''; const k = ({ tops: 'top', dresses: 'dress', bags: 'bag', accessories: 'accessory', jackets: 'jacket', coats: 'coat' })[kind.toLowerCase()] || kind.toLowerCase(); return cn ? `${cn.charAt(0)}${cn.slice(1).toLowerCase()} ${k}` : kind; };
 const saveCats = () => safe(store.put('meta', { id: 'categories', list: S.cats }));
 const saveMats = () => safe(store.put('meta', { id: 'materials', list: S.customMats }));
 const allMaterials = () => [...MATERIALS.filter(m => m !== 'Other'), ...S.customMats.filter(m => !MATERIALS.includes(m)), 'Other'];
@@ -687,7 +691,7 @@ function refreshPalette() { // start from pastels; your most worn colours (not b
   const mine = [...fam.values()].filter(l => l.length >= 2).sort((a, b) => b.length - a.length).slice(0, 4).map(avg);
   const season = (SEASON_PAL[getSeason()] || []).map(x => x[1]).filter(h => { const L = labOf(h); return L[0] > 22 && L[0] < 92 && Math.hypot(L[1], L[2]) > 14; });
   const ranked = mine.length ? season.sort((a, b) => Math.min(...mine.map(m => dE(a, m))) - Math.min(...mine.map(m => dE(b, m)))) : [];
-  const pick = []; for (const h of [...mine, ...ranked.slice(0, Math.max(0, mine.length ? 8 - mine.length : 0))]) if (pick.every(p => dE(p, h) > 12)) pick.push(h);
+  const src = getSeason() ? (mine.length ? ranked : season) : mine; const pick = []; for (const h of src) if (pick.every(p => dE(p, h) > 12)) pick.push(h);
   const C = pick.map(h => mixW(h, 0.42)), L = pick.map(h => mixW(h, 0.8));
   for (let i = 0; i < BASE_C.length; i++) { PASTEL_C[i] = C[i] || BASE_C[i]; PASTEL_L[i] = L[i] || BASE_L[i]; }
   if (typeof PASTEL !== 'undefined') { for (let i = 0; i < PASTEL.length; i++) PASTEL[i] = PASTEL_C[i]; RAMPS.brand = rot(5); RAMPS.mat = rot(2); RAMPS.occ = rot(6); }
@@ -704,7 +708,7 @@ function openSeasonPicker(first) { // choose your colour season; shown once on f
   const el = openSheet(`<div class="sheet-inner" role="dialog" aria-modal="true" aria-label="Choose your color season"><header class="sheet-head"><span style="width:60px"></span><h2>${first ? 'Welcome' : 'Your colors'}</h2><button class="btn ghost sm" data-sp="skip">${first ? 'Skip' : 'Close'}</button></header>
     <div class="sheet-body"><p class="sp-intro">${first ? 'Before you start: what is your <strong>color season</strong>? The app uses it for a shopping guide, to tell you which pieces suit you, and to tint its own colors. You can change it any time.' : 'Pick your color season. Tap one to choose it.'}</p>
     ${fams.map(([fam, note]) => `<h3 class="sp-fam">${fam}<small>${note}</small></h3><div class="sp-grid">${Object.keys(SEASON_PAL).filter(k => k.endsWith(fam)).map(k => `<button class="sp-card${k === cur ? ' on' : ''}" data-season="${k}"><span class="sp-sw">${SEASON_PAL[k].slice(0, 6).map(([n, h]) => `<i style="background:${h}" title="${esc(n)}"></i>`).join('')}</span><span class="sp-name">${k.replace(' ' + fam, '')}</span></button>`).join('')}</div>`).join('')}
-    <p class="sp-intro" style="margin-top:16px">Not sure? <a href="https://www.coloranalysistech.com/color-seasons-chart" target="_blank" rel="noopener noreferrer">Compare the seasons</a>, or skip for now.</p>
+    <p class="sp-intro" style="margin-top:16px">Not sure? You can skip this for now.</p>
     ${cur ? `<button class="btn ghost" data-sp="clear" style="width:100%">Clear my season</button>` : `<button class="btn" data-sp="skip" style="width:100%">Not sure yet</button>`}</div></div>`, 'full');
   el.addEventListener('click', e => {
     const c = e.target.closest('[data-season]'); if (c) { closeSheet(el); setSeason(c.dataset.season); return; }
@@ -838,7 +842,7 @@ const sweepMasks = () => { clearTimeout(sweepT); sweepT = setTimeout(() => { con
 document.addEventListener('scroll', sweepMasks, { capture: true, passive: true }); addEventListener('resize', sweepMasks);
 const watchMasks = root => { (root.querySelectorAll ? root.querySelectorAll('img[data-m]') : []).forEach(img => { if (img.dataset.mon === img.dataset.m) return; if (maskIO) maskIO.observe(img); else applyMask(img); }); if (root.matches?.('img[data-m]')) { if (maskIO) maskIO.observe(root); else applyMask(root); } };
 new MutationObserver(ms => { ms.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) watchMasks(n); })); sweepMasks(); }).observe(document.documentElement, { childList: true, subtree: true });
-const rackDims = () => { const vw = Math.min(window.innerWidth, 760), pad = vw >= 640 ? 0.27 : 0.19, vh = $('#view-rack')?.clientHeight || window.innerHeight; return [vw * (1 - 2 * pad), clamp(vh - 430, 180, 560), 0]; };
+const rackDims = () => { const vw = Math.min(window.innerWidth, 760), pad = vw >= 640 ? 0.27 : 0.19, vh = $('#view-rack')?.clientHeight || window.innerHeight; return [vw * (1 - 2 * pad), clamp(vh - 444, 180, 560), 0]; };
 let ORDER = (() => { try { return localStorage.getItem('closet-order') || 'new'; } catch { return 'new'; } })(), SEED = Math.random();
 const shuf = id => { let h = Math.floor(SEED * 1e9); for (const ch of id) h = Math.imul(h ^ ch.charCodeAt(0), 2654435761); return (h >>> 0) / 4294967296; };
 const ordered = list => ORDER === 'old' ? [...list].sort((a, b) => a.created - b.created) : ORDER === 'shuffle' ? [...list].sort((a, b) => shuf(a.id) - shuf(b.id)) : list;
@@ -917,7 +921,7 @@ function renderClosetResults() {
   const out = $('#closet-results'); const q = S.q.trim().toLowerCase();
   if (!S.items.length) { out.innerHTML = `<div class="empty"><h2>Start your closet</h2><p>Each piece you add shows up here, sorted by category.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add a piece</button></div>`; return; }
   let items = ordered(S.items);
-  if (q) items = items.filter(i => [i.name, i.brand, i.notes, i.price, i.size, catsOf(i).map(catName).join(' '), subsOf(i).map(subName).join(' '), colorFamily(i.color), colorFamily(i.color2), i.secondhand === true ? 'secondhand' : '', i.gift ? 'gift' : '', i.pockets ? 'pockets' : '', ...(i.care || []), ...(i.seasons || []), ...(i.occasions || []), ...(i.materials || [])].join(' ').toLowerCase().includes(q));
+  if (q) items = items.filter(i => [i.name, i.brand, i.notes, i.price, i.size, catsOf(i).map(catName).join(' '), subsOf(i).map(subName).join(' '), colorFamily(i.color), colorFamily(i.color2), i.secondhand === true ? 'secondhand' : '', i.gift ? 'gift' : '', i.pockets ? 'pockets' : '', ownedLabel(i), ...(i.care || []), ...(i.seasons || []), ...(i.occasions || []), ...(i.materials || [])].join(' ').toLowerCase().includes(q));
   if (S.closetCat !== 'all') items = items.filter(i => inCat(i, S.closetCat));
   if (S.closetSub) items = items.filter(i => (i.subs || []).includes(S.closetSub));
   if (!items.length) { out.innerHTML = `<p class="muted" style="padding:24px 22px">No pieces match${q ? ` "${esc(S.q)}"` : ''}.</p>`; return; }
@@ -1091,7 +1095,7 @@ function renderSettings() {
     <div class="row"><button class="btn primary" data-act="export">${ic('download', 20)}Export backup</button><button class="btn" data-act="import">${ic('upload', 20)}Import backup</button></div>
     <p id="usage" style="margin:14px 0 0;font-size:13px"></p>
   </section>
-  <section class="panel"><h2>Color season</h2><p>Used for your shopping guide on the Wishlist, the "fits your colors" check, and to tint the app. Not sure? <a href="https://www.coloranalysistech.com/color-seasons-chart" target="_blank" rel="noopener noreferrer">Compare the seasons</a>.</p>
+  <section class="panel"><h2>Color season</h2><p>Used for your shopping guide on the Wishlist, the "fits your colors" check, and to tint the app..</p>
     <select id="season-sel" aria-label="Color season" class="season-sel"><option value="" ${getSeason() ? '' : 'selected'}>Not set</option>${Object.keys(SEASON_PAL).map(k => `<option ${k === getSeason() ? 'selected' : ''}>${k}</option>`).join('')}</select>
   </section>
   <section class="panel"><h2>Appearance</h2><div class="seg" role="group" aria-label="Theme">${['auto', 'light', 'dark'].map(x => `<button data-theme-opt="${x}" aria-pressed="${t === x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div></section>
@@ -1847,7 +1851,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   const isNew = !item, v0 = item || pre || {};
   const defCat = S.rackCat !== 'all' && S.rackCat !== 'none' ? S.rackCat : (S.closetCat !== 'all' && S.closetCat !== 'none' ? S.closetCat : null);
   const st = { subs: [...(v0.subs || [])], cats: item ? catsOf(item).filter(c => c !== 'none') : [(pre?.cat && S.cats.some(c => c.id === pre.cat) ? pre.cat : defCat)].filter(Boolean), get cat() { return this.cats[0] || null; }, seasons: new Set(v0.seasons || []), occ: new Set(v0.occasions || []), colorTouched: !!v0.color, mats: new Set(v0.materials || []), second: v0.gift ? 'gift' : v0.secondhand === true ? true : v0.secondhand === false ? false : null, hManual: !!v0.hangerManual,
-    color2: v0.color2 || '', pockets: v0.pockets ?? null, letgo: v0.letgo ? { ...v0.letgo } : null, care: new Set(v0.care || []), details: [...(v0.details || [])], side: 'front', states: { front: null, back: null } };
+    color2: v0.color2 || '', acq: v0.acq || '', pockets: v0.pockets ?? null, letgo: v0.letgo ? { ...v0.letgo } : null, care: new Set(v0.care || []), details: [...(v0.details || [])], side: 'front', states: { front: null, back: null } };
   let smoothPref = true; try { smoothPref = localStorage.getItem('closet-smooth') !== '0'; } catch {}
   st.smooth = item ? !!item.smooth : smoothPref;
   let popPref = false; try { popPref = localStorage.getItem('closet-pop') === '1'; } catch {}
@@ -1889,7 +1893,8 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
         <div class="field"><span>Care to-do</span><div class="chips wrap" id="f-care">${CARE.map(c => `<button class="chip" data-care="${c}" aria-pressed="${(v0.care || []).includes(c)}">${ic('drop', 15)}${c}</button>`).join('')}</div></div>
         <div class="field"><span>Letting go</span><div class="chips wrap" id="f-letgo"><button class="chip" data-lg="sell" aria-pressed="${v0.letgo?.mode === 'sell'}">Sell</button><button class="chip" data-lg="donate" aria-pressed="${v0.letgo?.mode === 'donate'}">Donate</button></div><input type="text" id="f-ask" inputmode="decimal" placeholder="Asking price" value="${esc(v0.letgo?.price || '')}" style="margin-top:8px;${v0.letgo?.mode === 'sell' ? '' : 'display:none'}"></div>
         <div class="field"><span>Pockets</span><div class="chips wrap" id="f-pockets"><button class="chip" data-pk="yes" aria-pressed="${v0.pockets === true}">Has pockets</button><button class="chip" data-pk="no" aria-pressed="${v0.pockets === false}">No pockets</button></div></div>
-        <div class="field"><span>How you got it</span><div class="chips wrap" id="f-src"><button class="chip" data-src="new" aria-pressed="${st.second === false}">New</button><button class="chip" data-src="second" aria-pressed="${st.second === true}">Secondhand</button><button class="chip" data-src="gift" aria-pressed="${st.second === 'gift'}">${ic('gift', 16)}Gift</button></div></div>
+        <div class="field"><span>Had it for</span><div class="chips wrap" id="f-acq">${[[0, 'Under a year'], [1, '1 year'], [2, '2 years'], [3, '3 years'], [4, '4 years'], [5, '5+ years']].map(([n, l]) => `<button class="chip sm-chip" data-acq="${n}" aria-pressed="${(() => { const y = yearsOwned(v0); return y != null && (n === 5 ? y >= 5 : y === n); })()}">${l}</button>`).join('')}<input type="number" id="f-acq-year" inputmode="numeric" placeholder="or since year" min="1950" max="${new Date().getFullYear()}" value="${/^\d{4}-\d{2}$/.test(v0.acq || '') ? v0.acq.slice(0, 4) : ''}" style="width:130px;height:34px"></div></div>
+        <div class="field"><span>How you got it</span><div class="chips wrap" id="f-src"><button class="chip" data-src="new" aria-pressed="${st.second === false}">Bought new</button><button class="chip" data-src="second" aria-pressed="${st.second === true}">Secondhand</button><button class="chip" data-src="gift" aria-pressed="${st.second === 'gift'}">${ic('gift', 16)}Gift</button></div></div>
         <div class="two"><label class="field"><span>Brand</span><input type="text" id="f-brand" value="${esc(v0.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="f-price" inputmode="decimal" value="${esc(v0.price || '')}" placeholder="$29.99"></label></div>
         <div class="field"><span id="f-size-label">Size</span><input type="text" id="f-size" value="${esc(v0.size || '')}" placeholder="M, 38, W28 L32" style="max-width:220px"><div class="chips wrap" id="f-size-chips" style="margin-top:8px"></div></div>
         <div class="field"><span>Season</span><div class="chips wrap" id="f-season">${SEASONS.map(s => `<button class="chip" data-season="${s}" aria-pressed="${st.seasons.has(s)}">${s}</button>`).join('')}</div></div>
@@ -1928,6 +1933,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   };
   renderCats(); renderMats(); renderColor2(); renderDetails(); renderSwatches(); renderSizes();
   $('#f-size', el).addEventListener('input', renderSizes);
+  $('#f-acq-year', el).addEventListener('input', e => { const y = +e.target.value; st.acq = y >= 1950 && y <= new Date().getFullYear() ? `${y}-${String(new Date().getMonth() + 1).padStart(2, '0')}` : ''; const yo = yearsOwned({ acq: st.acq }); $$('[data-acq]', el).forEach(b => { const n = +b.dataset.acq; b.setAttribute('aria-pressed', yo != null && (n === 5 ? yo >= 5 : yo === n)); }); });
   const sideHas = () => !!ed.src;
   const setTool = t => {
     ed.tool = t; $$('[data-tool]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.tool === t));
@@ -2011,6 +2017,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       ed.onPick = c => { hint.textContent = prev; if (which === '1') { $('#f-color', el).value = c; st.colorTouched = true; $('#f-color-note', el).textContent = colorName(c) + ', picked from the photo'; } else { st.color2 = c; renderColor2(); } toast('Color picked'); };
       return;
     }
+    if (t.dataset.acq != null) { const n = +t.dataset.acq, on = t.getAttribute('aria-pressed') === 'true'; st.acq = on ? '' : acqFor(n); $$('[data-acq]', el).forEach(b => b.setAttribute('aria-pressed', !on && b === t)); $('#f-acq-year', el).value = on ? '' : st.acq.slice(0, 4); return; }
     if (t.dataset.lg) { const m = t.dataset.lg; st.letgo = st.letgo?.mode === m ? null : { mode: m, price: st.letgo?.price || '' }; $$('[data-lg]', el).forEach(b => b.setAttribute('aria-pressed', st.letgo?.mode === b.dataset.lg)); $('#f-ask', el).style.display = st.letgo?.mode === 'sell' ? '' : 'none'; return; }
     if (t.dataset.care) { const c = t.dataset.care; st.care.has(c) ? st.care.delete(c) : st.care.add(c); t.setAttribute('aria-pressed', st.care.has(c)); return; }
     if (t.dataset.pk) { const v = t.dataset.pk === 'yes'; st.pockets = st.pockets === v ? null : v; $$('[data-pk]', el).forEach(b => b.setAttribute('aria-pressed', st.pockets === (b.dataset.pk === 'yes'))); return; }
@@ -2063,7 +2070,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       if (front === 'uncut') { if (st.side !== 'front') switchSide('front'); toast('Wait a moment for the cut-out to finish.'); return; }
       if (back === 'uncut') { if (st.side !== 'back') switchSide('back'); toast('Wait a moment for the back to finish cutting out.'); return; }
       const now = Date.now();
-      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), subs: st.subs.filter(id => st.cats.some(c => (S.cats.find(x => x.id === c)?.subs || []).some(x => x.id === id))), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: '', imgJ: front.imgJ, imgM: front.imgM, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 11, imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, _j: undefined, _m: undefined, _md: undefined, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.fx.front.pop, adj: { ...st.fx.front.adj }, pockets: st.pockets, care: CARE.filter(c => st.care.has(c)), letgo: st.letgo ? { mode: st.letgo.mode, price: st.letgo.mode === 'sell' ? $('#f-ask', el).value.trim() : '' } : null, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
+      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), subs: st.subs.filter(id => st.cats.some(c => (S.cats.find(x => x.id === c)?.subs || []).some(x => x.id === id))), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: '', imgJ: front.imgJ, imgM: front.imgM, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 11, imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, _j: undefined, _m: undefined, _md: undefined, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.fx.front.pop, adj: { ...st.fx.front.adj }, acq: st.acq || '', pockets: st.pockets, care: CARE.filter(c => st.care.has(c)), letgo: st.letgo ? { mode: st.letgo.mode, price: st.letgo.mode === 'sell' ? $('#f-ask', el).value.trim() : '' } : null, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
         back: back ? { img: '', imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, imgJ: back.imgJ, imgM: back.imgM, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang, fx: st.link ? null : { adj: { ...st.fx.back.adj }, pop: st.fx.back.pop } } : null };
       if (!it.hang) { try { it.hang = await hangOf(front.img); } catch {} }
       if (!keepOrig()) { it.orig = undefined; it.mask = undefined; if (it.back) { it.back.orig = undefined; it.back.mask = undefined; } }
@@ -2102,7 +2109,7 @@ function openDetail(it) {
     it.color && ['Color', `<span class="dot" style="background:${esc(it.color)}"></span>${esc(colorName(it.color))}`],
     it.color2 && ['Second color', `<span class="dot" style="background:${esc(it.color2)}"></span>${esc(colorName(it.color2))}`],
     it.color && getSeason() && ['Your palette', { in: 'Fits your colors', close: 'Close to your colors', out: 'Outside your colors' }[paletteFit(it.color).verdict]],
-    it.materials?.length && ['Material', esc(it.materials.join(', '))], (it.gift || it.secondhand != null) && ['Got it', it.gift ? 'Gift' : it.secondhand ? 'Secondhand' : 'New'],
+    it.materials?.length && ['Material', esc(it.materials.join(', '))], yearsOwned(it) != null && ['Had it for', ownedLabel(it)], (it.gift || it.secondhand != null) && ['Got it', it.gift ? 'Gift' : it.secondhand ? 'Secondhand' : 'Bought new'],
     it.brand && ['Brand', esc(it.brand)], it.size && [isShoe(it) ? 'Shoe size' : 'Size', esc(it.size)], (it.worn?.length) && ['Worn', `${it.worn.length} ${it.worn.length === 1 ? 'time' : 'times'}, last ${agoText(lastWorn(it))}`], (it.worn?.length && !isNaN(priceNum(it.price))) && ['Cost per wear', esc((priceNum(it.price) / it.worn.length).toFixed(2))], it.letgo && ['Letting go', it.letgo.mode === 'sell' ? `For sale${it.letgo.price ? ', ' + esc(it.letgo.price) : ''}` : 'Donate'], it.care?.length && ['Care to-do', esc(it.care.join(', '))], it.pockets != null && ['Pockets', it.pockets ? 'Yes' : 'No'], it.price && ['Price', esc(it.price)],
     it.seasons?.length && ['Season', esc(it.seasons.join(', '))], it.occasions?.length && ['Occasion', esc(it.occasions.join(', '))],
     used.length && ['In outfits', esc(used.map(o => o.name || 'Untitled').join(', '))]
@@ -2121,7 +2128,7 @@ function openDetail(it) {
   el.addEventListener('click', async e => {
     const sd = e.target.closest('[data-dside]');
     if (sd) { $$('[data-dside]', el).forEach(x => x.setAttribute('aria-pressed', x === sd)); $('#d-hero', el).innerHTML = hangSideHTML(it, sd.dataset.dside, Math.min(window.innerWidth - 60, 700) * 0.72, Math.min(window.innerHeight * 0.46, 520)); return; }
-    const wb = e.target.closest('[data-dworn]'); if (wb) { await toggleWorn(it); wb.classList.toggle('primary', wornToday(it)); wb.lastChild.textContent = wornToday(it) ? 'Worn today' : 'Wore it today'; const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); renderClosetResults(); toast(wornToday(it) ? 'Marked as worn today' : 'Unmarked'); return; }
+    const wb = e.target.closest('[data-dworn]'); if (wb) { await toggleWorn(it); wb.classList.toggle('primary', wornToday(it)); wb.lastChild.textContent = wornToday(it) ? 'Worn today' : 'Wore it today'; const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); renderClosetResults(); return; }
     const df = e.target.closest('[data-dfold]'); if (df) { const f = S.folders.find(x => x.id === df.dataset.dfold); if (f) { f.ids = f.ids.includes(it.id) ? f.ids.filter(x => x !== it.id) : [...f.ids, it.id]; df.setAttribute('aria-pressed', f.ids.includes(it.id)); await saveFolders(); renderClosetResults(); } return; }
     if (e.target.closest('[data-dfold-new]')) { const name = await askText('New folder', 'Name', 'Summer trip'); if (name) { S.folders.push({ id: uid(), name, ids: [it.id] }); await saveFolders(); closeSheet(el); openDetail(it); renderClosetResults(); } return; }
     const dp = e.target.closest('[data-dphoto]'); if (dp) { openLightbox(dets, +dp.dataset.dphoto); return; }
@@ -2206,7 +2213,7 @@ function openMix() {
       <p class="dress-hint"></p>
       <div class="dress-strip"></div>
       <div class="btn-row dress-nav"><button class="btn" data-m="back">${ic('back', 18)}Back</button><button class="btn primary" data-m="forward">Next</button></div>
-      <button class="btn ghost sm" data-m="board" style="align-self:center;margin-top:4px">${ic('layers', 18)}Fine-tune on a board</button>
+      <div class="row" style="justify-content:center;gap:8px;margin-top:4px"><button class="btn sm" data-m="worn">${ic('check', 18)}<span>Wore this today</span></button><button class="btn ghost sm" data-m="board">${ic('layers', 18)}Fine-tune on a board</button></div>
     </div></div>`, 'full');
   const canvas = $('.dress-canvas', el), layers = $('.dress-layers', el);
   const cur = i => (DRESS_STAGES[i].multi ? null : (pick[i] >= 0 ? pools[i][pick[i]] : null));
@@ -2267,6 +2274,7 @@ function openMix() {
     if (a === 'prev') step(-1); if (a === 'next') step(1);
     if (a === 'back') goStage(nextStage(stage, -1));
     if (a === 'forward' && stage < DRESS_STAGES.length - 1) { goStage(nextStage(stage, 1)); return; }
+    if (a === 'worn') { const ids = [...new Set(zones().map(L => L.it.id))]; if (!ids.length) return; const all = ids.every(id => wornToday(byId(id))); for (const id of ids) await toggleWorn(byId(id), !all); b.classList.toggle('primary', !all); b.lastChild.textContent = !all ? 'Worn today' : 'Wore this today'; renderRack(); renderInsights(); return; }
     if (a === 'board') { const o = outfit(); if (!o.pieces.length) { toast('Pick at least one piece.'); return; } closeSheet(el); openBoard(o); return; }
     if (a === 'save' || a === 'forward') {
       const o = outfit(); if (!o.pieces.length) { toast('Pick at least one piece.'); return; }
@@ -2376,7 +2384,7 @@ function openBoard(outfit = null, seedId = null) {
     if (a === 'arrange') { if (!o.pieces.length) return; arrange(o); dirty = true; renderBoard(); }
     if (a === 'front' && cur()) { cur().z = maxZ() + 1; dirty = true; styleOf(cur()); }
     if (a === 'back' && cur()) { const p = cur(); o.pieces.forEach(q => { if (q !== p) q.z = (q.z || 0) + 1; }); p.z = 0; o.pieces.forEach(styleOf); dirty = true; }
-    if (a === 'worn') { const ids = [...new Set(o.pieces.map(p => p.itemId))]; for (const id of ids) { const it = byId(id); if (it) await toggleWorn(it, true); } renderRack(); renderInsights(); toast(`${ids.length} ${ids.length === 1 ? 'piece' : 'pieces'} marked as worn today`); return; }
+    if (a === 'worn') { const ids = [...new Set(o.pieces.map(p => p.itemId))], all = ids.every(id => byId(id) && wornToday(byId(id))); for (const id of ids) { const it = byId(id); if (it) await toggleWorn(it, !all); } b.classList.toggle('primary', !all); b.lastChild.textContent = !all ? 'Worn today' : 'Wore it'; renderRack(); renderInsights(); return; }
     if (a === 'image') { if (!o.pieces.length) { toast('Add a piece to the board first.'); return; } const blob = await outfitBlob(o); if (blob) saveFile(`${slug($('#b-name', el).value)}.png`, blob); }
     if (a === 'cancel') { if (dirty && o.pieces.length && !(await confirmDanger('Discard changes?', 'This outfit board won’t be saved.', 'Discard'))) return; closeSheet(el); }
     if (a === 'delete') {
@@ -2471,7 +2479,8 @@ function renderInsights() {
   const cats = tally(i => catsOf(i).map(catName));
   const colors = tally(i => colorFamily(i.color) || 'Not set');
   const seasons = tally(i => i.seasons || []);
-  const bought = tally(i => i.gift ? 'Gift' : i.secondhand == null ? 'Not set' : i.secondhand ? 'Secondhand' : 'New');
+  const bought = tally(i => i.gift ? 'Gift' : i.secondhand == null ? 'Not set' : i.secondhand ? 'Secondhand' : 'Bought new');
+  const owned = tally(i => { const y = yearsOwned(i); return y == null ? 'Not set' : y < 1 ? 'New (under a year)' : y < 3 ? '1–2 years' : y < 5 ? '3–4 years' : '5+ years'; });
   const mats = tally(i => i.materials || []);
   const occ = tally(i => i.occasions || []);
   const wornList = S.items.filter(i => i.worn?.length).sort((a, b) => b.worn.length - a.worn.length), neverWorn = n - wornList.length, forgot = S.items.filter(isForgotten).length;
@@ -2495,7 +2504,8 @@ function renderInsights() {
     + donutCard('cat', 'Category', cats, { colors: e => { const c = S.cats.find(x => x.name === e.label); return c ? catColor(c.id) : '#D6D6D6'; }, ramp: PASTEL, scope: 'cat' })
     + donutCard('color', 'Color', colors, { colors: e => avgColor(e.items) || FAMILY[e.label], ramp: PASTEL })
     + donutCard('season', 'Season', seasons, { colors: e => SEASON_COL[e.label], ramp: PASTEL, note: 'tags' })
-    + donutCard('bought', 'How you got it', bought.sort((x, y) => (x.label === 'Not set') - (y.label === 'Not set') || y.count - x.count), { colors: e => ({ Secondhand: '#8FD0CF', New: '#C3A9EC', Gift: '#F4A9B8' })[e.label], ramp: PASTEL })
+    + donutCard('bought', 'How you got it', bought.sort((x, y) => (x.label === 'Not set') - (y.label === 'Not set') || y.count - x.count), { colors: e => ({ Secondhand: '#8FD0CF', 'Bought new': '#C3A9EC', Gift: '#F4A9B8' })[e.label], ramp: PASTEL })
+    + donutCard('owned', 'How long you have had it', owned.sort((x, y) => ['New (under a year)', '1–2 years', '3–4 years', '5+ years', 'Not set'].indexOf(x.label) - ['New (under a year)', '1–2 years', '3–4 years', '5+ years', 'Not set'].indexOf(y.label)), { ramp: PASTEL })
     + donutCard('brand', 'Brand', brands, { ramp: RAMPS.brand })
     + donutCard('mat', 'Material', mats, { ramp: RAMPS.mat, note: 'tags' })
     + donutCard('occ', 'Occasion', occ, { ramp: RAMPS.occ, note: 'tags' })
@@ -2564,7 +2574,7 @@ async function importBackup(file) {
     img: IMG_RE.test(i.img || '') ? i.img : '', imgJ: IMG_RE.test(i.imgJ || '') ? i.imgJ : undefined, imgA: IMG_RE.test(i.imgA || '') ? i.imgA : undefined, imgM: IMG_RE.test(i.imgM || '') ? i.imgM : undefined, orig: IMG_RE.test(i.orig || '') ? i.orig : undefined, mask: IMG_RE.test(i.mask || '') ? i.mask : undefined, aspect: +i.aspect || 0.8,
     hang: (i.hang && [i.hang.cx, i.hang.ty, i.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.hang.type) ? i.hang.type : 'hanger', cx: clamp(i.hang.cx, -1, 2), ty: clamp(i.hang.ty, -1, 2), w: clamp(i.hang.w, 0.05, 3) } : undefined,
     hanger: ['hanger', 'clip', 'hook', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: !!i.smooth, pop: !!i.pop, adj: i.adj && typeof i.adj === 'object' ? Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+i.adj[k] || 0, -50, 50)])) : undefined,
-    materials: Array.isArray(i.materials) ? i.materials.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim().slice(0, 40)) : [], secondhand: typeof i.secondhand === 'boolean' ? i.secondhand : null, gift: !!i.gift, pockets: typeof i.pockets === 'boolean' ? i.pockets : null, worn: Array.isArray(i.worn) ? i.worn.filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)) : [], letgo: i.letgo && ['sell', 'donate'].includes(i.letgo.mode) ? { mode: i.letgo.mode, price: str(i.letgo.price).slice(0, 40) } : null, care: Array.isArray(i.care) ? i.care.filter(c => CARE.includes(c)) : [],
+    materials: Array.isArray(i.materials) ? i.materials.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim().slice(0, 40)) : [], secondhand: typeof i.secondhand === 'boolean' ? i.secondhand : null, gift: !!i.gift, pockets: typeof i.pockets === 'boolean' ? i.pockets : null, acq: /^\d{4}-\d{2}$/.test(i.acq || '') ? i.acq : '', worn: Array.isArray(i.worn) ? i.worn.filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)) : [], letgo: i.letgo && ['sell', 'donate'].includes(i.letgo.mode) ? { mode: i.letgo.mode, price: str(i.letgo.price).slice(0, 40) } : null, care: Array.isArray(i.care) ? i.care.filter(c => CARE.includes(c)) : [],
     color2: /^#[0-9a-f]{6}$/i.test(i.color2 || '') ? i.color2 : '', details: Array.isArray(i.details) ? i.details.filter(d => IMG_RE.test(d || '')).slice(0, 30) : [],
     back: i.back && (IMG_RE.test(i.back.img || '') || (IMG_RE.test(i.back.imgJ || '') && (IMG_RE.test(i.back.imgA || '') || IMG_RE.test(i.back.imgM || '')))) ? { img: IMG_RE.test(i.back.img || '') ? i.back.img : '', imgJ: IMG_RE.test(i.back.imgJ || '') ? i.back.imgJ : undefined, imgA: IMG_RE.test(i.back.imgA || '') ? i.back.imgA : undefined, imgM: IMG_RE.test(i.back.imgM || '') ? i.back.imgM : undefined, orig: IMG_RE.test(i.back.orig || '') ? i.back.orig : undefined, mask: IMG_RE.test(i.back.mask || '') ? i.back.mask : undefined, aspect: +i.back.aspect || 0.8, fx: i.back.fx && typeof i.back.fx === 'object' ? { adj: Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+(i.back.fx.adj || {})[k] || 0, -50, 50)])), pop: !!i.back.fx.pop } : null, hang: (i.back.hang && [i.back.hang.cx, i.back.hang.ty, i.back.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.back.hang.type) ? i.back.hang.type : 'hanger', cx: clamp(i.back.hang.cx, -1, 2), ty: clamp(i.back.hang.ty, -1, 2), w: clamp(i.back.hang.w, 0.05, 3) } : undefined } : null
   }));
@@ -2640,7 +2650,7 @@ document.addEventListener('click', async e => {
     case 'open-outfit': openBoard(S.outfits.find(o => o.id === a.dataset.id)); break;
     case 'add-cat': { const inp = $('#new-cat'); const name = inp.value.trim(); if (!name) { inp.focus(); return; } S.cats.push({ id: uid(), name: name.slice(0, 60) }); await saveCats(); renderAll(); toast(`Added ${name}`); break; }
     case 'export': exportBackup(); break;
-    case 'worn': { const it = byId(a.dataset.id); if (!it) break; await toggleWorn(it); const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); if (S.view === 'closet') renderClosetResults(); const dw = document.querySelector(`[data-dworn="${it.id}"]`); if (dw) { dw.classList.toggle('primary', wornToday(it)); dw.lastChild.textContent = wornToday(it) ? 'Worn today' : 'Wore it today'; } toast(wornToday(it) ? `Marked as worn today` : 'Unmarked'); break; }
+    case 'worn': { const it = byId(a.dataset.id); if (!it) break; await toggleWorn(it); const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); if (S.view === 'closet') renderClosetResults(); const dw = document.querySelector(`[data-dworn="${it.id}"]`); if (dw) { dw.classList.toggle('primary', wornToday(it)); dw.lastChild.textContent = wornToday(it) ? 'Worn today' : 'Wore it today'; } break; }
     case 'order': pickOrder(); break;
     case 'cols': { const n = gridCols() >= 5 ? 2 : gridCols() + 1; try { localStorage.setItem('closet-cols', String(n)); } catch {} applyCols(); break; }
     case 'color-check': openColorCheck(); break;
