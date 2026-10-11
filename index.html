@@ -169,7 +169,7 @@ img{max-width:100%}
 .sheet-head h2{font-family:var(--serif);font-weight:400;font-size:18px;letter-spacing:.05em;text-transform:uppercase;margin:0;flex:1;text-align:center}
 .title-input{flex:1;min-width:0;text-align:center;border:0;background:none;outline:none;font-family:var(--serif);font-size:20px;font-weight:400}
 .title-input::placeholder{color:var(--muted)}
-.sheet-body{flex:1;overflow-y:auto;padding:4px 18px 40px;min-height:0}
+.sheet-body{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior-x:none;padding:4px 18px 40px;min-height:0}
 .sheet.mini{background:rgba(42,26,36,0);transition:background .25s;display:flex;align-items:flex-end;justify-content:center}
 .sheet.mini.open{background:rgba(42,26,36,.38)}
 .mini-card{width:min(100% - 20px,460px);margin-bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);border-radius:30px;padding:22px 18px 14px;transform:translateY(115%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
@@ -436,8 +436,8 @@ img[data-m]:not([data-mon]){opacity:0}
 .prop-cushion,.prop-cushion-lip{position:absolute;left:0;border-radius:50% / 46%;background:radial-gradient(ellipse at 50% 30%,#4a4a52,#232328 70%)}
 .prop-cushion{box-shadow:0 10px 18px -12px rgba(0,0,0,.6)}
 .prop-cushion-lip{z-index:3;border-radius:0 0 50% 50% / 0 0 80% 80%;background:linear-gradient(#2c2c32,#1d1d21)}
-.color-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.cbox{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border-radius:20px;background:var(--surface);border:1px solid var(--line);transition:box-shadow .3s}
+.color-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.cbox{min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border-radius:20px;background:var(--surface);border:1px solid var(--line);transition:box-shadow .3s}
 .cbox.just{box-shadow:0 0 0 2.5px var(--ink)}
 .cbox-l{font-size:12.5px;color:var(--muted)}
 .cbox-n{font-size:13px;min-height:18px;text-align:center}
@@ -447,6 +447,13 @@ img[data-m]:not([data-mon]){opacity:0}
 .dthumb2{overflow:hidden}
 .dthumb2 .fcrop{max-height:100%;max-width:100%}
 .dthumb2 img{max-width:100%;max-height:100%}
+.cbox .chip{max-width:100%}
+.cbox-n{overflow-wrap:anywhere}
+.worn-q{width:100%}
+.btn-row + .field,.btn-row + .btn-row{margin-top:12px}
+.tag-actions{margin-top:14px}
+.dress-nav{margin-top:6px}
+.acq-year{border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:0 12px;font:inherit;font-size:14px}
 #toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
@@ -531,6 +538,8 @@ const P = {
   tag:'<path d="M3.5 12.5V5a1.5 1.5 0 0 1 1.5-1.5h7.5l8 8a1.5 1.5 0 0 1 0 2.1l-6.4 6.4a1.5 1.5 0 0 1-2.1 0Z"/><circle cx="8.5" cy="8.5" r="1.5"/>',
   clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
   check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  box:'<rect x="4.5" y="4.5" width="15" height="15" rx="3.5"/>',
+  boxcheck:'<rect x="4.5" y="4.5" width="15" height="15" rx="3.5"/><path d="m8.2 12.3 2.6 2.6 5-5.4"/>',
   upload:'<path d="M12 20V9M7.5 13.5 12 9l4.5 4.5M5 4h14"/>'
 };
 const ic = (n, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
@@ -557,6 +566,7 @@ const isShoe = it => catsOf(it).some(c => SHOE_RE.test(catName(c))) || (it.subs 
 const yearsOwned = it => { if (!/^\d{4}-\d{2}$/.test(it.acq || '')) return null; const [y, m] = it.acq.split('-').map(Number), n = new Date(); return Math.max(0, Math.floor(((n.getFullYear() - y) * 12 + (n.getMonth() + 1 - m)) / 12)); };
 const ownedLabel = it => { const y = yearsOwned(it); return y == null ? '' : y < 1 ? 'New (under a year)' : y >= 5 ? '5+ years' : `${y} ${y === 1 ? 'year' : 'years'}`; };
 const acqFor = n => { const d = new Date(); return `${d.getFullYear() - n}-${String(d.getMonth() + 1).padStart(2, '0')}`; };
+const wornIcon = (it, sz = 20) => wornToday(it) ? ic('boxcheck', sz) : ic('box', sz);
 const dayStr = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 const wornToday = it => (it.worn || []).includes(dayStr());
 const lastWorn = it => (it.worn || []).slice().sort().pop() || null;
@@ -858,7 +868,7 @@ async function ensureStickers() {
       if (hasCut(c) && !c.img && !c.imgMd && !c.bMd) { try { await prepCut(c); c.imgMd = await makeDarkMask(c, true); delete c._md; changed = true; } catch {} }
       else if (c.img && !c.imgJ && !c.bJ && !STICK.has(c.img)) { try { STICK.set(c.img, await makeSticker(c.img)); made++; } catch {} }
     }
-    if (changed) { await prepItem(it); await safe(putItem(it)); made++; if (made % 12 === 0) renderAll(); await new Promise(r => setTimeout(r, 30)); }
+    if (changed) { await prepItem(it); await safe(putItem(it)); made++; await new Promise(r => setTimeout(r, 30)); }
   }
   stickBusy = false; if (made) renderAll();
 }
@@ -940,7 +950,7 @@ function placeFlip(it) {
 function renderTag(it) {
   placeFlip(it);
   const el = $('#rack-tag'); if (!el || !it) return; const tags = metaTags(it);
-  el.innerHTML = `<article class="tag"><span class="badge" style="${catStyle(catOf(it))}">${esc(subsOf(it).length ? subsOf(it).map(subName).join(', ') : catsOf(it).map(catName).join(', '))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${it.color2 ? `<span class="dot" style="background:${esc(it.color2)};margin-left:-12px"></span>` : ''}${esc(itemName(it))}</h3>${it.brand || it.size ? `<p class="meta">${it.brand ? `<span>${esc(it.brand)}</span>` : ''}${it.size ? `<span class="size">${isShoe(it) ? 'Shoe size' : 'Size'} ${esc(it.size)}</span>` : ''}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions"><button class="btn sm${wornToday(it) ? ' primary' : ''}" data-act="worn" data-id="${it.id}" aria-pressed="${wornToday(it)}">${ic('check', 16)}${wornToday(it) ? 'Worn' : 'Wore it'}</button><button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
+  el.innerHTML = `<article class="tag"><span class="badge" style="${catStyle(catOf(it))}">${esc(subsOf(it).length ? subsOf(it).map(subName).join(', ') : catsOf(it).map(catName).join(', '))}</span><h3>${it.color ? `<span class="dot" style="background:${esc(it.color)}"></span>` : ''}${it.color2 ? `<span class="dot" style="background:${esc(it.color2)};margin-left:-12px"></span>` : ''}${esc(itemName(it))}</h3>${it.brand || it.size ? `<p class="meta">${it.brand ? `<span>${esc(it.brand)}</span>` : ''}${it.size ? `<span class="size">${isShoe(it) ? 'Shoe size' : 'Size'} ${esc(it.size)}</span>` : ''}</p>` : ''}${tags ? `<div class="mini-tags">${tags}</div>` : ''}<div class="tag-actions"><button class="btn sm${wornToday(it) ? ' primary' : ''}" data-act="worn" data-id="${it.id}" aria-pressed="${wornToday(it)}">${wornIcon(it, 16)}${wornToday(it) ? 'Worn' : 'Wore it?'}</button><button class="btn sm" data-act="detail" data-id="${it.id}">Details</button><button class="btn sm primary" data-act="style" data-id="${it.id}">${ic('layers', 18)}Style it</button></div></article>`;
 }
 
 function renderCloset() {
@@ -967,7 +977,7 @@ async function computeFocus(it) { // rows where the piece is solid; skip thin st
   if (body > full * 0.78) return null; const pad = body * 0.06; return { y0: Math.max(0, (y0 - pad) / H), y1: Math.min(1, (y1 + 1 + pad) / H) };
 }
 let focusBusy = false;
-async function ensureFocus() { if (focusBusy) return; focusBusy = true; let n = 0; for (const it of S.items) { if (it.focus !== undefined || !hasCut(it) || it.img) continue; try { it.focus = await computeFocus(it); await safe(putItem(it)); n++; } catch { it.focus = null; } await new Promise(r => setTimeout(r, 20)); } focusBusy = false; if (n) renderAll(); }
+async function ensureFocus() { if (focusBusy) return; focusBusy = true; let n = 0; for (const it of S.items) { if (it.focus !== undefined || !hasCut(it) || it.img) continue; try { it.focus = await computeFocus(it); await safe(putItem(it)); n++; } catch { it.focus = null; } await new Promise(r => setTimeout(r, 20)); } focusBusy = false; if (n) { renderClosetResults(); renderInsights(); } }
 const tileHTML = it => `<div class="tile-wrap"><button class="tile" data-act="detail" data-id="${it.id}"><div class="ph">${thumbHTML(it)}</div><p class="nm">${esc(itemName(it))}</p><p class="sub">${esc([it.brand, it.size && (isShoe(it) ? 'shoe size ' : 'size ') + it.size, it.price].filter(Boolean).join(', ') || catName(catOf(it)))}</p></button></div>`;
 function renderClosetResults() {
   applyCols();
@@ -1380,6 +1390,7 @@ class Cutout {
     this.onChange = () => {}; this.onStroke = () => {}; this.src = null; this.labels = null; this.cut = false; this.bind();
   }
   setSource(img, maskImg, alphaFromSrc) {
+    this.dirty = true; this.origURL = null;
     const nw = img.naturalWidth || img.width, nh = img.naturalHeight || img.height;
     const s = Math.min(1, MAX_WORK / Math.max(nw, nh)); const w = Math.max(1, Math.round(nw * s)), h = Math.max(1, Math.round(nh * s)), n = w * h;
     this.w = w; this.h = h; this.canvas.width = this.ov.width = w; this.canvas.height = this.ov.height = h;
@@ -1399,8 +1410,9 @@ class Cutout {
   }
   autoHanger() { if (this.htype === 'none' || DISPLAYS.includes(this.htype)) { this.hg = null; this.placeHanger(); return; } const g = autoHang(i => this.mask[i], this.w, this.h, 128, this.htype); if (g) this.hg = { cx: g.cx, ty: g.ty, w: g.w }; this.placeHanger(); }
   px() {
-    if (this.smooth && !this.smoothed) this.smoothed = smoothWrinkles(this.src.data, this.w, this.h, 0.004, 0.85);
-    const base = this.smooth && this.smoothed ? this.smoothed : this.src.data;
+    const sk = typeof this.smooth === 'number' ? this.smooth : (this.smooth ? 0.85 : 0);
+    if (sk > 0 && (!this.smoothed || this._smK !== sk)) { this.smoothed = smoothWrinkles(this.src.data, this.w, this.h, 0.004, sk); this._smK = sk; }
+    const base = sk > 0 && this.smoothed ? this.smoothed : this.src.data;
     let out = base;
     if (this.pop) { if (!this._pop || this._popBase !== base) { this._pop = popColors(base, this.cut ? this.mask : null); this._popBase = base; } out = this._pop; }
     const A = this.adj || {}, key = [A.b | 0, A.s | 0, A.w | 0, A.c | 0].join(',');
@@ -1408,11 +1420,12 @@ class Cutout {
     if (!this._adj || this._adjKey !== key || this._adjBase !== out) { this._adj = adjustColors(out, A); this._adjKey = key; this._adjBase = out; }
     return this._adj;
   }
-  setAdj(a) { this.adj = { ...a }; this.refreshView(); }
+  setAdj(a) { this.adj = { ...a }; this.dirty = true; this.refreshView(); }
   refreshView() { if (!this.src || !this.view) return; const s = this.px(), d = this.view.data; for (let i = 0; i < d.length; i += 4) { d[i] = s[i]; d[i + 1] = s[i + 1]; d[i + 2] = s[i + 2]; } this._sc = null; this.redraw(); }
-  setSmooth(on) { this.smooth = on; this.refreshView(); }
-  setPop(on) { this.pop = on; this._pop = null; this.refreshView(); }
+  setSmooth(v) { this.smooth = v; this.dirty = true; this.refreshView(); }
+  setPop(on) { this.pop = on; this.dirty = true; this._pop = null; this.refreshView(); }
   rotate() { // 90 degrees clockwise; keeps the cut-out
+    this.dirty = true; this.origURL = null;
     if (!this.src) return; const { w, h } = this, W = h, H = w, n = w * h, d = this.src.data, nd = new Uint8ClampedArray(n * 4), m = new Uint8ClampedArray(n), er = new Uint8ClampedArray(n), rs = new Uint8ClampedArray(n);
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = y * w + x, j = x * W + (W - 1 - y); nd[j * 4] = d[i * 4]; nd[j * 4 + 1] = d[i * 4 + 1]; nd[j * 4 + 2] = d[i * 4 + 2]; nd[j * 4 + 3] = 255; m[j] = this.mask[i]; er[j] = this.er[i]; rs[j] = this.rs[i]; }
     this.w = W; this.h = H; this.src = new ImageData(nd, W, H); this.mask = m; this.er = er; this.rs = rs;
@@ -1456,7 +1469,7 @@ class Cutout {
     this.ctx.putImageData(this.view, 0, 0, x0, y0, x1 - x0, y1 - y0);
   }
   snap() { return { m: this.mask.slice(), l: this.labels ? this.labels.slice() : null, er: this.er.slice(), rs: this.rs.slice(), cut: this.cut, f: { ...this.frame }, hg: this.hg ? { ...this.hg } : null, t: this.trim | 0, lb: this.lowBin }; }
-  push() { this.stack.push(this.snap()); if (this.stack.length > 8) this.stack.shift(); this.onChange(); }
+  push() { this.dirty = true; this.stack.push(this.snap()); if (this.stack.length > 8) this.stack.shift(); this.onChange(); }
   undo() { const s = this.stack.pop(); if (s) { this.mask = s.m; this.labels = s.l; this.er = s.er; this.rs = s.rs; this.cut = s.cut; this.frame = s.f; this.hg = s.hg; this.trim = s.t; this.lowBin = s.lb; if (this.onTrim) this.onTrim(this.trim); this.placeFrame(); this.placeHanger(); this.octx.clearRect(0, 0, this.w, this.h); this.redraw(); } this.onChange(); }
   fgFraction() { let c = 0; const m = this.mask; for (let i = 0; i < m.length; i += 7) if (m[i] > 128) c++; return c / Math.ceil(m.length / 7); }
   ensureLabels() {
@@ -1515,7 +1528,7 @@ class Cutout {
     const med = a => { a.sort((p, q) => p - q); return a[a.length >> 1]; };
     if (rs.length) return hex(med(rs), med(gs), med(bs)); if (ro.length) return hex(med(ro), med(go), med(bo)); return null;
   }
-  getState() { const k = ['src', 'mask', 'er', 'rs', 'labels', 'lowPx', 'lw', 'lh', 'w', 'h', 'cut', 'frame', 'hg', 'stack', 'smoothed', 'view', 'lowBin', 'trim']; const o = {}; k.forEach(x => { o[x] = this[x]; }); return this.src ? o : null; }
+  getState() { const k = ['src', 'mask', 'er', 'rs', 'labels', 'lowPx', 'lw', 'lh', 'w', 'h', 'cut', 'frame', 'hg', 'stack', 'smoothed', '_smK', 'view', 'lowBin', 'trim', 'dirty', 'origURL']; const o = {}; k.forEach(x => { o[x] = this[x]; }); return this.src ? o : null; }
   setState(o) {
     if (!o) { this.clear(); return; }
     Object.assign(this, o); const { w, h } = this;
@@ -1755,7 +1768,7 @@ class Cutout {
     ox.imageSmoothingQuality = 'high'; ox.drawImage(full, sx, sy, sw, sh, 0, 0, ow, oh);
     let img = out.toDataURL('image/webp', 0.9); if (!img.startsWith('data:image/webp')) img = out.toDataURL('image/png');
     const { imgJ, imgM } = splitCanvas(out);
-    const oc = mk(w, h); oc.getContext('2d').putImageData(this.src, 0, 0); const orig = oc.toDataURL('image/jpeg', 0.76);
+    const oc = mk(w, h); oc.getContext('2d').putImageData(this.src, 0, 0); const orig = this.origURL || oc.toDataURL('image/jpeg', 0.82); // the original photo is only compressed once
     const mc = mk(w, h), mi = new ImageData(w, h); for (let i = 0; i < w * h; i++) mi.data[i * 4 + 3] = m[i]; mc.getContext('2d').putImageData(mi, 0, 0);
     if (!this.hg) this.autoHanger(); const g = this.hg;
     const hang = this.htype === 'none' || DISPLAYS.includes(this.htype) ? { type: this.htype } : g ? { type: this.htype, cx: (g.cx - sx) / sw, ty: (g.ty - sy) / sh, w: g.w / sw } : null;
@@ -1917,8 +1930,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   const defCat = S.rackCat !== 'all' && S.rackCat !== 'none' ? S.rackCat : (S.closetCat !== 'all' && S.closetCat !== 'none' ? S.closetCat : null);
   const st = { hangerOk: !!item, subs: [...(v0.subs || [])], cats: item ? catsOf(item).filter(c => c !== 'none') : [(pre?.cat && S.cats.some(c => c.id === pre.cat) ? pre.cat : defCat)].filter(Boolean), get cat() { return this.cats[0] || null; }, seasons: new Set(v0.seasons || []), occ: new Set(v0.occasions || []), colorTouched: !!v0.color, mats: new Set(v0.materials || []), second: v0.gift ? 'gift' : v0.secondhand === true ? true : v0.secondhand === false ? false : null, hManual: !!v0.hangerManual,
     color2: v0.color2 || '', acq: v0.acq || '', pockets: v0.pockets ?? null, letgo: v0.letgo ? { ...v0.letgo } : null, care: new Set(v0.care || []), details: [...(v0.details || [])], side: 'front', states: { front: null, back: null } };
-  let smoothPref = true; try { smoothPref = localStorage.getItem('closet-smooth') !== '0'; } catch {}
-  st.smooth = item ? !!item.smooth : smoothPref;
+  st.smooth = item ? (typeof item.smooth === 'number' ? item.smooth : item.smooth ? 0.85 : 0) : 0;
   let popPref = false; try { popPref = localStorage.getItem('closet-pop') === '1'; } catch {}
   st.pop = item ? !!item.pop : popPref;
   st.adj = { b: 0, s: 0, w: 0, c: 0, ...(item?.adj || {}) };
@@ -1930,7 +1942,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       <div class="side-row"><div class="seg" role="group" aria-label="Side"><button data-side="front" aria-pressed="true">Front</button><button data-side="back" aria-pressed="false">Back</button></div><div class="side-acts"><button class="btn sm icon-only" data-e="rotate" aria-label="Rotate photo">${ic('rotate', 18)}</button><button class="btn sm" data-e="replace">${ic('photo', 18)}<span>Replace photo</span></button></div></div>
       <div class="stage"><div class="canvas-wrap"><div class="layer"><div class="hgr" hidden>${HANG_SVG}</div><canvas class="img"></canvas><img class="ghost" alt="" hidden><canvas class="ov"></canvas><div class="frame" hidden><i></i><i></i><i></i><i></i></div></div><div class="busy">Loading photo…</div><div class="side-empty" hidden><p>Add a photo of the back, so you can flip the piece around on the rack.</p><button class="btn primary sm" data-e="addback">${ic('camera', 18)}Add back photo</button></div><button class="zoom-reset" hidden>Fit</button><button class="fx-btn" data-e="fx" aria-label="Photo filters" aria-expanded="false">${ic('sliders', 20)}</button></div>
         <div class="fx-panel" id="e-fx" hidden>
-        <label class="check" style="margin:4px 2px 6px"><input type="checkbox" id="e-smooth" ${st.smooth ? 'checked' : ''}><span>Smooth out wrinkles a little</span></label>
+        <label class="slider adj" style="padding:4px 0 6px"><span>Sharp</span><input type="range" id="e-smooth" min="0" max="100" step="5" value="${Math.round(st.smooth * 100)}" aria-label="Blur and smooth"><span>Blur</span></label>
         <label class="check" style="margin:2px 2px 6px;font-size:14px"><input type="checkbox" id="e-link" ${st.link ? 'checked' : ''}><span>Same colors for front and back</span></label><div class="fx-mini" id="e-mini" hidden><img alt=""><span></span></div>
         <label class="check" style="margin:10px 2px 6px"><input type="checkbox" id="e-pop" ${st.pop ? 'checked' : ''}><span>Make colors pop (auto)</span></label>
         ${[['b', 'Darker', 'Brighter'], ['s', 'Muted', 'Vivid'], ['w', 'Cooler', 'Warmer'], ['c', 'Softer', 'Crisper']].map(([k, lo, hi]) => `<label class="slider adj"><span>${lo}</span><input type="range" min="-50" max="50" step="1" value="${st.adj[k] | 0}" data-adj="${k}" aria-label="${lo} to ${hi}"><span>${hi}</span></label>`).join('')}
@@ -1960,7 +1972,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
         <div class="field"><span>Care to-do</span><div class="chips wrap" id="f-care">${CARE.map(c => `<button class="chip" data-care="${c}" aria-pressed="${(v0.care || []).includes(c)}">${ic('drop', 15)}${c}</button>`).join('')}</div></div>
         <div class="field"><span>Letting go</span><div class="chips wrap" id="f-letgo"><button class="chip" data-lg="sell" aria-pressed="${v0.letgo?.mode === 'sell'}">Sell</button><button class="chip" data-lg="donate" aria-pressed="${v0.letgo?.mode === 'donate'}">Donate</button></div><input type="text" id="f-ask" inputmode="decimal" placeholder="Asking price" value="${esc(v0.letgo?.price || '')}" style="margin-top:8px;${v0.letgo?.mode === 'sell' ? '' : 'display:none'}"></div>
         <div class="field"><span>Pockets</span><div class="chips wrap" id="f-pockets"><button class="chip" data-pk="yes" aria-pressed="${v0.pockets === true}">Has pockets</button><button class="chip" data-pk="no" aria-pressed="${v0.pockets === false}">No pockets</button></div></div>
-        <div class="field"><span>Had it for</span><div class="chips wrap" id="f-acq">${[[0, 'Under a year'], [1, '1 year'], [2, '2 years'], [3, '3 years'], [4, '4 years'], [5, '5+ years']].map(([n, l]) => `<button class="chip sm-chip" data-acq="${n}" aria-pressed="${(() => { const y = yearsOwned(v0); return y != null && (n === 5 ? y >= 5 : y === n); })()}">${l}</button>`).join('')}<input type="number" id="f-acq-year" inputmode="numeric" placeholder="or since year" min="1950" max="${new Date().getFullYear()}" value="${/^\d{4}-\d{2}$/.test(v0.acq || '') ? v0.acq.slice(0, 4) : ''}" style="width:130px;height:34px"></div></div>
+        <div class="field"><span>Had it for</span><div class="chips wrap" id="f-acq">${[[0, 'Under a year'], [1, '1 year'], [2, '2 years'], [3, '3 years'], [4, '4 years'], [5, '5+ years']].map(([n, l]) => `<button class="chip sm-chip" data-acq="${n}" aria-pressed="${(() => { const y = yearsOwned(v0); return y != null && (n === 5 ? y >= 5 : y === n); })()}">${l}</button>`).join('')}<input type="number" id="f-acq-year" inputmode="numeric" placeholder="or since year" class="acq-year" min="1950" max="${new Date().getFullYear()}" value="${/^\d{4}-\d{2}$/.test(v0.acq || '') ? v0.acq.slice(0, 4) : ''}" style="width:130px;height:34px"></div></div>
         <div class="field"><span>How you got it</span><div class="chips wrap" id="f-src"><button class="chip" data-src="new" aria-pressed="${st.second === false}">Bought new</button><button class="chip" data-src="second" aria-pressed="${st.second === true}">Secondhand</button><button class="chip" data-src="gift" aria-pressed="${st.second === 'gift'}">${ic('gift', 16)}Gift</button></div></div>
         <div class="two"><label class="field"><span>Brand</span><input type="text" id="f-brand" value="${esc(v0.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="f-price" inputmode="decimal" value="${esc(v0.price || '')}" placeholder="${LANG_NL() ? '€29,99' : '$29.99'}"></label></div>
         <div class="field"><span id="f-size-label">Size</span><input type="text" id="f-size" value="${esc(v0.size || '')}" placeholder="M, 38, W28 L32" style="max-width:220px"><div class="chips wrap" id="f-size-chips" style="margin-top:8px"></div></div>
@@ -2049,7 +2061,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   });
   $('#f-color', el).addEventListener('input', e => { st.colorTouched = true; $('#f-color-note', el).textContent = colorName(e.target.value); });
   $('.zoom-reset', el).addEventListener('click', () => ed.resetZoom());
-  $('#e-smooth', el).addEventListener('change', e => { st.smooth = e.target.checked; try { localStorage.setItem('closet-smooth', st.smooth ? '1' : '0'); } catch {} ed.setSmooth(st.smooth); });
+  let smRaf = 0; $('#e-smooth', el).addEventListener('input', e => { st.smooth = (+e.target.value) / 100; cancelAnimationFrame(smRaf); smRaf = requestAnimationFrame(() => ed.setSmooth(st.smooth)); });
   const syncFx = () => { st.fx[st.side] = { adj: { ...st.adj }, pop: st.pop }; if (st.link) st.fx[st.side === 'front' ? 'back' : 'front'] = { adj: { ...st.adj }, pop: st.pop }; };
   const fxUI = () => { $$('[data-adj]', el).forEach(i => { i.value = st.adj[i.dataset.adj] | 0; }); $('#e-pop', el).checked = st.pop; };
   const updateMini = () => {
@@ -2143,6 +2155,10 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       }
       t.disabled = true; busy.textContent = 'Saving…'; busy.hidden = false; await new Promise(r => setTimeout(r, 30));
       let front, back; try { front = resultOf('front'); back = resultOf('back'); } catch (err) { console.error(err); }
+      const fxOf = side => JSON.stringify([st.fx[side].adj, !!st.fx[side].pop, st.smooth]);
+      const savedFx = side => item ? JSON.stringify([side === 'back' && item.back?.fx ? { b: 0, s: 0, w: 0, c: 0, ...item.back.fx.adj } : { b: 0, s: 0, w: 0, c: 0, ...(item.adj || {}) }, side === 'back' && item.back?.fx ? !!item.back.fx.pop : !!item.pop, typeof item.smooth === 'number' ? item.smooth : item.smooth ? 0.85 : 0]) : null;
+      const sideDirty = side => { const S0 = side === st.side ? ed.getState() : st.states[side]; return !item || !S0 || S0.dirty !== false || fxOf(side) !== savedFx(side); };
+      const reuseFront = item && hasCut(item) && !sideDirty('front'), reuseBack = item && hasCut(item.back) && !sideDirty('back');
       busy.hidden = true; t.disabled = false;
       if (!front) { if (st.side !== 'front') switchSide('front'); toast('Add a photo of the front first.'); return; }
       if (front === 'uncut') { if (st.side !== 'front') switchSide('front'); toast('Wait a moment for the cut-out to finish.'); return; }
@@ -2151,6 +2167,9 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), subs: st.subs.filter(id => st.cats.some(c => (S.cats.find(x => x.id === c)?.subs || []).some(x => x.id === id))), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: '', imgJ: front.imgJ, imgM: front.imgM, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 11, focus: undefined, imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, _j: undefined, _m: undefined, _md: undefined, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.fx.front.pop, adj: { ...st.fx.front.adj }, acq: st.acq || '', pockets: st.pockets, care: CARE.filter(c => st.care.has(c)), letgo: st.letgo ? { mode: st.letgo.mode, price: st.letgo.mode === 'sell' ? $('#f-ask', el).value.trim() : '' } : null, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
         back: back ? { img: '', imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, imgJ: back.imgJ, imgM: back.imgM, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang, fx: st.link ? null : { adj: { ...st.fx.back.adj }, pop: st.fx.back.pop } } : null };
       if (!it.hang) { try { it.hang = await hangOf(front.img); } catch {} }
+      const keepPics = (dst, src) => { ['imgJ', 'imgM', 'imgMd', 'bJ', 'bM', 'bMd', '_j', '_m', '_md', 'orig', 'mask'].forEach(k => { if (src[k] !== undefined) dst[k] = src[k]; }); };
+      if (reuseFront) { keepPics(it, item); it.focus = item.focus; }
+      if (reuseBack && it.back && item.back) keepPics(it.back, item.back);
       if (!keepOrig()) { it.orig = undefined; it.mask = undefined; if (it.back) { it.back.orig = undefined; it.back.mask = undefined; } }
       await prepItem(it); const ok = await safe(putItem(it).then(() => true), "Couldn't save the piece. Your device may be out of space.");
       if (!ok) return;
@@ -2166,11 +2185,11 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     if (file) { const im = await loadImage(await fileToDataURL(file)); ed.setSource(im); busy.hidden = true; await autoCut(); }
     else {
       if (hasCut(item.back)) { // prepare the back first, then the front
-        if (item.back.orig && item.back.mask) { const [o, m] = await Promise.all([loadImage(item.back.orig), loadImage(item.back.mask)]); ed.setSource(o, m); } else ed.setSource(await loadImage(await fullSrc(item.back)), null, true);
-        ed.hg = mapHang(ed.cropBox(), item.back.hang); if (!ed.hg) ed.autoHanger(); st.states.back = ed.getState();
+        if (item.back.orig && item.back.mask) { const [o, m] = await Promise.all([loadImage(item.back.orig), loadImage(item.back.mask)]); ed.setSource(o, m); ed.origURL = item.back.orig; } else ed.setSource(await loadImage(await fullSrc(item.back)), null, true);
+        ed.hg = mapHang(ed.cropBox(), item.back.hang); if (!ed.hg) ed.autoHanger(); ed.dirty = false; st.states.back = ed.getState();
       }
-      if (item.orig && item.mask) { const [o, m] = await Promise.all([loadImage(item.orig), loadImage(item.mask)]); ed.setSource(o, m); } else ed.setSource(await loadImage(await fullSrc(item)), null, true);
-      busy.hidden = true; ed.hg = mapHang(ed.cropBox(), item.hang); if (!ed.hg) ed.autoHanger();
+      if (item.orig && item.mask) { const [o, m] = await Promise.all([loadImage(item.orig), loadImage(item.mask)]); ed.setSource(o, m); ed.origURL = item.orig; } else ed.setSource(await loadImage(await fullSrc(item)), null, true);
+      busy.hidden = true; ed.hg = mapHang(ed.cropBox(), item.hang); if (!ed.hg) ed.autoHanger(); ed.dirty = false;
       showSide(); setTool(item.orig && item.mask ? 'remove' : 'erase');
     }
   } catch (err) { console.error(err); busy.textContent = "Couldn't open that photo. Try a JPEG or PNG."; }
@@ -2195,7 +2214,7 @@ function openDetail(it) {
   const el = openSheet(`<div class="sheet-inner" role="dialog" aria-modal="true" aria-label="${esc(itemName(it))}">
     <header class="sheet-head"><button class="icon-btn" data-d="close" aria-label="Close">${ic('x')}</button><span></span><button class="btn sm" data-d="edit">${ic('edit', 18)}Edit</button></header>
     <div class="sheet-body">${hasCut(it.back) ? `<div class="seg" role="group" aria-label="Side" style="max-width:220px;margin:0 auto 12px"><button data-dside="front" aria-pressed="true">Front</button><button data-dside="back" aria-pressed="false">Back</button></div>` : ''}<div class="detail-hero" id="d-hero">${hangHTML(it, Math.min(window.innerWidth - 60, 700) * 0.72, Math.min(window.innerHeight * 0.46, 520))}</div>
-      <div class="btn-row" style="margin:2px 0 14px"><button class="btn${wornToday(it) ? ' primary' : ''}" data-act="worn" data-dworn="${it.id}" data-id="${it.id}">${ic('check', 20)}<span>${wornToday(it) ? 'Worn today' : 'Wore it today'}</span></button></div>
+      <div class="btn-row" style="margin:16px 0 18px"><button class="btn worn-q${wornToday(it) ? ' primary' : ''}" data-act="worn" data-dworn="${it.id}" data-id="${it.id}" aria-pressed="${wornToday(it)}">${wornIcon(it)}<span>${wornToday(it) ? 'Worn today' : 'Did you wear this today?'}</span></button></div>
        <div class="field" style="margin:4px 2px 14px"><span>Folders</span><div class="chips wrap" id="d-folders">${S.folders.map(f => `<button class="chip" data-dfold="${f.id}" aria-pressed="${f.ids.includes(it.id)}">${ic('folder', 15)}${esc(f.name)}</button>`).join('')}<button class="chip" data-dfold-new>${ic('plus', 15)}New folder</button></div></div>
       ${(it.details?.length || it.detailsN) ? `<div class="details-row" id="d-details" style="margin:14px 2px 0">${(it.details || []).map((d, i) => `<button class="dthumb" data-dphoto="${i}" aria-label="Open detail photo ${i + 1}"><img src="${d}" alt=""></button>`).join('')}</div>` : ''}
       <h2 class="detail-name">${esc(itemName(it))}</h2>
@@ -2206,7 +2225,7 @@ function openDetail(it) {
   el.addEventListener('click', async e => {
     const sd = e.target.closest('[data-dside]');
     if (sd) { $$('[data-dside]', el).forEach(x => x.setAttribute('aria-pressed', x === sd)); $('#d-hero', el).innerHTML = hangSideHTML(it, sd.dataset.dside, Math.min(window.innerWidth - 60, 700) * 0.72, Math.min(window.innerHeight * 0.46, 520)); return; }
-    const wb = e.target.closest('[data-dworn]'); if (wb) { await toggleWorn(it); wb.classList.toggle('primary', wornToday(it)); wb.lastChild.textContent = wornToday(it) ? 'Worn today' : 'Wore it today'; const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); renderClosetResults(); return; }
+    const wb = e.target.closest('[data-dworn]'); if (wb) { await toggleWorn(it); wb.classList.toggle('primary', wornToday(it)); wb.setAttribute('aria-pressed', wornToday(it)); wb.innerHTML = `${wornIcon(it)}<span>${wornToday(it) ? 'Worn today' : 'Did you wear this today?'}</span>`; const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); renderClosetResults(); return; }
     const df = e.target.closest('[data-dfold]'); if (df) { const f = S.folders.find(x => x.id === df.dataset.dfold); if (f) { f.ids = f.ids.includes(it.id) ? f.ids.filter(x => x !== it.id) : [...f.ids, it.id]; df.setAttribute('aria-pressed', f.ids.includes(it.id)); await saveFolders(); renderClosetResults(); } return; }
     if (e.target.closest('[data-dfold-new]')) { const name = await askText('New folder', 'Name', 'Summer trip'); if (name) { S.folders.push({ id: uid(), name, ids: [it.id] }); await saveFolders(); closeSheet(el); openDetail(it); renderClosetResults(); } return; }
     const dp = e.target.closest('[data-dphoto]'); if (dp) { openLightbox(dets, +dp.dataset.dphoto); return; }
@@ -2255,22 +2274,25 @@ const DRESS_RE = /dress|jurk|jumpsuit|playsuit/i;
 const DRESS_STAGES = [
   { key: 'shirt', label: 'Top', hint: 'Pick your base top, or None', none: true, re: /t-?shirt|shirt|tee|top|blouse|tank|polo|body|turtleneck|coltrui|col\b|longsleeve/i },
   { key: 'dress', label: 'Dress', hint: 'Or wear a dress instead of a top and bottom', re: DRESS_RE, none: true },
-  { key: 'sweater', label: 'Sweater', hint: 'A sweater over it, or None', re: /sweat|sweater|jumper|knit|trui|hoodie|pullover|crewneck/i, none: true },
-  { key: 'cardigan', label: 'Cardigan', hint: 'An open layer on top: cardigan, blazer, jacket, or None', re: /cardigan|\bvest\b|blazer|jacket|\bjas\b|jassen|\bjack\b|coat|outer|kimono|bolero|bodywarmer|overshirt|gilet/i, none: true },
+  { key: 'sweater', label: 'Sweater or cardigan', hint: 'A sweater or cardigan over it, or None', re: /sweat|sweater|jumper|knit|trui|hoodie|pullover|crewneck|cardigan|\bvest\b|bolero|kimono/i, none: true },
+  { key: 'cardigan', label: 'Jacket', hint: 'A jacket, coat or blazer on top, or None', re: /blazer|jacket|\bjas\b|jassen|\bjack\b|coat|outer|bodywarmer|gilet|overshirt|trench|parka/i, none: true },
   { key: 'bottom', label: 'Bottom', hint: 'Swipe through your bottoms', re: /bottom|pant|trouser|jean|short|skirt|rok|broek|legging/i, none: true },
   { key: 'shoes', label: 'Shoes', hint: 'Finish the base with shoes', re: /shoe|sneaker|boot|heel|sandal|slipper|loafer|schoen/i, none: true },
-  { key: 'extras', label: 'Extras', hint: 'Tap to add as many extras as you like', re: /bag|tas|purse|tote|clutch|access|jewel|sieraad|necklace|earring|ring|bracelet|hat|cap|scarf|shawl|sjaal|belt|riem|sunglass|bril|watch|horloge|sock/i, multi: true }
+  { key: 'extras', label: 'Accessories', hint: 'Tap to add accessories', re: /bag|tas|purse|tote|clutch|access|jewel|sieraad|necklace|earring|ring|bracelet|hat|cap|scarf|shawl|sjaal|belt|riem|sunglass|bril|watch|horloge|sock/i, multi: true }
 ];
 const SI = Object.fromEntries(DRESS_STAGES.map((st, i) => [st.key, i]));
 const itemText = it => [it.name, ...catsOf(it).map(catName), ...subsOf(it).map(subName)].join(' ');
 const isDress = it => !!it && DRESS_RE.test(itemText(it));
 function dressPools() {
   const baseName = it => /\bt-?shirt|\btee\b|blouse|\btank\b|\bpolo\b|turtleneck|coltrui|longsleeve/i.test(it.name || '') || subsOf(it).some(x => /t-?shirt|blouse|tank|topje|polo|turtleneck|coltrui/i.test(subName(x)));
-  const isSweater = it => DRESS_STAGES[SI.sweater].re.test(itemText(it)) && !baseName(it), isCardi = it => DRESS_STAGES[SI.cardigan].re.test(itemText(it)) && !baseName(it);
+  const ownWords = it => [it.name || '', ...subsOf(it).map(subName)].join(' '), knitWord = /cardigan|\bvest\b|bolero|kimono|knit|trui|sweater|jumper|hoodie|pullover/i;
+  const isSweater = it => DRESS_STAGES[SI.sweater].re.test(itemText(it)) && !baseName(it) && !(DRESS_STAGES[SI.cardigan].re.test(ownWords(it)) && !knitWord.test(ownWords(it)));
+  const isCardi = it => DRESS_STAGES[SI.cardigan].re.test(itemText(it)) && !baseName(it) && !knitWord.test(ownWords(it));
   const pools = DRESS_STAGES.map(st => S.items.filter(it => {
     if (!st.re.test(itemText(it))) return false;
     if (st.key === 'shirt') return !isDress(it) && !isSweater(it) && !isCardi(it);
-    if (st.key === 'sweater') return !isDress(it) && !isCardi(it);
+    if (st.key === 'sweater') return !isDress(it) && isSweater(it);
+    if (st.key === 'cardigan') return !isDress(it) && isCardi(it);
     if (st.key !== 'dress' && isDress(it)) return false;
     return true;
   }));
@@ -2328,7 +2350,7 @@ function openMix() {
   const draw = enterDir => {
     layers.innerHTML = zones().map(L => { const f = fit(L.it, L.box), active = L.st === stage && !DRESS_STAGES[stage].multi; return `<img class="dl${active ? ' active' : ''}${active && enterDir ? (enterDir > 0 ? ' in-r' : ' in-l') : ''}" data-st="${L.st}" ${cutAttrs(L.it, `left:${f.x.toFixed(1)}px;top:${f.y.toFixed(1)}px;width:${f.w.toFixed(1)}px;height:${f.h.toFixed(1)}px;z-index:${L.z}`, true)} alt="" draggable="false">`; }).join('');
     const st = DRESS_STAGES[stage], it = cur(stage);
-    $('.dress-name', el).textContent = st.multi ? (pick[SI.extras].size ? `${pick[SI.extras].size} extra${pick[SI.extras].size > 1 ? 's' : ''}` : 'No extras yet') : (it ? itemName(it) : `No ${st.label.toLowerCase()}`);
+    $('.dress-name', el).textContent = st.multi ? (pick[SI.extras].size ? `${pick[SI.extras].size} ${pick[SI.extras].size > 1 ? 'accessories' : 'accessory'}` : 'No accessories') : (it ? itemName(it) : `No ${st.label.toLowerCase()}`);
     $('.dress-hint', el).textContent = skipped(stage) ? `Skipped, the dress covers this. Pick one anyway to swap the dress for separates.` : (pools[stage].length ? st.hint : `No ${st.label.toLowerCase()} pieces in your closet yet.`);
     $$('.dress-arrow', el).forEach(b => { b.hidden = !!st.multi || (pools[stage].length + (st.none ? 1 : 0)) < 2; });
     $$('[data-step]', el).forEach((b, i) => { b.setAttribute('aria-selected', i === stage); b.classList.toggle('done', i < stage); b.classList.toggle('skip', skipped(i)); });
@@ -2662,7 +2684,7 @@ async function importBackup(file) {
     seasons: Array.isArray(i.seasons) ? i.seasons.filter(s => SEASONS.includes(s)) : [], occasions: Array.isArray(i.occasions) ? i.occasions.filter(s => OCCASIONS.includes(s)) : [],
     img: IMG_RE.test(i.img || '') ? i.img : '', imgJ: IMG_RE.test(i.imgJ || '') ? i.imgJ : undefined, imgA: IMG_RE.test(i.imgA || '') ? i.imgA : undefined, imgM: IMG_RE.test(i.imgM || '') ? i.imgM : undefined, orig: IMG_RE.test(i.orig || '') ? i.orig : undefined, mask: IMG_RE.test(i.mask || '') ? i.mask : undefined, aspect: +i.aspect || 0.8,
     hang: (i.hang && [i.hang.cx, i.hang.ty, i.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook', 'chain'].includes(i.hang.type) ? i.hang.type : 'hanger', cx: clamp(i.hang.cx, -1, 2), ty: clamp(i.hang.ty, -1, 2), w: clamp(i.hang.w, 0.05, 3) } : undefined,
-    hanger: ['hanger', 'clip', 'hook', 'chain', 'card', 'cushion', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: !!i.smooth, pop: !!i.pop, adj: i.adj && typeof i.adj === 'object' ? Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+i.adj[k] || 0, -50, 50)])) : undefined,
+    hanger: ['hanger', 'clip', 'hook', 'chain', 'card', 'cushion', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: typeof i.smooth === 'number' ? clamp(i.smooth, 0, 1) : (i.smooth ? 0.85 : 0), pop: !!i.pop, adj: i.adj && typeof i.adj === 'object' ? Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+i.adj[k] || 0, -50, 50)])) : undefined,
     materials: Array.isArray(i.materials) ? i.materials.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim().slice(0, 40)) : [], secondhand: typeof i.secondhand === 'boolean' ? i.secondhand : null, gift: !!i.gift, pockets: typeof i.pockets === 'boolean' ? i.pockets : null, acq: /^\d{4}-\d{2}$/.test(i.acq || '') ? i.acq : '', worn: Array.isArray(i.worn) ? i.worn.filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)) : [], letgo: i.letgo && ['sell', 'donate'].includes(i.letgo.mode) ? { mode: i.letgo.mode, price: str(i.letgo.price).slice(0, 40) } : null, care: Array.isArray(i.care) ? i.care.filter(c => CARE.includes(c)) : [],
     color2: /^#[0-9a-f]{6}$/i.test(i.color2 || '') ? i.color2 : '', details: Array.isArray(i.details) ? i.details.filter(d => IMG_RE.test(d || '')).slice(0, 30) : [],
     back: i.back && (IMG_RE.test(i.back.img || '') || (IMG_RE.test(i.back.imgJ || '') && (IMG_RE.test(i.back.imgA || '') || IMG_RE.test(i.back.imgM || '')))) ? { img: IMG_RE.test(i.back.img || '') ? i.back.img : '', imgJ: IMG_RE.test(i.back.imgJ || '') ? i.back.imgJ : undefined, imgA: IMG_RE.test(i.back.imgA || '') ? i.back.imgA : undefined, imgM: IMG_RE.test(i.back.imgM || '') ? i.back.imgM : undefined, orig: IMG_RE.test(i.back.orig || '') ? i.back.orig : undefined, mask: IMG_RE.test(i.back.mask || '') ? i.back.mask : undefined, aspect: +i.back.aspect || 0.8, fx: i.back.fx && typeof i.back.fx === 'object' ? { adj: Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+(i.back.fx.adj || {})[k] || 0, -50, 50)])), pop: !!i.back.fx.pop } : null, hang: (i.back.hang && [i.back.hang.cx, i.back.hang.ty, i.back.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook', 'chain'].includes(i.back.hang.type) ? i.back.hang.type : 'hanger', cx: clamp(i.back.hang.cx, -1, 2), ty: clamp(i.back.hang.ty, -1, 2), w: clamp(i.back.hang.w, 0.05, 3) } : undefined } : null
@@ -2741,7 +2763,7 @@ document.addEventListener('click', async e => {
     case 'add-cat': { const inp = $('#new-cat'); const name = inp.value.trim(); if (!name) { inp.focus(); return; } S.cats.push({ id: uid(), name: name.slice(0, 60) }); await saveCats(); renderAll(); toast(`Added ${name}`); break; }
     case 'export': exportBackup(); break;
     case 'noop': break;
-    case 'worn': { const it = byId(a.dataset.id); if (!it) break; await toggleWorn(it); const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); if (S.view === 'closet') renderClosetResults(); const dw = document.querySelector(`[data-dworn="${it.id}"]`); if (dw) { dw.classList.toggle('primary', wornToday(it)); dw.lastChild.textContent = wornToday(it) ? 'Worn today' : 'Wore it today'; } break; }
+    case 'worn': { const it = byId(a.dataset.id); if (!it) break; await toggleWorn(it); const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); if (S.view === 'closet') renderClosetResults(); const dw = document.querySelector(`[data-dworn="${it.id}"]`); if (dw) { dw.classList.toggle('primary', wornToday(it)); dw.innerHTML = `${wornIcon(it)}<span>${wornToday(it) ? 'Worn today' : 'Did you wear this today?'}</span>`; } break; }
     case 'order': pickOrder(); break;
     case 'cols': { const n = gridCols() >= 5 ? 2 : gridCols() + 1; try { localStorage.setItem('closet-cols', String(n)); } catch {} applyCols(); break; }
     case 'color-check': openColorCheck(); break;
@@ -3006,15 +3028,18 @@ const NL = {
   'Light Spring': 'Light Spring',
   'Not worn yet': 'Nog niet gedragen',
   'Top': 'Top', 'Cardigan': 'Vest', 'Pick your base top, or None': 'Kies je basistop, of Geen', 'Or wear a dress instead of a top and bottom': 'Of draag een jurk in plaats van top en onderkant', 'A sweater over it, or None': 'Een trui eroverheen, of Geen', 'An open layer on top: cardigan, blazer, jacket, or None': 'Een open laag erover: vest, blazer, jas, of Geen', 'No cardigan': 'Geen vest',
+  'Sharp': 'Scherp', 'Blur': 'Vervaagd', 'Blur and smooth': 'Vervagen en gladstrijken', 'Jacket': 'Jas', 'Sweater or cardigan': 'Trui of vest', 'Accessories': 'Accessoires', 'A sweater or cardigan over it, or None': 'Een trui of vest eroverheen, of Geen', 'A jacket, coat or blazer on top, or None': 'Een jas, jack of blazer erover, of Geen', 'Tap to add accessories': 'Tik om accessoires toe te voegen', 'No jacket': 'Geen jas',
+  'Did you wear this today?': 'Heb je dit vandaag gedragen?', 'Wore it?': 'Gedragen?',
+  'Off-white': 'Gebroken wit', 'Ivory': 'Ivoor', 'Cream': 'Crème', 'Oatmeal': 'Havermout', 'Sand': 'Zand', 'Stone': 'Steengrijs', 'Camel': 'Camel', 'Tan': 'Lichtbruin', 'Taupe': 'Taupe', 'Chocolate': 'Chocoladebruin', 'Cognac': 'Cognac', 'Burnt orange': 'Gebrand oranje', 'Peach': 'Perzik', 'Salmon': 'Zalm', 'Blush': 'Zachtroze', 'Cherry': 'Kersenrood', 'Lavender': 'Lavendel', 'Royal blue': 'Koningsblauw', 'Cobalt': 'Kobaltblauw', 'Baby blue': 'Babyblauw', 'Light denim': 'Lichte denim', 'Mint': 'Mint', 'Khaki': 'Kaki', 'Bottle green': 'Flessengroen', 'Mustard': 'Mosterdgeel', 'Butter': 'Botergeel', 'Grey': 'Grijs', 'Light grey': 'Lichtgrijs', 'Dark grey': 'Donkergrijs', 'Burgundy': 'Bordeaux', 'Wine': 'Wijnrood', 'Charcoal': 'Antraciet', 'Olive': 'Olijfgroen', 'Sage': 'Saliegroen', 'Rust': 'Roest', 'Coral': 'Koraal', 'Emerald': 'Smaragdgroen', 'Rose': 'Roze', 'Lilac': 'Lila',
   'Touch the photo and slide to the exact color, then let go.': 'Raak de foto aan, schuif naar de juiste kleur en laat los.', 'Take this along when you shop.': 'Neem dit mee als je gaat shoppen.'
 };
 const NL_RE = [
   [/^(\d+) pieces?$/, (m, n) => `${n} item${n === '1' ? '' : 's'}`], [/^(\d+) outfits?$/, (m, n) => `${n} outfit${n === '1' ? '' : 's'}`],
   [/^Size (.+)$/, (m, v) => `Maat ${v}`], [/^Shoe size (.+)$/, (m, v) => `Schoenmaat ${v}`], [/^(\d+) years$/, (m, n) => `${n} jaar`],
   [/^(\d+) (times?), last (.+)$/, (m, n, t, w) => `${n} keer, laatst ${nlAgo(w)}`], [/^For sale(.*)$/, (m, r) => `Te koop${r}`],
-  [/^No (top|shirt|sweater|cardigan|bottom|shoes|dress|extras yet)$/, (m, w) => ({ cardigan: 'Geen vest', top: 'Geen top', shirt: 'Geen shirt', sweater: 'Geen trui', bottom: 'Geen onderkant', shoes: 'Geen schoenen', dress: 'Geen jurk', 'extras yet': 'Nog geen extra’s' })[w]],
+  [/^No (top|shirt|sweater or cardigan|jacket|sweater|cardigan|bottom|shoes|dress|extras yet|accessories)$/, (m, w) => ({ 'sweater or cardigan': 'Geen trui of vest', jacket: 'Geen jas', accessories: 'Geen accessoires', cardigan: 'Geen vest', top: 'Geen top', shirt: 'Geen shirt', sweater: 'Geen trui', bottom: 'Geen onderkant', shoes: 'Geen schoenen', dress: 'Geen jurk', 'extras yet': 'Nog geen extra’s' })[w]],
   [/^Next: (.+)$/, (m, w) => `Volgende: ${NL[w] || w}`], [/^(\d+)\. (.+)$/, (m, n, w) => `${n}. ${NL[w] || w}`], [/^All (.+)$/, (m, w) => `Alle ${NL[w.charAt(0).toUpperCase() + w.slice(1)]?.toLowerCase() || w}`],
-  [/^Add to (.+)$/, (m, w) => `Toevoegen aan ${w}`], [/^(.+), (detected|picked) from the photo$/, (m, c, how) => `${NL[c] || c}, ${how === 'detected' ? 'herkend in' : 'gekozen uit'} de foto`],
+  [/^Add to (.+)$/, (m, w) => `Toevoegen aan ${w}`], [/^(\d+) accessor(?:y|ies)$/, (m, n) => `${n} ${n === '1' ? 'accessoire' : 'accessoires'}`], [/^(.+), (detected|picked) from the photo$/, (m, c, how) => `${NL[c] || c}, ${how === 'detected' ? 'herkend in' : 'gekozen uit'} de foto`],
   [/^(.+)\.(?: (\d+) of your (\d+) pieces fit this palette\.)? Take this along when you shop\.$/, (m, sn, a, b) => `${sn}.${a ? ` ${a} van je ${b} items passen bij dit palet.` : ''} Neem dit mee als je gaat shoppen.`], [/^A safety copy from (.+) \(before (.+)\) is kept on this device\.$/, (m, d, r) => `Er staat een veiligheidskopie van ${d} op dit apparaat (van vóór ${r.replace('your last import', 'je laatste import').replace('you deleted everything', 'alles verwijderen')}).`],
   [/^Using about (.+) on this device\. (\d+) pieces?, (\d+) outfits?\.?$/, (m, a, b, c) => `Gebruikt ongeveer ${a} op dit apparaat. ${b} items, ${c} outfits.`], [/^Your last backup was (.+)\. Everything lives only on this device, so a fresh copy keeps your closet safe\.$/, (m, w) => `Je laatste back-up was ${nlAgo(w)}. Alles staat alleen op dit apparaat, dus een nieuwe kopie houdt je kast veilig.`],
   [/^(\d+) (?:piece has|pieces have) no wears logged yet\. Tap Wore it on the rack when you wear something\.$/, (m, a) => `${a} ${a === '1' ? 'item heeft' : 'items hebben'} nog geen keer gedragen geregistreerd. Tik op Gedragen op het rek als je iets draagt.`],
