@@ -429,6 +429,24 @@ img[data-m]:not([data-mon]){opacity:0}
 .sp-sw{display:grid;grid-template-columns:repeat(3,16px);gap:4px}
 .sp-sw i{width:16px;height:16px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
 .sp-name{font-size:13.5px}
+.fcrop{position:relative;display:block;overflow:hidden;max-width:100%;max-height:100%}
+.prop-hook{position:absolute;top:0;width:12px;height:20px;z-index:1}
+.prop-card{position:absolute;left:0;border-radius:14px;background:#F7F2EA;box-shadow:0 8px 18px -12px rgba(0,0,0,.45),inset 0 0 0 1px rgba(0,0,0,.05)}
+.prop-card::before{content:"";position:absolute;top:9px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--surface-2);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+.prop-cushion,.prop-cushion-lip{position:absolute;left:0;border-radius:50% / 46%;background:radial-gradient(ellipse at 50% 30%,#4a4a52,#232328 70%)}
+.prop-cushion{box-shadow:0 10px 18px -12px rgba(0,0,0,.6)}
+.prop-cushion-lip{z-index:3;border-radius:0 0 50% 50% / 0 0 80% 80%;background:linear-gradient(#2c2c32,#1d1d21)}
+.color-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cbox{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border-radius:20px;background:var(--surface);border:1px solid var(--line);transition:box-shadow .3s}
+.cbox.just{box-shadow:0 0 0 2.5px var(--ink)}
+.cbox-l{font-size:12.5px;color:var(--muted)}
+.cbox-n{font-size:13px;min-height:18px;text-align:center}
+.cbox input[type=color]{width:52px;height:52px}
+.cbox-add{width:52px;height:52px;border-radius:50%;border:1.5px dashed var(--line);display:grid;place-items:center;color:var(--muted)}
+.dress-strip{overflow-y:hidden;align-items:center}
+.dthumb2{overflow:hidden}
+.dthumb2 .fcrop{max-height:100%;max-width:100%}
+.dthumb2 img{max-width:100%;max-height:100%}
 #toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;max-width:calc(100% - 40px);text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}}
@@ -520,11 +538,19 @@ const HANG_SVG = '<svg viewBox="0 0 120 52" aria-hidden="true"><path d="M60 16.5
 const CLIP_SVG = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M53 9a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v6"/><path vector-effect="non-scaling-stroke" d="M7 25.5h106"/><path vector-effect="non-scaling-stroke" d="M14 25.5v4M106 25.5v4"/><rect x="9.5" y="29.5" width="9" height="16" rx="2" fill="currentColor" stroke="none"/><rect x="101.5" y="29.5" width="9" height="16" rx="2" fill="currentColor" stroke="none"/><path d="M11.5 36h5M103.5 36h5" stroke-width="1" style="stroke:var(--surface)" vector-effect="non-scaling-stroke"/></svg>';
 const HOOK_SVG = '<svg viewBox="0 0 40 60" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M14 9a6 6 0 1 1 6 6v25"/><path vector-effect="non-scaling-stroke" d="M20 40v7a7 7 0 0 1-14 0v-4"/></svg>';
 const HANGERS = { hanger: { svg: () => HANG_SVG, anchor: 0.905, front: false, ar: 52 / 120, ax: 0.5 }, clip: { svg: () => CLIP_SVG, anchor: 0.86, front: true, ar: 52 / 120, ax: 0.5 }, hook: { svg: () => HOOK_SVG, anchor: 0.88, front: true, ar: 1.5, ax: 0.33 } };
-const HOOK_RE = /bag|purse|tote|handbag|clutch|\btas/i;
-const NO_HANGER_RE = /shawl|omslagdoek|shoe|sneaker|boot|heel|sandal|slipper|schoen|jewel|sieraad|ring|necklace|earring|bracelet|watch|horloge|accessor|hat|cap|sock|sok|belt|riem|sunglass|bril|scarf|sjaal/i;
+const CHAIN_SVG = '<svg viewBox="0 0 60 80" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true"><path d="M33.4 3.4A3.4 3.4 0 1 0 30 6.8" stroke-width="1.8" vector-effect="non-scaling-stroke"/><path d="M30 6.8C9 27 15 62 30 76C45 62 51 27 30 6.8Z" stroke-width="1.5" stroke-dasharray="1.8 1.5" vector-effect="non-scaling-stroke"/></svg>';
+HANGERS.chain = { svg: () => CHAIN_SVG, anchor: 0.95, front: false, ar: 80 / 60, ax: 0.5 };
+const DISPLAYS = ['card', 'cushion']; // earrings on a card, rings on a cushion: nothing to place by hand
+const EARRING_RE = /earring|oorbel|ear cuff|studs?\b/i, RING_RE = /\brings?\b|\bringen\b/i, CHARM_RE = /charm|bedel|pendant/i, NECKLACE_RE = /necklace|ketting|bracelet|armband|anklet|enkelband|\bchain\b/i;
+const JEWEL_RE = /jewel|sieraad|sieraden|earring|oorbel|\brings?\b|ringen|necklace|ketting|bracelet|armband|charm|bedel|pendant|anklet|brooch|broche/i;
+const HOOK_RE = /bag|purse|tote|handbag|clutch|\btas|tassen|rugzak|shopper/i;
+const NO_HANGER_RE = /shawl|omslagdoek|accessoire|sieraad|laars|laarzen|hakken|sandaal|shoe|sneaker|boot|heel|sandal|slipper|schoen|jewel|sieraad|ring|necklace|earring|bracelet|watch|horloge|accessor|hat|cap|sock|sok|belt|riem|sunglass|bril|scarf|sjaal/i;
 const CLIP_RE = /bottom|pant|trouser|jean|short|skirt|legging|broek|rok/i;
-const defaultHanger = it => { const ns = catsOf(it).map(catName), any = re => ns.some(n => re.test(n)); return any(HOOK_RE) ? 'hook' : any(NO_HANGER_RE) ? 'none' : any(CLIP_RE) ? 'clip' : 'hanger'; };
-const hangerType = it => ['hanger', 'clip', 'hook', 'none'].includes(it.hanger) ? it.hanger : defaultHanger(it);
+const defaultHanger = it => { const ns = [...catsOf(it).map(catName), ...(it.subs || []).map(x => typeof subName === 'function' ? subName(x) : '')].filter(Boolean), any = re => ns.some(n => re.test(n)); if (any(JEWEL_RE)) return 'none'; return any(HOOK_RE) ? 'hook' : any(NO_HANGER_RE) ? 'none' : any(CLIP_RE) ? 'clip' : 'hanger'; };
+const hangerType = it => ['chain', 'card', 'cushion'].includes(it.hanger) ? 'none' : ['hanger', 'clip', 'hook', 'none'].includes(it.hanger) ? it.hanger : defaultHanger(it);
+const phoneLangs = () => { const l = [...(navigator.languages || []), navigator.language, (() => { try { return Intl.DateTimeFormat().resolvedOptions().locale; } catch { return ''; } })()].filter(Boolean); return l; };
+const langPref = () => { if (window.__closetLang) return window.__closetLang; try { return localStorage.getItem('closet-lang') || 'auto'; } catch { return 'auto'; } };
+const LANG_NL = () => { const p = langPref(); if (p !== 'auto') return p === 'nl'; return phoneLangs().some(l => /^nl\b|^nl-|^nl_/i.test(l)); };
 const CARE = ['Needs washing', 'Deep clean', 'Dry clean', 'Needs fixing'];
 const SHOE_RE = /shoe|sneaker|boot|heel|sandal|slipper|loafer|schoen/i;
 const isShoe = it => catsOf(it).some(c => SHOE_RE.test(catName(c))) || (it.subs || []).some(x => SHOE_RE.test(subName(x)));
@@ -539,13 +565,15 @@ const agoText = ds => { const d = daysAgo(ds); return d <= 0 ? 'today' : d === 1
 const isForgotten = it => { const l = lastWorn(it); const ref = l ? new Date(l + 'T12:00:00').getTime() : (it.created || Date.now()); return Date.now() - ref > 182 * 864e5; };
 async function toggleWorn(it, on) { const t = dayStr(), w = new Set(it.worn || []); (on ?? !w.has(t)) ? w.add(t) : w.delete(t); it.worn = [...w].sort(); await safe(putItem(it)); }
 const saveFolders = () => safe(store.put('meta', { id: 'folders', list: S.folders }));
-const MATERIALS = ['Cotton', 'Linen', 'Wool', 'Cashmere', 'Silk', 'Denim', 'Leather', 'Viscose', 'Polyester', 'Nylon', 'Elastane', 'Other'];
+const METALS = ['Gold', 'Silver', 'Rose gold', 'Stainless steel', 'Gold plated', 'Sterling silver', 'Pearl'];
+const MATERIALS = ['Cotton', 'Linen', 'Wool', 'Cashmere', 'Silk', 'Denim', 'Leather', 'Viscose', 'Polyester', 'Nylon', 'Elastane', 'Gold', 'Silver', 'Other'];
 const HANGER = '<svg viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M53 11a7 7 0 1 1 9.5 6.5c-1.6.6-2.5 1.9-2.5 3.5v4"/><path d="M60 25 12 45c-3 1.3-2.2 4.5 1 4.5h94c3.2 0 4-3.2 1-4.5Z"/></svg>';
 
 const SEASONS = ['Spring', 'Summer', 'Fall', 'Winter'];
 const OCCASIONS = ['Everyday', 'Work', 'Going out', 'Lounge', 'Active', 'Formal'];
-const DEFAULT_SUBS = { tops: ['T-shirt', 'Blouse', 'Shirt', 'Tank top', 'Sweater', 'Cardigan', 'Hoodie'], bottoms: ['Jeans', 'Trousers', 'Skirt', 'Shorts', 'Leggings'], outerwear: ['Jacket', 'Coat', 'Blazer', 'Vest'], dresses: ['Mini', 'Midi', 'Maxi', 'Jumpsuit'], shoes: ['Sneakers', 'Boots', 'Heels', 'Flats', 'Sandals'], bags: ['Tote', 'Shoulder bag', 'Crossbody', 'Backpack', 'Clutch'], accessories: ['Jewelry', 'Scarf', 'Belt', 'Hat', 'Sunglasses'] };
-const seedSubs = c => { if (!Array.isArray(c.subs)) c.subs = (DEFAULT_SUBS[c.name.toLowerCase()] || []).map(n => ({ id: uid() + n.slice(0, 2), name: n })); return c; };
+const DEFAULT_SUBS = { tops: ['T-shirt', 'Blouse', 'Shirt', 'Tank top', 'Sweater', 'Cardigan', 'Hoodie'], bottoms: ['Jeans', 'Trousers', 'Skirt', 'Shorts', 'Leggings'], outerwear: ['Jacket', 'Coat', 'Blazer', 'Vest'], dresses: ['Mini', 'Midi', 'Maxi', 'Jumpsuit'], shoes: ['Sneakers', 'Boots', 'Heels', 'Flats', 'Sandals'], bags: ['Tote', 'Shoulder bag', 'Crossbody', 'Backpack', 'Clutch'], accessories: ['Jewelry', 'Necklace', 'Earrings', 'Ring', 'Bracelet', 'Charm', 'Scarf', 'Belt', 'Hat', 'Sunglasses'] };
+const seedSubs = c => { if (!Array.isArray(c.subs)) { const nl = LANG_NL() && NL_CATS[c.name]; if (nl) c.name = nl[0]; c.subs = (nl ? nl[1] : DEFAULT_SUBS[c.name.toLowerCase()] || []).map(n => ({ id: uid() + n.slice(0, 2), name: n })); } return c; };
+const NL_CATS = { Tops: ['Tops', ['T-shirt', 'Blouse', 'Overhemd', 'Topje', 'Trui', 'Vest', 'Hoodie']], Bottoms: ['Broeken & rokken', ['Jeans', 'Pantalon', 'Rok', 'Short', 'Legging']], Outerwear: ['Jassen', ['Jack', 'Jas', 'Blazer', 'Bodywarmer']], Dresses: ['Jurken', ['Mini', 'Midi', 'Maxi', 'Jumpsuit']], Shoes: ['Schoenen', ['Sneakers', 'Laarzen', 'Hakken', 'Platte schoenen', 'Sandalen']], Bags: ['Tassen', ['Shopper', 'Schoudertas', 'Crossbody', 'Rugzak', 'Clutch']], Accessories: ['Accessoires', ['Sieraden', 'Ketting', 'Oorbellen', 'Ring', 'Armband', 'Bedel', 'Sjaal', 'Riem', 'Hoed', 'Zonnebril']] };
 const DEFAULT_CATS = () => ['Tops', 'Bottoms', 'Outerwear', 'Dresses', 'Shoes', 'Bags', 'Accessories'].map(name => ({ id: uid() + name.slice(0, 2), name }));
 
 /* ---------- storage ---------- */
@@ -586,7 +614,11 @@ const catsOf = it => { const p = catOf(it), extra = (it?.cats || []).filter(c =>
 const inCat = (it, id) => catsOf(it).includes(id);
 const subName = id => { for (const c of S.cats) { const x = (c.subs || []).find(s => s.id === id); if (x) return x.name; } return ''; };
 const subsOf = it => (it.subs || []).filter(id => subName(id));
-const itemName = it => { if (it.name && it.name.trim()) return it.name.trim(); const kind = subName(subsOf(it)[0]) || (catOf(it) !== 'none' ? catName(catOf(it)) : 'piece'), cn = typeof colorName === 'function' ? colorName(it.color) : ''; const k = ({ tops: 'top', dresses: 'dress', bags: 'bag', accessories: 'accessory', jackets: 'jacket', coats: 'coat' })[kind.toLowerCase()] || kind.toLowerCase(); return cn ? `${cn.charAt(0)}${cn.slice(1).toLowerCase()} ${k}` : kind; };
+const itemName = it => { if (it.name && it.name.trim()) return it.name.trim(); const kind = subName(subsOf(it)[0]) || (catOf(it) !== 'none' ? catName(catOf(it)) : 'piece'), cn = typeof colorName === 'function' ? colorName(it.color) : ''; const k = ({ tops: 'top', dresses: 'dress', bags: 'bag', accessories: 'accessory', jackets: 'jacket', coats: 'coat' })[kind.toLowerCase()] || kind.toLowerCase();
+  if (LANG_NL()) { const kn = (({ piece: 'item', top: 'top', dress: 'jurk', bag: 'tas', accessory: 'accessoire', jacket: 'jack', coat: 'jas', bottoms: 'broek', shoes: 'schoenen', 't-shirt': 't-shirt', sweater: 'trui', blouse: 'blouse', shirt: 'shirt', 'broeken & rokken': 'broek', jassen: 'jas', jurken: 'jurk', tassen: 'tas', schoenen: 'schoenen', accessoires: 'accessoire' })[k] || k), het = /^(item|shirt|vest|topje|jack|overhemd|t-shirt)$/.test(kn) || kn.endsWith('je');
+    const AD = { Black: ['zwart', 'zwarte'], White: ['wit', 'witte'], 'Off-white': ['gebroken wit', 'gebroken witte'], Grey: ['grijs', 'grijze'], 'Light grey': ['lichtgrijs', 'lichtgrijze'], 'Dark grey': ['donkergrijs', 'donkergrijze'], Red: ['rood', 'rode'], Pink: ['roze', 'roze'], Navy: ['marineblauw', 'marineblauwe'], 'Royal blue': ['koningsblauw', 'koningsblauwe'], 'Baby blue': ['babyblauw', 'babyblauwe'], Denim: ['denim', 'denim'], Beige: ['beige', 'beige'], Cream: ['crème', 'crème'], Ivory: ['ivoor', 'ivoren'], Brown: ['bruin', 'bruine'], Camel: ['camel', 'camel'], Tan: ['lichtbruin', 'lichtbruine'], Chocolate: ['chocoladebruin', 'chocoladebruine'], Yellow: ['geel', 'gele'], Mustard: ['mosterdgeel', 'mosterdgele'], Gold: ['goud', 'gouden'], Silver: ['zilver', 'zilveren'], 'Rose gold': ['roségoud', 'roségouden'], Purple: ['paars', 'paarse'], Lavender: ['lavendel', 'lavendel'], Mint: ['mint', 'mint'], Khaki: ['kaki', 'kaki'], 'Bottle green': ['flessengroen', 'flessengroene'], Cherry: ['kersenrood', 'kersenrode'], Blush: ['zachtroze', 'zachtroze'], Peach: ['perzik', 'perzik'], Burgundy: ['bordeaux', 'bordeaux'], Wine: ['wijnrood', 'wijnrode'], Maroon: ['bordeaux', 'bordeaux'], Olive: ['olijfgroen', 'olijfgroene'], Sage: ['saliegroen', 'saliegroene'], Teal: ['petrol', 'petrol'], Charcoal: ['antraciet', 'antraciet'], Stone: ['steengrijs', 'steengrijze'], Sand: ['zand', 'zand'], Taupe: ['taupe', 'taupe'], Cobalt: ['kobaltblauw', 'kobaltblauwe'], Plum: ['pruim', 'pruim'], Mauve: ['mauve', 'mauve'], Coral: ['koraal', 'koraal'], Rust: ['roest', 'roest'], Emerald: ['smaragdgroen', 'smaragdgroene'] }[cn];
+    if (!cn) return kind; const adj = AD ? AD[het ? 0 : 1] : cn.toLowerCase(); return `${adj.charAt(0).toUpperCase()}${adj.slice(1)} ${kn}`; }
+  return cn ? `${cn.charAt(0)}${cn.slice(1).toLowerCase()} ${k}` : kind; };
 const saveCats = () => safe(store.put('meta', { id: 'categories', list: S.cats }));
 const saveMats = () => safe(store.put('meta', { id: 'materials', list: S.customMats }));
 const allMaterials = () => [...MATERIALS.filter(m => m !== 'Other'), ...S.customMats.filter(m => !MATERIALS.includes(m)), 'Other'];
@@ -628,7 +660,7 @@ const catColor = id => { const i = catIdx(id); return i < 0 ? '#D6D6D6' : PASTEL
 const catLight = id => { const i = catIdx(id); return i < 0 ? '#EDEDED' : PASTEL_L[i]; };
 const dk = h => { const v = i => parseInt(h.slice(i, i + 2), 16) * 0.3 + 24 * 0.7; return hex(v(1), v(3), v(5)); };
 const tagIdx = t => { let x = 0; for (const ch of String(t)) x = (x * 31 + ch.charCodeAt(0)) >>> 0; return x % PASTEL_C.length; };
-const tagStyle = t => { const c = SEASON_COL[t] || PASTEL_C[tagIdx(t)], l = SEASON_L[t] || PASTEL_L[tagIdx(t)]; return isDark() ? `background:${dk(c)};color:${c}` : `background:${l}`; };
+const tagStyle = t => { const fix = !getSeason(), c = (fix && SEASON_COL[t]) || PASTEL_C[tagIdx(t)], l = (fix && SEASON_L[t]) || PASTEL_L[tagIdx(t)]; return isDark() ? `background:${dk(c)};color:${c}` : `background:${l}`; };
 const catStyle = id => { const i = catIdx(id), c = i < 0 ? '#BDBDBD' : PASTEL_C[i]; return isDark() ? `background:${dk(c)};color:${c}` : `background:${catLight(id)}`; };
 const tagLight = t => { if (SEASON_L[t]) return SEASON_L[t]; let h = 0; for (const ch of String(t)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return PASTEL_L[h % PASTEL_L.length]; };
 function chipRow(active, scope, withCounts = true) {
@@ -668,7 +700,7 @@ const SEASON_PAL = {
   'Deep Winter': [['Deep Navy', '#1B2440'], ['Deep Ruby', '#7A0A23'], ['Deep Emerald', '#035E48'], ['Deep Teal', '#01535C'], ['Dark Oxblood', '#4E0F16'], ['Aubergine', '#3D1A3A'], ['Deep Sapphire', '#082567'], ['Deep Charcoal', '#2A2D31'], ['Deep Magenta', '#8B0A5A'], ['Wine', '#5E1224'], ['Deep Slate', '#3B4552'], ['True Red', '#C8102E']]
 };
 const SEASON_NEUTRALS = { Winter: [['Black', '#111111'], ['Pure white', '#FAFAFA'], ['Charcoal', '#36454F'], ['Cool grey', '#8E9196']], Summer: [['Soft white', '#F2F0EC'], ['Cool grey', '#9DA3A8'], ['Navy', '#2E3F66'], ['Taupe', '#9A8F86']], Autumn: [['Cream', '#EFE4CC'], ['Camel', '#C19A6B'], ['Chocolate', '#4E3326'], ['Olive', '#6E6B2E']], Spring: [['Ivory', '#F4EEDB'], ['Camel', '#C9A27A'], ['Warm grey', '#A39A8E'], ['Light navy', '#3A4E7A']] };
-const BASIC_NAMES = [['Black', '#111111'], ['Off-white', '#F2EEE6'], ['White', '#FFFFFF'], ['Ivory', '#F4EEDB'], ['Cream', '#EFE4CC'], ['Oatmeal', '#DCD0BC'], ['Beige', '#D8C6A8'], ['Sand', '#CDB894'], ['Stone', '#B7AFA3'], ['Camel', '#C19A6B'], ['Tan', '#B48C64'], ['Taupe', '#8F7F72'], ['Chocolate', '#4E3326'], ['Brown', '#6E4B34'], ['Cognac', '#9A4E26'], ['Burnt orange', '#CC5500'], ['Peach', '#F6C3A3'], ['Salmon', '#F49C8A'], ['Blush', '#F2C4C4'], ['Pink', '#F2A6C0'], ['Cherry', '#A4161A'], ['Red', '#C8102E'], ['Lavender', '#B9A7DA'], ['Purple', '#6B3FA0'], ['Navy', '#1F2A44'], ['Royal blue', '#2B4FBF'], ['Cobalt', '#0047AB'], ['Baby blue', '#BBD8F0'], ['Denim', '#4F6D8F'], ['Light denim', '#8EA9C6'], ['Mint', '#A8E6C3'], ['Khaki', '#A89B6E'], ['Bottle green', '#0F4D32'], ['Mustard', '#D4A52A'], ['Yellow', '#F2D13D'], ['Butter', '#F6E7B8'], ['Gold', '#C9A85C'], ['Grey', '#8E8E8E'], ['Light grey', '#C9CBCF'], ['Dark grey', '#555555']];
+const BASIC_NAMES = [['Gold', '#D4AF37'], ['Silver', '#C4C7CC'], ['Rose gold', '#C98F84'], ['Black', '#111111'], ['Off-white', '#F2EEE6'], ['White', '#FFFFFF'], ['Ivory', '#F4EEDB'], ['Cream', '#EFE4CC'], ['Oatmeal', '#DCD0BC'], ['Beige', '#D8C6A8'], ['Sand', '#CDB894'], ['Stone', '#B7AFA3'], ['Camel', '#C19A6B'], ['Tan', '#B48C64'], ['Taupe', '#8F7F72'], ['Chocolate', '#4E3326'], ['Brown', '#6E4B34'], ['Cognac', '#9A4E26'], ['Burnt orange', '#CC5500'], ['Peach', '#F6C3A3'], ['Salmon', '#F49C8A'], ['Blush', '#F2C4C4'], ['Pink', '#F2A6C0'], ['Cherry', '#A4161A'], ['Red', '#C8102E'], ['Lavender', '#B9A7DA'], ['Purple', '#6B3FA0'], ['Navy', '#1F2A44'], ['Royal blue', '#2B4FBF'], ['Cobalt', '#0047AB'], ['Baby blue', '#BBD8F0'], ['Denim', '#4F6D8F'], ['Light denim', '#8EA9C6'], ['Mint', '#A8E6C3'], ['Khaki', '#A89B6E'], ['Bottle green', '#0F4D32'], ['Mustard', '#D4A52A'], ['Yellow', '#F2D13D'], ['Butter', '#F6E7B8'], ['Gold', '#C9A85C'], ['Grey', '#8E8E8E'], ['Light grey', '#C9CBCF'], ['Dark grey', '#555555']];
 const ALL_NAMES = [...BASIC_NAMES, ...Object.values(SEASON_PAL).flat()];
 const labOf = hx => { const f = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; }, t = v => v > 0.008856 ? Math.cbrt(v) : 7.787 * v + 16 / 116; const r = f(parseInt(hx.slice(1, 3), 16)), g = f(parseInt(hx.slice(3, 5), 16)), b = f(parseInt(hx.slice(5, 7), 16)); const X = t((r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047), Y = t(r * 0.2126 + g * 0.7152 + b * 0.0722), Z = t((r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883); return [116 * Y - 16, 500 * (X - Y), 200 * (Y - Z)]; };
 const dE = (a, b) => { const A = labOf(a), B = labOf(b); return Math.hypot(A[0] - B[0], A[1] - B[1], A[2] - B[2]); };
@@ -706,7 +738,7 @@ function setSeason(v) { try { if (v) localStorage.setItem('closet-season', v); e
 function openSeasonPicker(first) { // choose your colour season; shown once on first opening, and any time from the shopping guide or Settings
   const fams = [['Spring', 'Warm, clear and light'], ['Summer', 'Cool, soft and light'], ['Autumn', 'Warm, muted and rich'], ['Winter', 'Cool, clear and deep']], cur = getSeason();
   const el = openSheet(`<div class="sheet-inner" role="dialog" aria-modal="true" aria-label="Choose your color season"><header class="sheet-head"><span style="width:60px"></span><h2>${first ? 'Welcome' : 'Your colors'}</h2><button class="btn ghost sm" data-sp="skip">${first ? 'Skip' : 'Close'}</button></header>
-    <div class="sheet-body"><p class="sp-intro">${first ? 'Before you start: what is your <strong>color season</strong>? The app uses it for a shopping guide, to tell you which pieces suit you, and to tint its own colors. You can change it any time.' : 'Pick your color season. Tap one to choose it.'}</p>
+    <div class="sheet-body"><p class="sp-intro">${LANG_NL() ? (first ? 'Even vooraf: wat is je <strong>kleurseizoen</strong>? De app gebruikt het voor een shoppinggids, om te laten zien welke items bij je passen, en voor de eigen kleuren. Je kunt het altijd wijzigen.' : 'Kies je kleurseizoen. Tik op een seizoen om het te kiezen.') : (first ? 'Before you start: what is your <strong>color season</strong>? The app uses it for a shopping guide, to tell you which pieces suit you, and to tint its own colors. You can change it any time.' : 'Pick your color season. Tap one to choose it.')}</p>
     ${fams.map(([fam, note]) => `<h3 class="sp-fam">${fam}<small>${note}</small></h3><div class="sp-grid">${Object.keys(SEASON_PAL).filter(k => k.endsWith(fam)).map(k => `<button class="sp-card${k === cur ? ' on' : ''}" data-season="${k}"><span class="sp-sw">${SEASON_PAL[k].slice(0, 6).map(([n, h]) => `<i style="background:${h}" title="${esc(n)}"></i>`).join('')}</span><span class="sp-name">${k.replace(' ' + fam, '')}</span></button>`).join('')}</div>`).join('')}
     <p class="sp-intro" style="margin-top:16px">Not sure? You can skip this for now.</p>
     ${cur ? `<button class="btn ghost" data-sp="clear" style="width:100%">Clear my season</button>` : `<button class="btn" data-sp="skip" style="width:100%">Not sure yet</button>`}</div></div>`, 'full');
@@ -741,35 +773,48 @@ function autoHang(alpha, W, H, thr, type = 'hanger') {
   let x0 = W, x1 = -1, y0 = H, y1 = -1;
   for (let y = 0; y < H; y++) for (let i = 0; i < W; i++) if (alpha(y * W + i) > thr) { if (i < x0) x0 = i; if (i > x1) x1 = i; if (y < y0) y0 = y; if (y > y1) y1 = y; }
   if (x1 < 0) return null;
-  const clip = type === 'clip', hook = type === 'hook', gh = y1 - y0 + 1, band = Math.min(H, y0 + Math.max(2, Math.round(gh * (hook ? 0.03 : clip ? 0.04 : 0.1)))); let l = W, r = -1;
+  const clip = type === 'clip', hook = type === 'hook', gh = y1 - y0 + 1, band = Math.min(H, y0 + Math.max(2, Math.round(gh * (hook || type === 'chain' ? 0.03 : clip ? 0.04 : 0.1)))); let l = W, r = -1;
   for (let y = y0; y < band; y++) for (let i = 0; i < W; i++) if (alpha(y * W + i) > thr) { if (i < l) l = i; if (i > r) r = i; }
   const span = Math.max((r - l + 1), (x1 - x0 + 1) * 0.3);
   if (hook) return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.012, w: (x1 - x0 + 1) * 0.14, box: { x0, y0, x1, y1 } };
+  if (type === 'chain') return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.02, w: Math.min(W, (x1 - x0 + 1) * 0.7), box: { x0, y0, x1, y1 } };
   if (clip) return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.025, w: span * 0.8 / 0.767, box: { x0, y0, x1, y1 } };
   return { type, cx: (l + r + 1) / 2, ty: y0 + gh * 0.06, w: span / 0.84, box: { x0, y0, x1, y1 } };
 }
 async function hangOf(src, type = 'hanger') {
   const im = await loadImage(src), W = 160, H = Math.max(2, Math.round(W * im.naturalHeight / im.naturalWidth));
   const c = mk(W, H), x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0, W, H); const d = x.getImageData(0, 0, W, H).data;
-  if (type === 'none') return { type };
+  if (type === 'none' || DISPLAYS.includes(type)) return { type };
   const g = autoHang(i => d[i * 4 + 3], W, H, 40, type);
   return g ? { type, cx: g.cx / W, ty: g.ty / H, w: g.w / W } : hangNorm(null, type);
 }
 function hangNorm(g, type = 'hanger') {
   if (g && g.cx != null && (g.type || 'hanger') === type) return g;
   if (type === 'hanger' && g && g.l != null) return { cx: (g.l + g.r) / 2, ty: 0.06, w: (g.r - g.l) / 0.84 };
-  return type === 'hook' ? { type, cx: 0.5, ty: 0.012, w: 0.14 } : type === 'clip' ? { type, cx: 0.5, ty: 0.025, w: 0.85 } : { type, cx: 0.5, ty: 0.06, w: 0.8 };
+  return type === 'chain' ? { type, cx: 0.5, ty: 0.02, w: 0.7 } : type === 'hook' ? { type, cx: 0.5, ty: 0.012, w: 0.14 } : type === 'clip' ? { type, cx: 0.5, ty: 0.025, w: 0.85 } : { type, cx: 0.5, ty: 0.06, w: 0.8 };
 }
 function hangHTML(it, maxW, maxH) {
   const type = hangerType(it), a = it.aspect || 0.75;
-  if (type === 'none') { // sits on the floor of the arch, a bit smaller
-    let ih = maxH * 0.52, iw = ih * a; if (iw > maxW * 0.78) { iw = maxW * 0.78; ih = iw / a; }
-    const top = Math.max(0, maxH - 6 - ih);
-    return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${(ih + top).toFixed(1)}px"><img ${cutAttrs(it, `top:${top.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px`, true)} alt="" loading="lazy"></div>`;
+  if (false) {
+    const cw = clamp(maxW * 0.62, 110, 190), ch = cw * 1.32, hk = 18; let bw = cw * 0.66, bh = ch * 0.58, iw = bw, ih = iw / a; if (ih > bh) { ih = bh; iw = ih * a; }
+    const top = hk + ch * 0.3 + (bh - ih) / 2;
+    return `<div class="hang" style="width:${cw.toFixed(1)}px;height:${(hk + ch).toFixed(1)}px"><svg class="prop-hook" viewBox="0 0 12 20" style="left:${(cw / 2 - 6).toFixed(1)}px"><path d="M6 20V9a3.5 3.5 0 1 1 3.4-4.3" fill="none" stroke="#141414" stroke-width="1.6" stroke-linecap="round"/></svg><span class="prop-card" style="top:${hk}px;width:${cw.toFixed(1)}px;height:${ch.toFixed(1)}px"></span><img ${cutAttrs(it, `left:${((cw - iw) / 2).toFixed(1)}px;top:${top.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px;z-index:2`, true)} alt="" loading="lazy"></div>`;
+  }
+  if (false) {
+    const cw = clamp(maxW * 0.6, 110, 180), chh = cw * 0.46; let iw = cw * 0.6, ih = iw / a; if (ih > cw * 0.62) { ih = cw * 0.62; iw = ih * a; }
+    const floor = maxH - 6, ct = floor - chh, it0 = ct - ih * 0.6;
+    return `<div class="hang" style="width:${cw.toFixed(1)}px;height:${floor.toFixed(1)}px"><span class="prop-cushion" style="top:${ct.toFixed(1)}px;width:${cw.toFixed(1)}px;height:${chh.toFixed(1)}px"></span><img ${cutAttrs(it, `left:${((cw - iw) / 2).toFixed(1)}px;top:${it0.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px;z-index:2`, true)} alt="" loading="lazy"><span class="prop-cushion-lip" style="top:${(ct + chh * 0.4).toFixed(1)}px;width:${cw.toFixed(1)}px;height:${(chh * 0.6).toFixed(1)}px"></span></div>`;
+  }
+  if (type === 'none') { // shoes sit on the floor of the arch; jewelry floats in the middle
+    const jw = [...catsOf(it).map(catName), ...(it.subs || []).map(subName)].some(n => JEWEL_RE.test(n));
+    let ih = maxH * (jw ? 0.42 : 0.52), iw = ih * a; if (iw > maxW * (jw ? 0.62 : 0.78)) { iw = maxW * (jw ? 0.62 : 0.78); ih = iw / a; }
+    const top = jw ? Math.max(0, (maxH - ih) * 0.42) : Math.max(0, maxH - 6 - ih);
+    return `<div class="hang" style="width:${iw.toFixed(1)}px;height:${(jw ? Math.max(ih + top, maxH - 6) : ih + top).toFixed(1)}px"><img ${cutAttrs(it, `top:${top.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px`, true)} alt="" loading="lazy"></div>`;
   }
   let ih = maxH, iw = ih * a; if (iw > maxW) { iw = maxW; ih = iw / a; }
+  if (type === 'chain') { ih = Math.min(ih, maxH * 0.4); iw = ih * a; if (iw > maxW * 0.5) { iw = maxW * 0.5; ih = iw / a; } } // a charm is small: show it small on its chain
   const H = HANGERS[type], g = hangNorm(it.hang, type);
-  const hw = type === 'hook' ? clamp(g.w * iw, 22, 56) : clamp(g.w * iw, 56, maxW * 1.1), hh = hw * H.ar, cx = g.cx * iw, left = cx - hw * H.ax, pivot = left + hw * 0.5;
+  const hw = type === 'hook' ? clamp(g.w * iw, 22, 56) : type === 'chain' ? clamp(g.w * iw, 40, maxW * 0.95) : clamp(g.w * iw, 56, maxW * 1.1), hh = hw * H.ar, cx = g.cx * iw, left = cx - hw * H.ax, pivot = left + hw * 0.5;
   const over = Math.max(0, hh * H.anchor - g.ty * ih);
   return `<div class="hang swing" style="width:${iw.toFixed(1)}px;height:${(ih + over).toFixed(1)}px;transform-origin:${pivot.toFixed(1)}px 2px;animation-delay:-${(Math.random() * 7).toFixed(2)}s"><span class="hk" style="left:${left.toFixed(1)}px;width:${hw.toFixed(1)}px;z-index:${H.front ? 2 : 0}">${H.svg()}</span><img ${cutAttrs(it, `top:${over.toFixed(1)}px;width:${iw.toFixed(1)}px;height:${ih.toFixed(1)}px`, true)} alt="" loading="lazy"></div>`;
 }
@@ -778,7 +823,7 @@ function hangHTML(it, maxW, maxH) {
 function hangSideHTML(it, side, maxW, maxH) {
   const type = hangerType(it);
   if (side !== 'back' || !hasCut(it.back)) return hangHTML(it, maxW, maxH);
-  if (type === 'none') return hangHTML(sideOf(it, 'back'), maxW, maxH);
+  if (type === 'none' || DISPLAYS.includes(type)) return hangHTML(sideOf(it, 'back'), maxW, maxH);
   const a = it.aspect || 0.75; let ih = maxH, iw = ih * a; if (iw > maxW) { iw = maxW; ih = iw / a; }
   const H = HANGERS[type], g = hangNorm(it.hang, type);
   const hw = type === 'hook' ? clamp(g.w * iw, 22, 56) : clamp(g.w * iw, 56, maxW * 1.1), hh = hw * H.ar, cx = g.cx * iw, left = cx - hw * H.ax;
@@ -856,7 +901,7 @@ function subRow(catId, active, scope) { const c = S.cats.find(x => x.id === catI
 function renderRack() {
   const v = $('#view-rack'); const items = rackItems(); const total = S.items.length;
   let body;
-  if (!total) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Your rack is empty</h2><p>Photograph a piece, frame it, and it'll hang here with the background removed.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add your first piece</button></div>`;
+  if (!total) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Your rack is empty</h2><p>Photograph a piece and it'll hang here with the background removed.</p><button class="btn primary" data-act="add">${ic('camera', 20)}Add your first piece</button></div>`;
   else if (!items.length) body = `<div class="empty"><div class="hook">${HANGER}</div><h2>Nothing here yet</h2><p>No pieces in ${esc(catName(S.rackCat))} so far.</p><button class="btn primary" data-act="add">${ic('plus', 20)}Add a piece</button></div>`;
   else { const [mw, mh] = rackDims(); const top = 32, aw = Math.min(mw + 44, 340), ar = aw / 2, ry = 26.5 + top, half = ry < ar ? Math.sqrt(ar * ar - (ar - ry) * (ar - ry)) : ar; body = `<div class="rack-stage" style="margin-top:${Math.round(top)}px"><div class="arch-win" style="top:${-Math.round(top)}px;width:${Math.round(aw)}px;height:${Math.round(mh + 70 + top)}px"><div class="rail-bar"></div></div><button class="rack-flip" id="rack-flip" data-act="flip" hidden style="left:calc(50% + ${Math.round(aw / 2 - 58)}px)">${ic('flip', 18)}</button><div class="rail" id="rail" tabindex="0" aria-label="Pieces, use arrow keys to browse">${items.map((it, i) => Math.abs(i - Math.min(S.rackIndex, items.length - 1)) <= 6 ? `<button class="slide" data-id="${it.id}" aria-label="${esc(itemName(it))}">${hangSideHTML(it, S.flip[it.id] ? 'back' : 'front', mw, mh)}</button>` : `<button class="slide" data-id="${it.id}" data-empty="1" aria-label="${esc(itemName(it))}"><div class="hang" style="width:10px;height:${Math.round(mh + 30)}px"></div></button>`).join('')}</div></div><div id="rack-tag"></div>`; }
   v.innerHTML = `<header class="arc">${total > 1 ? `<button class="order-btn" data-act="order" aria-label="Order: ${ORDER_LABEL[ORDER]}">${ic(ORDER === 'shuffle' ? 'shuffle' : 'sort', 18)}</button>` : ''}<h1>My closet</h1><span class="count">${total} ${total === 1 ? 'piece' : 'pieces'}</span>${total ? chipRow(S.rackCat, 'rack') + subRow(S.rackCat, S.rackSub, 'rack-sub') : ''}</header>${body}`;
@@ -909,7 +954,21 @@ function renderCloset() {
 }
 const gridCols = () => { try { return clamp(+localStorage.getItem('closet-cols') || 2, 2, 5); } catch { return 2; } };
 const applyCols = () => { const v = $('#view-closet'); if (v) { v.style.setProperty('--cols', gridCols()); v.dataset.cols = gridCols(); } const n = $('#cols-n'); if (n) n.textContent = gridCols(); };
-const tileHTML = it => `<div class="tile-wrap"><button class="tile" data-act="detail" data-id="${it.id}"><div class="ph"><img ${cutAttrs(it)} alt="" loading="lazy"></div><p class="nm">${esc(itemName(it))}</p><p class="sub">${esc([it.brand, it.size && (isShoe(it) ? 'shoe size ' : 'size ') + it.size, it.price].filter(Boolean).join(', ') || catName(catOf(it)))}</p></button></div>`;
+function thumbHTML(it) { // small pictures zoom in on the solid part of a piece, so a bag shows the bag instead of its long strap
+  const f = it.focus; if (!f || !(f.y1 > f.y0)) return `<img ${cutAttrs(it)} alt="" loading="lazy">`;
+  const span = f.y1 - f.y0, ra = (it.aspect || 0.8) / span;
+  return `<span class="fcrop" style="aspect-ratio:${ra.toFixed(3)};${ra >= 0.8 ? 'width:100%' : 'height:100%'}"><img ${cutAttrs(it, `position:absolute;left:0;width:100%;height:${(100 / span).toFixed(2)}%;top:-${(f.y0 / span * 100).toFixed(2)}%;max-width:none;max-height:none`)} alt="" loading="lazy"></span>`;
+}
+async function computeFocus(it) { // rows where the piece is solid; skip thin straps, chains and handles above or below
+  await prepCut(it); const im = await loadImage(it._m || it.imgM); const W = 120, H = Math.max(2, Math.round(W * im.naturalHeight / im.naturalWidth)), c = mk(W, H), x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(im, 0, 0, W, H);
+  const d = x.getImageData(0, 0, W, H).data, rows = new Array(H).fill(0); for (let y = 0; y < H; y++) for (let i = 0; i < W; i++) if (d[(y * W + i) * 4 + 3] > 128) rows[y]++;
+  const mx = Math.max(...rows); if (!mx) return null; const thr = mx * 0.32; let y0 = rows.findIndex(v => v >= thr), y1 = H - 1 - [...rows].reverse().findIndex(v => v >= thr);
+  const top = rows.findIndex(v => v > 0), bot = H - 1 - [...rows].reverse().findIndex(v => v > 0), full = bot - top + 1, body = y1 - y0 + 1;
+  if (body > full * 0.78) return null; const pad = body * 0.06; return { y0: Math.max(0, (y0 - pad) / H), y1: Math.min(1, (y1 + 1 + pad) / H) };
+}
+let focusBusy = false;
+async function ensureFocus() { if (focusBusy) return; focusBusy = true; let n = 0; for (const it of S.items) { if (it.focus !== undefined || !hasCut(it) || it.img) continue; try { it.focus = await computeFocus(it); await safe(putItem(it)); n++; } catch { it.focus = null; } await new Promise(r => setTimeout(r, 20)); } focusBusy = false; if (n) renderAll(); }
+const tileHTML = it => `<div class="tile-wrap"><button class="tile" data-act="detail" data-id="${it.id}"><div class="ph">${thumbHTML(it)}</div><p class="nm">${esc(itemName(it))}</p><p class="sub">${esc([it.brand, it.size && (isShoe(it) ? 'shoe size ' : 'size ') + it.size, it.price].filter(Boolean).join(', ') || catName(catOf(it)))}</p></button></div>`;
 function renderClosetResults() {
   applyCols();
   { const ab = document.querySelector('[data-act="closet-add"]'), inF = S.ctab === 'folders' && S.folderOpen && S.folderOpen !== 'forgot'; if (ab) ab.lastChild.textContent = inF ? 'Add to folder' : S.ctab === 'wish' ? 'Add wish' : 'Add'; }
@@ -951,7 +1010,7 @@ function openWish(w) {
       <div class="form">
         <label class="field"><span>Name</span><input type="text" id="w-name" value="${esc(w?.name || '')}" placeholder="Linen wrap dress"></label>
         <label class="field"><span>Link</span><input type="text" id="w-link" inputmode="url" autocapitalize="off" autocorrect="off" value="${esc(w?.link || '')}" placeholder="Paste the shop link"></label>
-        <div class="two"><label class="field"><span>Brand</span><input type="text" id="w-brand" value="${esc(w?.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="w-price" inputmode="decimal" value="${esc(w?.price || '')}" placeholder="$79"></label></div>
+        <div class="two"><label class="field"><span>Brand</span><input type="text" id="w-brand" value="${esc(w?.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="w-price" inputmode="decimal" value="${esc(w?.price || '')}" placeholder="${LANG_NL() ? '€79' : '$79'}"></label></div>
         <div class="two"><label class="field"><span>Size</span><input type="text" id="w-size" value="${esc(w?.size || '')}" placeholder="M, 38, W28 L32"></label><span></span></div>
         <div class="field"><span>Category</span><div class="chips wrap" id="w-cats"></div></div>
         <label class="field"><span>Notes</span><textarea id="w-notes" rows="3" placeholder="Size, color, waiting for a sale…">${esc(w?.notes || '')}</textarea></label>
@@ -988,17 +1047,17 @@ function openWish(w) {
 }
 
 const SMART = [
-  { id: 'care', name: 'To do', icon: 'drop', note: 'Washing, cleaning, fixing', items: () => S.items.filter(i => i.care?.length) },
-  { id: 'sell', name: 'Sell / donate', icon: 'tag', note: 'Pieces you are letting go', items: () => S.items.filter(i => i.letgo) },
-  { id: 'forgot', name: 'Forgotten', icon: 'clock', note: 'Not worn in 6 months', items: () => S.items.filter(isForgotten) }
+  { id: 'care', get name() { return LANG_NL() ? 'Te doen' : 'To do'; }, icon: 'drop', note: 'Washing, cleaning, fixing', items: () => S.items.filter(i => i.care?.length) },
+  { id: 'sell', get name() { return LANG_NL() ? 'Verkopen / weggeven' : 'Sell / donate'; }, icon: 'tag', note: 'Pieces you are letting go', items: () => S.items.filter(i => i.letgo) },
+  { id: 'forgot', get name() { return LANG_NL() ? 'Vergeten' : 'Forgotten'; }, icon: 'clock', note: 'Not worn in 6 months', items: () => S.items.filter(isForgotten) }
 ];
 const folderItems = id => { const sm = SMART.find(f => f.id === id); if (sm) return sm.items(); const f = S.folders.find(x => x.id === id); return f ? f.ids.map(byId).filter(Boolean) : []; };
 function renderFolders() {
   $('#closet-chips').innerHTML = ''; const out = $('#closet-results');
   if (S.folderOpen && !SMART.some(f => f.id === S.folderOpen) && !S.folders.some(f => f.id === S.folderOpen)) S.folderOpen = null;
   if (!S.folderOpen) {
-    const card = (id, name, icon, note, list, smart) => `<div class="fcard-wrap">${smart ? '' : `<button class="fcard-add" data-fquick="${id}" aria-label="Add pieces to ${esc(name)}">${ic('plus', 18)}</button>`}<button class="fcard" data-fopen="${id}"><div class="fthumbs">${list.slice(0, 3).map(it => `<span><img ${cutAttrs(it)} alt="" loading="lazy"></span>`).join('') || `<span class="fempty">${ic(icon, 26)}</span>`}</div><p class="nm">${ic(icon, 15)} ${esc(name)}</p><p class="sub">${list.length} ${list.length === 1 ? 'piece' : 'pieces'}${smart ? `, ${esc(note)}` : ''}</p></button></div>`;
-    out.innerHTML = `<div class="grid">${SMART.filter(f => f.id !== 'forgot' || f.items().length).map(f => card(f.id, f.name, f.icon, f.note, f.items(), f.id === 'forgot')).join('')}${S.folders.map(f => card(f.id, f.name, 'folder', '', folderItems(f.id), false)).join('')}<button class="fcard fnew" data-fnew><div class="fthumbs"><span class="fempty">${ic('plus', 28)}</span></div><p class="nm">New folder</p><p class="sub">Group any pieces you like</p></button></div>`;
+    const card = (id, name, icon, note, list, smart) => `<div class="fcard-wrap">${smart ? '' : `<button class="fcard-add" data-fquick="${id}" aria-label="Add pieces to ${esc(name)}">${ic('plus', 18)}</button>`}<button class="fcard" data-fopen="${id}"><div class="fthumbs">${list.slice(0, 3).map(it => `<span>${thumbHTML(it)}</span>`).join('') || `<span class="fempty">${ic(icon, 26)}</span>`}</div><p class="nm">${ic(icon, 15)} ${esc(name)}</p><p class="sub">${list.length} ${list.length === 1 ? 'piece' : 'pieces'}${smart ? `, ${esc(note)}` : ''}</p></button></div>`;
+    out.innerHTML = `<div class="grid">${SMART.filter(f => f.id !== 'forgot' || f.items().length).map(f => card(f.id, f.name, f.icon, f.note, f.items(), f.id === 'forgot')).join('')}${S.folders.map(f => card(f.id, f.name, 'folder', '', folderItems(f.id), false)).join('')}<button class="fcard fnew" data-fnew><div class="fthumbs"><span class="fempty">${ic('plus', 28)}</span></div><p class="nm">${LANG_NL() ? 'Nieuwe map' : 'New folder'}</p><p class="sub">Group any pieces you like</p></button></div>`;
     return;
   }
   const sm = SMART.find(f => f.id === S.folderOpen), f = S.folders.find(x => x.id === S.folderOpen), list = folderItems(S.folderOpen), name = sm ? sm.name : f.name;
@@ -1027,7 +1086,7 @@ function pickPieces(title, selected) { // quick picker: small pictures, filter b
     const draw = () => {
       const list = S.items.filter(i => (cat === 'all' || inCat(i, cat)) && (!q || itemText(i).toLowerCase().includes(q) || (i.brand || '').toLowerCase().includes(q)));
       $('.pp-chips', el).innerHTML = [`<button class="chip" data-ppcat="all" aria-pressed="${cat === 'all'}">All</button>`, ...S.cats.filter(c => S.items.some(i => inCat(i, c.id))).map(c => `<button class="chip" data-ppcat="${c.id}" aria-pressed="${cat === c.id}"><span class="cdot" style="background:${catColor(c.id)}"></span>${esc(c.name)}</button>`)].join('');
-      $('.pp-grid', el).innerHTML = list.map(it => `<button class="pp-mini${sel.has(it.id) ? ' on' : ''}" data-pp-id="${it.id}" aria-pressed="${sel.has(it.id)}" aria-label="${esc(itemName(it))}"><span class="pp-ph"><img ${cutAttrs(it)} alt="" loading="lazy"></span><span class="pp-name">${esc(itemName(it))}</span></button>`).join('') || '<p class="muted">Nothing matches.</p>';
+      $('.pp-grid', el).innerHTML = list.map(it => `<button class="pp-mini${sel.has(it.id) ? ' on' : ''}" data-pp-id="${it.id}" aria-pressed="${sel.has(it.id)}" aria-label="${esc(itemName(it))}"><span class="pp-ph">${thumbHTML(it)}</span><span class="pp-name">${esc(itemName(it))}</span></button>`).join('') || '<p class="muted">Nothing matches.</p>';
       $('#pp-n', el).textContent = sel.size ? `(${sel.size})` : '';
     };
     draw();
@@ -1095,9 +1154,10 @@ function renderSettings() {
     <div class="row"><button class="btn primary" data-act="export">${ic('download', 20)}Export backup</button><button class="btn" data-act="import">${ic('upload', 20)}Import backup</button></div>
     <p id="usage" style="margin:14px 0 0;font-size:13px"></p>
   </section>
-  <section class="panel"><h2>Color season</h2><p>Used for your shopping guide on the Wishlist, the "fits your colors" check, and to tint the app..</p>
+  <section class="panel"><h2>Color season</h2><p>Used for your shopping guide on the Wishlist, the "fits your colors" check, and to tint the app.</p>
     <select id="season-sel" aria-label="Color season" class="season-sel"><option value="" ${getSeason() ? '' : 'selected'}>Not set</option>${Object.keys(SEASON_PAL).map(k => `<option ${k === getSeason() ? 'selected' : ''}>${k}</option>`).join('')}</select>
   </section>
+  <section class="panel"><h2>Language</h2><div class="seg" role="group" aria-label="Language">${[['auto', 'Auto'], ['en', 'English'], ['nl', 'Nederlands']].map(([v, l]) => `<button data-lang="${v}" aria-pressed="${langPref() === v}">${l}</button>`).join('')}</div><p class="muted" style="font-size:12.5px;margin:8px 2px 0" data-user>${langPref() === 'auto' ? (LANG_NL() ? 'Auto: Nederlands, zoals je telefoon.' : `Auto: English. Your phone reports ${esc(phoneLangs()[0] || 'no language')}; pick Nederlands to switch.`) : ''}</p></section>
   <section class="panel"><h2>Appearance</h2><div class="seg" role="group" aria-label="Theme">${['auto', 'light', 'dark'].map(x => `<button data-theme-opt="${x}" aria-pressed="${t === x}">${x[0].toUpperCase() + x.slice(1)}</button>`).join('')}</div></section>
   <section class="panel"><h2>Start over</h2><p>Permanently delete every piece, outfit, and category on this device.</p><button class="btn danger" data-act="wipe">${ic('trash', 20)}Delete everything</button></section>`;
   store.get('snap', 'last').then(sn => { const r = $('#snap-row'); if (r && sn) r.innerHTML = `<p style="margin:14px 0 8px">A safety copy from ${new Date(sn.at).toLocaleString()} (before ${esc(sn.reason)}) is kept on this device.</p><button class="btn" data-act="restore-snap">${ic('undo', 20)}Restore that closet</button>`; }).catch(() => {});
@@ -1337,7 +1397,7 @@ class Cutout {
     this.wrap.style.aspectRatio = `${w} / ${h}`; this.wrap.style.width = `min(100%, calc(50vh * ${(w / h).toFixed(4)}))`;
     this.resetZoom(); this.redraw(); this.onChange();
   }
-  autoHanger() { if (this.htype === 'none') { this.placeHanger(); return; } const g = autoHang(i => this.mask[i], this.w, this.h, 128, this.htype); if (g) this.hg = { cx: g.cx, ty: g.ty, w: g.w }; this.placeHanger(); }
+  autoHanger() { if (this.htype === 'none' || DISPLAYS.includes(this.htype)) { this.hg = null; this.placeHanger(); return; } const g = autoHang(i => this.mask[i], this.w, this.h, 128, this.htype); if (g) this.hg = { cx: g.cx, ty: g.ty, w: g.w }; this.placeHanger(); }
   px() {
     if (this.smooth && !this.smoothed) this.smoothed = smoothWrinkles(this.src.data, this.w, this.h, 0.004, 0.85);
     const base = this.smooth && this.smoothed ? this.smoothed : this.src.data;
@@ -1442,17 +1502,18 @@ class Cutout {
     g.imageSmoothingEnabled = false; g.fillStyle = '#ffffff'; g.fillRect(0, 0, 264, 264);
     g.drawImage(this.srcCanvas(), Math.round(x) - R, Math.round(y) - R, R * 2 + 1, R * 2 + 1, 0, 0, 264, 264);
     const cell = 264 / (R * 2 + 1), o = R * cell; g.lineWidth = 3; g.strokeStyle = '#141414'; g.strokeRect(o - 1, o - 1, cell + 2, cell + 2); g.lineWidth = 1.5; g.strokeStyle = '#ffffff'; g.strokeRect(o + 1.5, o + 1.5, cell - 3, cell - 3);
-    const c = this.sample(x, y, 1); this.loupeColor = c;
+    const c = this.sample(x, y, 2); this.loupeColor = c;
     L.querySelector('.loupe-sw').style.background = c; L.querySelector('.loupe-hex').textContent = (c || '').toUpperCase();
     const vw = window.innerWidth, size = 132; let left = e.clientX - size / 2, top = e.clientY - size - 86;
     if (top < 8) top = e.clientY + 60; left = clamp(left, 8, vw - size - 8);
     L.style.left = left + 'px'; L.style.top = top + 'px'; L.hidden = false;
   }
   hideLoupe() { if (this.loupe) this.loupe.hidden = true; }
-  sample(x, y, rad = 3) {
-    const d = this.px(), w = this.w, h = this.h; let R = 0, G = 0, B = 0, n = 0;
-    for (let yy = Math.max(0, Math.round(y) - rad); yy <= Math.min(h - 1, Math.round(y) + rad); yy++) for (let xx = Math.max(0, Math.round(x) - rad); xx <= Math.min(w - 1, Math.round(x) + rad); xx++) { const i = (yy * w + xx) * 4; R += d[i]; G += d[i + 1]; B += d[i + 2]; n++; }
-    return n ? hex(R / n, G / n, B / n) : null;
+  sample(x, y, rad = 3) { // median of the pixels around the point, only from the piece itself when possible (not from removed background)
+    const d = this.px(), w = this.w, h = this.h, m = this.cut ? this.mask : null, rs = [], gs = [], bs = [], ro = [], go = [], bo = [];
+    for (let yy = Math.max(0, Math.round(y) - rad); yy <= Math.min(h - 1, Math.round(y) + rad); yy++) for (let xx = Math.max(0, Math.round(x) - rad); xx <= Math.min(w - 1, Math.round(x) + rad); xx++) { const j = yy * w + xx, i = j * 4; if (!m || m[j] > 128) { rs.push(d[i]); gs.push(d[i + 1]); bs.push(d[i + 2]); } else { ro.push(d[i]); go.push(d[i + 1]); bo.push(d[i + 2]); } }
+    const med = a => { a.sort((p, q) => p - q); return a[a.length >> 1]; };
+    if (rs.length) return hex(med(rs), med(gs), med(bs)); if (ro.length) return hex(med(ro), med(go), med(bo)); return null;
   }
   getState() { const k = ['src', 'mask', 'er', 'rs', 'labels', 'lowPx', 'lw', 'lh', 'w', 'h', 'cut', 'frame', 'hg', 'stack', 'smoothed', 'view', 'lowBin', 'trim']; const o = {}; k.forEach(x => { o[x] = this[x]; }); return this.src ? o : null; }
   setState(o) {
@@ -1608,7 +1669,7 @@ class Cutout {
     const W = this.wrap;
     W.addEventListener('pointerdown', e => {
       if (!this.src || e.target.closest('button')) return; e.preventDefault();
-      if (e.isPrimary || this.ptrs.size >= 2) { this.ptrs.clear(); this.pinch = null; this.tap2 = null; if (this.stroking) { this.stroking = false; if (this.dirtyStroke) { this.dirtyStroke = false; this.onStroke(); } } this.hdrag = null; this.fdrag = null; }
+      if (e.isPrimary || this.ptrs.size >= 2) { this.ptrs.clear(); this.pinch = null; this.hpinch = null; this.tap2 = null; if (this.stroking) { this.stroking = false; if (this.dirtyStroke) { this.dirtyStroke = false; this.onStroke(); } } this.hdrag = null; this.fdrag = null; }
       try { W.setPointerCapture(e.pointerId); } catch {}
       this.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (this.onPick && this.ptrs.size === 1) { this.picking = true; this.showLoupe(e); return; }
@@ -1622,7 +1683,7 @@ class Cutout {
       }
       if (this.ptrs.size > 2) return;
       if (this.tool === 'frame') { this.frameDown(e); return; }
-      if (this.tool === 'hanger') { if (this.htype === 'none') return; if (!this.hg) this.autoHanger(); this.push(); const p = this.toImg(e); this.hdrag = { sx: p.x, sy: p.y, g0: { ...this.hg }, moved: false }; return; }
+      if (this.tool === 'hanger') { if (this.htype === 'none' || DISPLAYS.includes(this.htype)) return; if (!this.hg) this.autoHanger(); this.push(); const p = this.toImg(e); this.hdrag = { sx: p.x, sy: p.y, g0: { ...this.hg }, moved: false }; return; }
       if ((this.tool === 'keep' || this.tool === 'remove') && !this.ensureLabels()) { toast('Wait a moment for the cut-out to finish.'); return; }
       const p = this.toImg(e); this.push(); this.stroking = true; this.dirtyStroke = false; this.sb = null; this.last = p; this.dab(p.x, p.y, this.brushPx());
     });
@@ -1634,7 +1695,7 @@ class Cutout {
     });
     const up = e => {
       if (!this.ptrs.has(e.pointerId)) return; this.ptrs.delete(e.pointerId);
-      if (this.pinch && this.ptrs.size < 2) this.pinch = null;
+      if (this.pinch && this.ptrs.size < 2) this.pinch = null; this.hpinch = null;
       if (this.ptrs.size === 0) {
         if (this.picking) {
           this.picking = false; const c = this.loupeColor, cb = this.onPick; this.hideLoupe();
@@ -1648,15 +1709,17 @@ class Cutout {
       }
     };
     W.addEventListener('pointerup', up); W.addEventListener('pointercancel', up); W.addEventListener('lostpointercapture', up);
-    W.addEventListener('touchend', e => { if (!e.touches.length && this.ptrs.size) { this.ptrs.clear(); this.pinch = null; } }, { passive: true });
+    W.addEventListener('touchend', e => { if (!e.touches.length && this.ptrs.size) { this.ptrs.clear(); this.pinch = null; this.hpinch = null; } }, { passive: true });
     W.addEventListener('wheel', e => {
       if (!this.src) return; e.preventDefault(); const r = W.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
       const s0 = this.z.s, s = clamp(s0 * Math.exp(-e.deltaY * 0.002), 1, 12), cx = (mx - this.z.x) / s0, cy = (my - this.z.y) / s0;
       this.z = { s, x: clamp(mx - cx * s, r.width - r.width * s, 0), y: clamp(my - cy * s, r.height - r.height * s, 0) }; this.applyZoom();
     }, { passive: false });
   }
-  startPinch() { const [a, b] = [...this.ptrs.values()], r = this.wrap.getBoundingClientRect(); this.pinch0 = { ...this.z }; this.pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, mx0: (a.x + b.x) / 2 - r.left, my0: (a.y + b.y) / 2 - r.top, s0: this.z.s, x0: this.z.x, y0: this.z.y }; }
+  startPinch() { const [a, b] = [...this.ptrs.values()], r = this.wrap.getBoundingClientRect();
+    if (this.tool === 'hanger' && this.hg) { this.hpinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, w0: this.hg.w }; this.pinch = { hanger: true }; return; } this.pinch0 = { ...this.z }; this.pinch = { d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, mx0: (a.x + b.x) / 2 - r.left, my0: (a.y + b.y) / 2 - r.top, s0: this.z.s, x0: this.z.x, y0: this.z.y }; }
   updatePinch() {
+    if (this.hpinch) { const [a, b] = [...this.ptrs.values()], H = this.hpinch, w = clamp(H.w0 * Math.hypot(a.x - b.x, a.y - b.y) / H.d0, this.w * 0.04, this.w * 1.5); this.hg = { ...this.hg, w }; this.placeHanger(); this.onHangerResize?.(); return; }
     const P = this.pinch, [a, b] = [...this.ptrs.values()], r = this.wrap.getBoundingClientRect();
     const mx = (a.x + b.x) / 2 - r.left, my = (a.y + b.y) / 2 - r.top, s = clamp(P.s0 * Math.hypot(a.x - b.x, a.y - b.y) / P.d0, 1, 12);
     const cx = (P.mx0 - P.x0) / P.s0, cy = (P.my0 - P.y0) / P.s0;
@@ -1695,7 +1758,7 @@ class Cutout {
     const oc = mk(w, h); oc.getContext('2d').putImageData(this.src, 0, 0); const orig = oc.toDataURL('image/jpeg', 0.76);
     const mc = mk(w, h), mi = new ImageData(w, h); for (let i = 0; i < w * h; i++) mi.data[i * 4 + 3] = m[i]; mc.getContext('2d').putImageData(mi, 0, 0);
     if (!this.hg) this.autoHanger(); const g = this.hg;
-    const hang = this.htype === 'none' ? { type: 'none' } : g ? { type: this.htype, cx: (g.cx - sx) / sw, ty: (g.ty - sy) / sh, w: g.w / sw } : null;
+    const hang = this.htype === 'none' || DISPLAYS.includes(this.htype) ? { type: this.htype } : g ? { type: this.htype, cx: (g.cx - sx) / sw, ty: (g.ty - sy) / sh, w: g.w / sw } : null;
     return { img, imgJ, imgM, orig, mask: mc.toDataURL('image/png'), aspect: ow / oh, color: this.dominant(), hang };
   }
 }
@@ -1830,7 +1893,7 @@ async function compressPhoto(blob, max = 1100, q = 0.76) {
   const im = await loadImage(await fileToDataURL(blob)), k = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
   const c = mk(Math.round(im.naturalWidth * k), Math.round(im.naturalHeight * k)); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); return encPhoto(c, q);
 }
-async function openAdd() { const f = await choosePhoto('Add a piece', "Any background works. Next you'll drag a frame around the piece and the app cuts it out."); if (f) openEditor({ file: f }); }
+async function openAdd() { const f = await choosePhoto('Add a piece', "Any background works; a darker one helps for white pieces. The app cuts the piece out for you."); if (f) openEditor({ file: f }); }
 document.addEventListener('paste', e => {
   const f = clipImage(e.clipboardData); if (!f) return;
   if (e.target.closest && e.target.closest('input, textarea, .paste-zone')) return;
@@ -1838,19 +1901,21 @@ document.addEventListener('paste', e => {
   if (!$('#sheets .sheet')) { e.preventDefault(); openEditor({ file: f }); }
 });
 const TOOL_HINT = {
+  displayCard: 'Earrings are shown on a little jewelry card. Nothing to place.',
+  displayCushion: 'Rings sit in a little velvet cushion. Nothing to place.',
   frame: 'Drag a snug frame around the piece, then tap Cut out. Drag the corners to adjust.',
   keep: 'Paint over parts that went missing. The cut-out updates when you lift your finger.',
   remove: 'Paint over leftover background, like the hanger or a door edge. Updates when you lift.',
   erase: 'Erases exactly where you paint. Pinch with two fingers to zoom.',
   restore: 'Paints back exactly where you paint. Removed areas show faintly.',
   hangerBack: 'The faint image is the front. Drag the hanger and use the size slider until the back lines up with it; then front and back match when you flip.',
-  hanger: 'Pick a hanger, then drag it to where the piece hangs from: across the straps or shoulders, clips on the waistband, or a hook through a bag handle.'
+  hanger: 'Pick a hanger, then drag it to where the piece hangs from: across the straps or shoulders, clips on the waistband, or a hook through a bag handle. Pinch with two fingers to resize it.'
 };
 async function openEditor({ item = null, file = null, pre = null, onSaved = null }) {
   if (item) item = await withEdits(item);
   const isNew = !item, v0 = item || pre || {};
   const defCat = S.rackCat !== 'all' && S.rackCat !== 'none' ? S.rackCat : (S.closetCat !== 'all' && S.closetCat !== 'none' ? S.closetCat : null);
-  const st = { subs: [...(v0.subs || [])], cats: item ? catsOf(item).filter(c => c !== 'none') : [(pre?.cat && S.cats.some(c => c.id === pre.cat) ? pre.cat : defCat)].filter(Boolean), get cat() { return this.cats[0] || null; }, seasons: new Set(v0.seasons || []), occ: new Set(v0.occasions || []), colorTouched: !!v0.color, mats: new Set(v0.materials || []), second: v0.gift ? 'gift' : v0.secondhand === true ? true : v0.secondhand === false ? false : null, hManual: !!v0.hangerManual,
+  const st = { hangerOk: !!item, subs: [...(v0.subs || [])], cats: item ? catsOf(item).filter(c => c !== 'none') : [(pre?.cat && S.cats.some(c => c.id === pre.cat) ? pre.cat : defCat)].filter(Boolean), get cat() { return this.cats[0] || null; }, seasons: new Set(v0.seasons || []), occ: new Set(v0.occasions || []), colorTouched: !!v0.color, mats: new Set(v0.materials || []), second: v0.gift ? 'gift' : v0.secondhand === true ? true : v0.secondhand === false ? false : null, hManual: !!v0.hangerManual,
     color2: v0.color2 || '', acq: v0.acq || '', pockets: v0.pockets ?? null, letgo: v0.letgo ? { ...v0.letgo } : null, care: new Set(v0.care || []), details: [...(v0.details || [])], side: 'front', states: { front: null, back: null } };
   let smoothPref = true; try { smoothPref = localStorage.getItem('closet-smooth') !== '0'; } catch {}
   st.smooth = item ? !!item.smooth : smoothPref;
@@ -1887,15 +1952,17 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       <div class="form">
         <label class="field"><span>Name</span><input type="text" id="f-name" placeholder="Long fine-knit cardigan" value="${esc(v0.name || '')}"></label>
         <div class="field"><span>Categories <span style="opacity:.7">(pick one or more, the first is the main one)</span></span><div class="chips wrap" id="f-cats"></div></div>
-        <div class="field"><span>Color</span><div class="color-row"><input type="color" id="f-color" value="${esc(v0.color || '#c9b49b')}" aria-label="Main color"><button class="chip" data-pickc="1">${ic('drop', 16)}Pick from photo</button><span class="muted" id="f-color-note">${esc(colorName(v0.color || ''))}</span></div><div class="swatches" data-sw="1"></div></div>
-        <div class="field" id="f-color2-field"></div>
+        <div class="field"><span>Colors</span><div class="color-pair">
+          <div class="cbox"><span class="cbox-l">Main color</span><input type="color" id="f-color" value="${esc(v0.color || '#c9b49b')}" aria-label="Main color"><span class="cbox-n" id="f-color-note">${esc(colorName(v0.color || ''))}</span><button class="chip sm-chip" data-pickc="1">${ic('drop', 14)}From photo</button></div>
+          <div class="cbox" id="f-color2-field"></div>
+        </div></div>
         <div class="field"><span>Material</span><div class="chips wrap" id="f-mat"></div></div>
         <div class="field"><span>Care to-do</span><div class="chips wrap" id="f-care">${CARE.map(c => `<button class="chip" data-care="${c}" aria-pressed="${(v0.care || []).includes(c)}">${ic('drop', 15)}${c}</button>`).join('')}</div></div>
         <div class="field"><span>Letting go</span><div class="chips wrap" id="f-letgo"><button class="chip" data-lg="sell" aria-pressed="${v0.letgo?.mode === 'sell'}">Sell</button><button class="chip" data-lg="donate" aria-pressed="${v0.letgo?.mode === 'donate'}">Donate</button></div><input type="text" id="f-ask" inputmode="decimal" placeholder="Asking price" value="${esc(v0.letgo?.price || '')}" style="margin-top:8px;${v0.letgo?.mode === 'sell' ? '' : 'display:none'}"></div>
         <div class="field"><span>Pockets</span><div class="chips wrap" id="f-pockets"><button class="chip" data-pk="yes" aria-pressed="${v0.pockets === true}">Has pockets</button><button class="chip" data-pk="no" aria-pressed="${v0.pockets === false}">No pockets</button></div></div>
         <div class="field"><span>Had it for</span><div class="chips wrap" id="f-acq">${[[0, 'Under a year'], [1, '1 year'], [2, '2 years'], [3, '3 years'], [4, '4 years'], [5, '5+ years']].map(([n, l]) => `<button class="chip sm-chip" data-acq="${n}" aria-pressed="${(() => { const y = yearsOwned(v0); return y != null && (n === 5 ? y >= 5 : y === n); })()}">${l}</button>`).join('')}<input type="number" id="f-acq-year" inputmode="numeric" placeholder="or since year" min="1950" max="${new Date().getFullYear()}" value="${/^\d{4}-\d{2}$/.test(v0.acq || '') ? v0.acq.slice(0, 4) : ''}" style="width:130px;height:34px"></div></div>
         <div class="field"><span>How you got it</span><div class="chips wrap" id="f-src"><button class="chip" data-src="new" aria-pressed="${st.second === false}">Bought new</button><button class="chip" data-src="second" aria-pressed="${st.second === true}">Secondhand</button><button class="chip" data-src="gift" aria-pressed="${st.second === 'gift'}">${ic('gift', 16)}Gift</button></div></div>
-        <div class="two"><label class="field"><span>Brand</span><input type="text" id="f-brand" value="${esc(v0.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="f-price" inputmode="decimal" value="${esc(v0.price || '')}" placeholder="$29.99"></label></div>
+        <div class="two"><label class="field"><span>Brand</span><input type="text" id="f-brand" value="${esc(v0.brand || '')}" placeholder="Optional"></label><label class="field"><span>Price</span><input type="text" id="f-price" inputmode="decimal" value="${esc(v0.price || '')}" placeholder="${LANG_NL() ? '€29,99' : '$29.99'}"></label></div>
         <div class="field"><span id="f-size-label">Size</span><input type="text" id="f-size" value="${esc(v0.size || '')}" placeholder="M, 38, W28 L32" style="max-width:220px"><div class="chips wrap" id="f-size-chips" style="margin-top:8px"></div></div>
         <div class="field"><span>Season</span><div class="chips wrap" id="f-season">${SEASONS.map(s => `<button class="chip" data-season="${s}" aria-pressed="${st.seasons.has(s)}">${s}</button>`).join('')}</div></div>
         <div class="field"><span>Occasion</span><div class="chips wrap" id="f-occ">${OCCASIONS.map(s => `<button class="chip" data-occ="${s}" aria-pressed="${st.occ.has(s)}">${s}</button>`).join('')}</div></div>
@@ -1912,15 +1979,16 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       + (typeof renderSizes === 'function' && $('#f-size', el) ? (setTimeout(renderSizes, 0), '') : '') + st.cats.map(id => S.cats.find(c => c.id === id)).filter(Boolean).map(c => `<div class="subrow"><span class="sublabel">${esc(c.name)}:</span>${(c.subs || []).map(x => `<button class="chip sm-chip" data-fsub="${x.id}" aria-pressed="${st.subs.includes(x.id)}">${esc(x.name)}</button>`).join('')}<button class="chip sm-chip" data-newsub="${c.id}">${ic('plus', 14)}Add</button></div>`).join('');
   };
   const renderMats = () => {
-    const list = [...allMaterials(), ...[...st.mats].filter(m => !allMaterials().includes(m))];
+    const base = allMaterials();
+    const list = [...base, ...[...st.mats].filter(m => !base.includes(m))];
     $('#f-mat', el).innerHTML = list.map(m => `<button class="chip" data-mat="${esc(m)}" aria-pressed="${st.mats.has(m)}">${esc(m)}</button>`).join('') + `<button class="chip" data-newmat>${ic('plus', 16)}Add material</button>`;
   };
   const renderColor2 = () => {
-    $('#f-color2-field', el).innerHTML = st.color2 ? `<span>Second color</span><div class="color-row"><input type="color" id="f-color2" value="${esc(st.color2)}" aria-label="Second color"><button class="chip" data-pickc="2">${ic('drop', 16)}Pick from photo</button><button class="chip" data-c2="remove">${ic('x', 15)}Remove</button><span class="muted" id="f-color2-name">${esc(colorName(st.color2))}</span></div><div class="swatches" data-sw="2"></div>` : `<div><button class="chip" data-c2="add">${ic('plus', 16)}Add a second color</button></div>`;
+    $('#f-color2-field', el).innerHTML = st.color2 ? `<span class="cbox-l">Second color</span><input type="color" id="f-color2" value="${esc(st.color2)}" aria-label="Second color"><span class="cbox-n" id="f-color2-name">${esc(colorName(st.color2))}</span><div class="row" style="gap:4px;justify-content:center"><button class="chip sm-chip" data-pickc="2">${ic('drop', 14)}From photo</button><button class="icon-btn" data-c2="remove" aria-label="Remove second color" style="width:30px;height:30px">${ic('x', 14)}</button></div>` : `<span class="cbox-l">Second color</span><button class="cbox-add" data-c2="add" aria-label="Add a second color">${ic('plus', 22)}</button><span class="cbox-n">Optional</span>`;
     const i2 = $('#f-color2', el); if (i2) i2.addEventListener('input', () => { st.color2 = i2.value; const nm = $('#f-color2-name', el); if (nm) nm.textContent = colorName(i2.value); });
     renderSwatches();
   };
-  const renderSwatches = () => { $$('.swatches', el).forEach(box => { box.innerHTML = favColors().map(c => `<button class="sw" data-swc="${c.hex}" data-which="${box.dataset.sw}" style="background:${c.hex}" aria-label="${esc(colorName(c.hex))}" title="${esc(colorName(c.hex))}"></button>`).join(''); }); };
+  const renderSwatches = () => { const jw = [st.cat, ...st.cats].some(c => JEWEL_RE.test(catName(c))) || st.subs.some(x => JEWEL_RE.test(subName(x))); $$('.swatches', el).forEach(box => { box.innerHTML = [...(jw ? [{ name: 'Gold', hex: '#D4AF37' }, { name: 'Silver', hex: '#C4C7CC' }, { name: 'Rose gold', hex: '#C98F84' }] : []), ...favColors()].map(c => `<button class="sw" data-swc="${c.hex}" data-which="${box.dataset.sw}" style="background:${c.hex}" aria-label="${esc(colorName(c.hex))}" title="${esc(colorName(c.hex))}"></button>`).join(''); }); };
   const renderDetails = () => {
     $('#f-details', el).innerHTML = st.details.map((d, i) => `<div class="dthumb"><img src="${d}" alt="Detail photo ${i + 1}"><button class="dx" data-ddel="${i}" aria-label="Remove detail photo ${i + 1}">${ic('x', 14)}</button><button class="dx dr" data-drot="${i}" aria-label="Rotate detail photo ${i + 1}">${ic('rotate', 13)}</button></div>`).join('') + `<button class="dadd" data-dadd aria-label="Add detail photo">${ic('plus', 22)}<span>Add</span></button>`;
   };
@@ -1936,11 +2004,12 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   $('#f-acq-year', el).addEventListener('input', e => { const y = +e.target.value; st.acq = y >= 1950 && y <= new Date().getFullYear() ? `${y}-${String(new Date().getMonth() + 1).padStart(2, '0')}` : ''; const yo = yearsOwned({ acq: st.acq }); $$('[data-acq]', el).forEach(b => { const n = +b.dataset.acq; b.setAttribute('aria-pressed', yo != null && (n === 5 ? yo >= 5 : yo === n)); }); });
   const sideHas = () => !!ed.src;
   const setTool = t => {
+    if (t === 'hanger' && st.side === 'front' && ed.src) st.hangerOk = true;
     ed.tool = t; $$('[data-tool]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.tool === t));
     $('#e-slider-row', el).hidden = t === 'frame' || !sideHas();
     $('#e-trim-row', el).hidden = !ed.cut || t === 'frame' || t === 'hanger' || !sideHas();
     $('#e-htype', el).hidden = t !== 'hanger'; $$('[data-htype]', el).forEach(b => b.setAttribute('aria-pressed', b.dataset.htype === ed.htype));
-    if (t === 'hanger' && ed.htype === 'none') $('#e-slider-row', el).hidden = true;
+    if (t === 'hanger' && (ed.htype === 'none' || DISPLAYS.includes(ed.htype))) $('#e-slider-row', el).hidden = true;
     if (t === 'hanger') { if (!ed.hg) ed.autoHanger(); const b = ed.gBox(); $('#e-slabel', el).textContent = ed.htype === 'hook' ? 'Hook size' : 'Hanger size'; slider.min = ed.htype === 'hook' ? 6 : 15; slider.max = ed.htype === 'hook' ? 40 : 140; slider.value = b && ed.hg ? Math.round(ed.hg.w / (b.x1 - b.x0 + 1) * 100) : 80; }
     else { $('#e-slabel', el).textContent = 'Brush size'; slider.min = 6; slider.max = 70; slider.value = ed.brush; }
     cutBtn.hidden = true;
@@ -1956,6 +2025,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   const detectColor = () => { if (!st.colorTouched && st.side === 'front') { const c = ed.dominant(); if (c) { $('#f-color', el).value = c; $('#f-color-note', el).textContent = colorName(c) + ', detected from the photo'; } } };
   const autoCut = async () => {
     let foundHanger = false; await work('Cutting out…', () => { ed.autoCut(); foundHanger = ed.detectHanger(); if (!foundHanger) ed.autoHanger(); });
+    if (st.side === 'front') st.hangerOk = foundHanger;
     showSide(); setTool('remove');
     hint.textContent = ed.fgFraction() < 0.01 ? "Couldn't find the piece. Try a photo with a bit more contrast." : (foundHanger ? 'Done, and I put the hanger where yours was. ' : 'Done. ') + 'Leftover background? Paint it with Remove. A missing strap? Paint it with Keep. Pinch to zoom in for detail.';
     detectColor();
@@ -1972,6 +2042,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   let trimPushed = false, trimRaf = 0;
   trim.addEventListener('input', () => { if (!ed.src || !ed.cut) return; if (!trimPushed) { ed.push(); trimPushed = true; } ed.trim = +trim.value; cancelAnimationFrame(trimRaf); trimRaf = requestAnimationFrame(() => ed.finish()); });
   trim.addEventListener('change', () => { trimPushed = false; });
+  ed.onHangerResize = () => { const b = ed.gBox(); if (b && ed.hg) slider.value = Math.round(ed.hg.w / (b.x1 - b.x0 + 1) * 100); };
   slider.addEventListener('input', () => {
     if (ed.tool === 'hanger') { const b = ed.gBox(); if (b && ed.hg) { ed.hg.w = (b.x1 - b.x0 + 1) * slider.value / 100; ed.placeHanger(); } }
     else ed.brush = +slider.value;
@@ -1990,7 +2061,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
   $('#e-pop', el).addEventListener('change', e => { st.pop = e.target.checked; try { localStorage.setItem('closet-pop', st.pop ? '1' : '0'); } catch {} syncFx(); ed.setPop(st.pop); });
   let adjRaf = 0;
   $$('[data-adj]', el).forEach(inp => inp.addEventListener('input', () => { st.adj[inp.dataset.adj] = +inp.value; syncFx(); cancelAnimationFrame(adjRaf); adjRaf = requestAnimationFrame(() => ed.setAdj(st.adj)); }));
-  ed.htype = item ? hangerType(item) : defaultHanger({ cat: st.cat }); ed.smooth = st.smooth; ed.pop = st.pop; ed.adj = { ...st.adj };
+  ed.htype = item ? hangerType(item) : defaultHanger({ cat: st.cat, cats: st.cats.slice(1), subs: st.subs }); ed.smooth = st.smooth; ed.pop = st.pop; ed.adj = { ...st.adj };
   const frontGuide = () => { // a faint copy of the front, placed by the back hanger, so the back can be matched in size and position
     let fr = null; try { if (st.side === 'front') { if (ed.src && ed.cut) fr = ed.result(); } else if (st.states.front) { const cur = ed.getState(); ed.setState(st.states.front); fr = ed.cut ? ed.result() : null; ed.setState(cur); } } catch {}
     if (!fr && FULL.get(item?._j || item?.imgJ) && item.hang?.cx != null) fr = { img: FULL.get(item._j || item.imgJ), hang: item.hang, aspect: item.aspect };
@@ -2013,8 +2084,8 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     if (t.dataset.e === 'rmback') { if (!(await confirmDanger('Remove the back photo?', 'The front stays as it is.', 'Remove'))) return; ed.clear(); st.states.back = null; showSide(); return; }
     if (t.dataset.pickc) {
       if (!ed.src) { toast('Add a photo first.'); return; }
-      const which = t.dataset.pickc; el.querySelector('.sheet-body').scrollTo({ top: 0, behavior: 'smooth' }); ed.wrap.classList.add('picking'); const prev = hint.textContent; hint.textContent = 'Touch the photo and slide to the exact color, then let go.';
-      ed.onPick = c => { hint.textContent = prev; if (which === '1') { $('#f-color', el).value = c; st.colorTouched = true; $('#f-color-note', el).textContent = colorName(c) + ', picked from the photo'; } else { st.color2 = c; renderColor2(); } toast('Color picked'); };
+      const which = t.dataset.pickc; el.querySelector('.sheet-body').scrollTo({ top: 0, behavior: 'smooth' }); ed.wrap.classList.add('picking'); const prev = hint.textContent; hint.textContent = which === '1' ? 'Main color: touch the photo, slide to the exact spot, then let go.' : 'Second color: touch the photo, slide to the exact spot, then let go.';
+      ed.onPick = c => { hint.textContent = prev; if (which === '1') { $('#f-color', el).value = c; st.colorTouched = true; $('#f-color-note', el).textContent = colorName(c); } else { st.color2 = c; renderColor2(); } const box = which === '1' ? $('#f-color', el).closest('.cbox') : $('#f-color2-field', el); box.classList.add('just'); setTimeout(() => box.classList.remove('just'), 900); setTimeout(() => box.scrollIntoView({ block: 'center', behavior: 'smooth' }), 150); };
       return;
     }
     if (t.dataset.acq != null) { const n = +t.dataset.acq, on = t.getAttribute('aria-pressed') === 'true'; st.acq = on ? '' : acqFor(n); $$('[data-acq]', el).forEach(b => b.setAttribute('aria-pressed', !on && b === t)); $('#f-acq-year', el).value = on ? '' : st.acq.slice(0, 4); return; }
@@ -2028,9 +2099,9 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
     if (t.dataset.drot != null) { const i = +t.dataset.drot; try { st.details[i] = await rotateDataURL(st.details[i]); renderDetails(); } catch {} return; }
     if (t.dataset.ddel != null) { st.details.splice(+t.dataset.ddel, 1); renderDetails(); return; }
     if (t.dataset.size) { $('#f-size', el).value = t.dataset.size; renderSizes(); return; }
-    if (t.dataset.fsub) { const id = t.dataset.fsub; st.subs = st.subs.includes(id) ? st.subs.filter(x => x !== id) : [...st.subs, id]; renderCats(); return; }
+    if (t.dataset.fsub) { const id = t.dataset.fsub; st.subs = st.subs.includes(id) ? st.subs.filter(x => x !== id) : [...st.subs, id]; renderCats(); if (!st.hManual) { const h = defaultHanger({ cat: st.cat, cats: st.cats.slice(1), subs: st.subs }); if (h !== ed.htype) { ed.htype = h; ed.hg = null; ed.autoHanger(); if (ed.tool === 'hanger') setTool('hanger'); } } renderMats(); renderSwatches(); return; }
     if (t.dataset.newsub) { const c = S.cats.find(x => x.id === t.dataset.newsub); const name = c && await askText(`New type of ${c.name.toLowerCase()}`, 'Name', 'e.g. Turtleneck'); if (name) { const x = { id: uid(), name: name.slice(0, 40) }; (c.subs = c.subs || []).push(x); await saveCats(); st.subs.push(x.id); renderCats(); renderAll(); } return; }
-    if (t.dataset.fcat) { const id = t.dataset.fcat; st.cats = st.cats.includes(id) ? st.cats.filter(c => c !== id) : [...st.cats, id]; if (!st.cats.includes(id)) { const own = (S.cats.find(c => c.id === id)?.subs || []).map(x => x.id); st.subs = st.subs.filter(x => !own.includes(x)); } renderCats(); if (!st.hManual) { const ht = defaultHanger({ cat: st.cat }); if (ht !== ed.htype) { ed.htype = ht; ed.hg = null; if (ed.cut) ed.autoHanger(); if (ed.tool === 'hanger') setTool('hanger'); } } return; }
+    if (t.dataset.fcat) { const id = t.dataset.fcat; st.cats = st.cats.includes(id) ? st.cats.filter(c => c !== id) : [...st.cats, id]; if (!st.cats.includes(id)) { const own = (S.cats.find(c => c.id === id)?.subs || []).map(x => x.id); st.subs = st.subs.filter(x => !own.includes(x)); } renderCats(); if (!st.hManual) { const ht = defaultHanger({ cat: st.cat, cats: st.cats.slice(1), subs: st.subs }); if (ht !== ed.htype) { ed.htype = ht; ed.hg = null; if (ed.cut) ed.autoHanger(); if (ed.tool === 'hanger') setTool('hanger'); } } return; }
     if (t.dataset.htype) { st.hManual = true; ed.htype = t.dataset.htype; ed.hg = null; ed.autoHanger(); setTool('hanger'); return; }
     if (t.dataset.mat) { const m = t.dataset.mat; st.mats.has(m) ? st.mats.delete(m) : st.mats.add(m); t.setAttribute('aria-pressed', st.mats.has(m)); return; }
     if (t.dataset.src) { const map = { new: false, second: true, gift: 'gift' }, v = map[t.dataset.src]; st.second = st.second === v ? null : v; $$('[data-src]', el).forEach(b => b.setAttribute('aria-pressed', st.second === map[b.dataset.src])); return; }
@@ -2063,6 +2134,13 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       close(); return;
     }
     if (t.dataset.e === 'save') {
+      if (!st.hangerOk && ed.htype !== 'none' && !DISPLAYS.includes(ed.htype) && (st.side === 'front' ? ed.src && ed.cut : st.states.front)) {
+        const what = { hanger: 'hanger', clip: 'clips', hook: 'hook', chain: 'chain' }[ed.htype] || 'hanger';
+        const v = await choose('Hang it up?', 'Drag it to where the piece hangs from and pinch to resize. Or skip, and it shows without a hanger.', [{ v: 'place', label: `Place the ${what}`, primary: true }, { v: 'skip', label: 'No hanger' }]);
+        if (!v) return;
+        if (v === 'place') { if (st.side !== 'front') switchSide('front'); setTool('hanger'); $('.canvas-wrap', el).scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+        st.hManual = true; ed.htype = 'none'; ed.hg = null; ed.placeHanger(); st.hangerOk = true;
+      }
       t.disabled = true; busy.textContent = 'Saving…'; busy.hidden = false; await new Promise(r => setTimeout(r, 30));
       let front, back; try { front = resultOf('front'); back = resultOf('back'); } catch (err) { console.error(err); }
       busy.hidden = true; t.disabled = false;
@@ -2070,7 +2148,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       if (front === 'uncut') { if (st.side !== 'front') switchSide('front'); toast('Wait a moment for the cut-out to finish.'); return; }
       if (back === 'uncut') { if (st.side !== 'back') switchSide('back'); toast('Wait a moment for the back to finish cutting out.'); return; }
       const now = Date.now();
-      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), subs: st.subs.filter(id => st.cats.some(c => (S.cats.find(x => x.id === c)?.subs || []).some(x => x.id === id))), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: '', imgJ: front.imgJ, imgM: front.imgM, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 11, imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, _j: undefined, _m: undefined, _md: undefined, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.fx.front.pop, adj: { ...st.fx.front.adj }, acq: st.acq || '', pockets: st.pockets, care: CARE.filter(c => st.care.has(c)), letgo: st.letgo ? { mode: st.letgo.mode, price: st.letgo.mode === 'sell' ? $('#f-ask', el).value.trim() : '' } : null, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
+      const it = { ...(item || {}), id: item?.id || uid(), created: item?.created || now, updated: now, name: $('#f-name', el).value.trim(), cat: st.cat, cats: st.cats.slice(1), subs: st.subs.filter(id => st.cats.some(c => (S.cats.find(x => x.id === c)?.subs || []).some(x => x.id === id))), color: $('#f-color', el).value, color2: st.color2 || '', brand: $('#f-brand', el).value.trim(), price: $('#f-price', el).value.trim(), size: $('#f-size', el).value.trim(), seasons: SEASONS.filter(s => st.seasons.has(s)), occasions: OCCASIONS.filter(s => st.occ.has(s)), notes: $('#f-notes', el).value.trim(), img: '', imgJ: front.imgJ, imgM: front.imgM, orig: front.orig, mask: front.mask, aspect: front.aspect, v: 11, focus: undefined, imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, _j: undefined, _m: undefined, _md: undefined, hang: front.hang, hanger: ed.htype, hangerManual: st.hManual, smooth: st.smooth, pop: st.fx.front.pop, adj: { ...st.fx.front.adj }, acq: st.acq || '', pockets: st.pockets, care: CARE.filter(c => st.care.has(c)), letgo: st.letgo ? { mode: st.letgo.mode, price: st.letgo.mode === 'sell' ? $('#f-ask', el).value.trim() : '' } : null, materials: [...allMaterials().filter(m => st.mats.has(m)), ...[...st.mats].filter(m => !allMaterials().includes(m))], secondhand: st.second === 'gift' ? null : st.second, gift: st.second === 'gift', details: st.details,
         back: back ? { img: '', imgMd: undefined, bJ: undefined, bM: undefined, bMd: undefined, imgJ: back.imgJ, imgM: back.imgM, orig: back.orig, mask: back.mask, aspect: back.aspect, hang: back.hang, fx: st.link ? null : { adj: { ...st.fx.back.adj }, pop: st.fx.back.pop } } : null };
       if (!it.hang) { try { it.hang = await hangOf(front.img); } catch {} }
       if (!keepOrig()) { it.orig = undefined; it.mask = undefined; if (it.back) { it.back.orig = undefined; it.back.mask = undefined; } }
@@ -2079,7 +2157,7 @@ async function openEditor({ item = null, file = null, pre = null, onSaved = null
       const lit = lighten(it).light; Object.assign(lit, { _j: it._j, _m: it._m }); if (lit.back && it.back) Object.assign(lit.back, { _j: it.back._j, _m: it.back._m });
       const idx = S.items.findIndex(x => x.id === it.id); if (idx >= 0) S.items[idx] = lit; else S.items.push(lit); sortItems();
       if (isNew) { S.rackIndex = Math.max(0, rackItems().findIndex(x => x.id === it.id)); if (S.items.length === 1) navigator.storage?.persist?.().catch(() => {}); }
-      pasteTarget = null; closeAllSheets(); renderAll(); ensureStickers(); toast(isNew ? 'Added to your closet' : 'Changes saved'); if (onSaved) onSaved(it);
+      pasteTarget = null; closeAllSheets(); renderAll(); ensureStickers(); setTimeout(ensureFocus, 300); toast(isNew ? 'Added to your closet' : 'Changes saved'); if (onSaved) onSaved(it);
     }
   });
 
@@ -2175,9 +2253,10 @@ function openLightbox(list, i) {
 /* ---------- dress up: build an outfit layer by layer ---------- */
 const DRESS_RE = /dress|jurk|jumpsuit|playsuit/i;
 const DRESS_STAGES = [
-  { key: 'dress', label: 'Dress', hint: 'Start with a dress, or None to build with separates', re: DRESS_RE, none: true },
-  { key: 'shirt', label: 'Shirt', hint: 'Swipe to pick your base layer, or None', none: true, re: /t-?shirt|shirt|tee|top|blouse|tank|polo|body/i },
-  { key: 'sweater', label: 'Sweater', hint: 'Add a layer on top, or keep it bare', re: /sweat|sweater|jumper|knit|trui|cardigan|hoodie|vest|blazer|jacket|jas|coat|outer/i, none: true },
+  { key: 'shirt', label: 'Top', hint: 'Pick your base top, or None', none: true, re: /t-?shirt|shirt|tee|top|blouse|tank|polo|body|turtleneck|coltrui|col\b|longsleeve/i },
+  { key: 'dress', label: 'Dress', hint: 'Or wear a dress instead of a top and bottom', re: DRESS_RE, none: true },
+  { key: 'sweater', label: 'Sweater', hint: 'A sweater over it, or None', re: /sweat|sweater|jumper|knit|trui|hoodie|pullover|crewneck/i, none: true },
+  { key: 'cardigan', label: 'Cardigan', hint: 'An open layer on top: cardigan, blazer, jacket, or None', re: /cardigan|\bvest\b|blazer|jacket|\bjas\b|jassen|\bjack\b|coat|outer|kimono|bolero|bodywarmer|overshirt|gilet/i, none: true },
   { key: 'bottom', label: 'Bottom', hint: 'Swipe through your bottoms', re: /bottom|pant|trouser|jean|short|skirt|rok|broek|legging/i, none: true },
   { key: 'shoes', label: 'Shoes', hint: 'Finish the base with shoes', re: /shoe|sneaker|boot|heel|sandal|slipper|loafer|schoen/i, none: true },
   { key: 'extras', label: 'Extras', hint: 'Tap to add as many extras as you like', re: /bag|tas|purse|tote|clutch|access|jewel|sieraad|necklace|earring|ring|bracelet|hat|cap|scarf|shawl|sjaal|belt|riem|sunglass|bril|watch|horloge|sock/i, multi: true }
@@ -2186,22 +2265,29 @@ const SI = Object.fromEntries(DRESS_STAGES.map((st, i) => [st.key, i]));
 const itemText = it => [it.name, ...catsOf(it).map(catName), ...subsOf(it).map(subName)].join(' ');
 const isDress = it => !!it && DRESS_RE.test(itemText(it));
 function dressPools() {
-  const layer = it => DRESS_STAGES[SI.sweater].re.test(itemText(it)) && !/\bt-?shirt|\btee\b|blouse|\btank\b|\bpolo\b/i.test(it.name || '');
+  const baseName = it => /\bt-?shirt|\btee\b|blouse|\btank\b|\bpolo\b|turtleneck|coltrui|longsleeve/i.test(it.name || '') || subsOf(it).some(x => /t-?shirt|blouse|tank|topje|polo|turtleneck|coltrui/i.test(subName(x)));
+  const isSweater = it => DRESS_STAGES[SI.sweater].re.test(itemText(it)) && !baseName(it), isCardi = it => DRESS_STAGES[SI.cardigan].re.test(itemText(it)) && !baseName(it);
   const pools = DRESS_STAGES.map(st => S.items.filter(it => {
     if (!st.re.test(itemText(it))) return false;
-    if (st.key === 'shirt') return !isDress(it) && !layer(it);
+    if (st.key === 'shirt') return !isDress(it) && !isSweater(it) && !isCardi(it);
+    if (st.key === 'sweater') return !isDress(it) && !isCardi(it);
     if (st.key !== 'dress' && isDress(it)) return false;
     return true;
   }));
   const used = new Set(pools.flat().map(i => i.id)); S.items.forEach(it => { if (!used.has(it.id)) pools[SI.shirt].push(it); });
-  const blackTee = it => /t-?shirt|tee/i.test(itemText(it)) && colorFamily(it.color) === 'Black';
-  pools[SI.shirt].sort((x, y) => (blackTee(y) - blackTee(x)) || ((colorFamily(y.color) === 'Black') - (colorFamily(x.color) === 'Black')));
   return pools;
 }
 function openMix() {
   if (!S.items.length) { toast('Add a few pieces first.'); return; }
-  const pools = dressPools(), pick = DRESS_STAGES.map((st, i) => st.multi ? new Set() : (st.key === 'dress' || st.key === 'sweater' ? -1 : (pools[i].length ? 0 : -1)));
-  let stage = pools[SI.dress].length ? 0 : SI.shirt;
+  const pools = dressPools(), pick = DRESS_STAGES.map(st => st.multi ? new Set() : -1);
+  const rnd = n => Math.floor(Math.random() * n);
+  const shuffleAll = () => { // a random outfit: always a top, bottom and shoes when you have them; layers now and then
+    DRESS_STAGES.forEach((st, i) => { if (st.multi) { pick[i] = new Set(); return; } const n = pools[i].length; pick[i] = !n ? -1 : (st.key === 'dress' ? -1 : st.key === 'sweater' || st.key === 'cardigan' ? (Math.random() < 0.4 ? rnd(n) : -1) : rnd(n)); });
+    if (!pools[SI.shirt].length && pools[SI.dress].length) pick[SI.dress] = rnd(pools[SI.dress].length);
+    if (pick[SI.sweater] >= 0 && pick[SI.cardigan] >= 0 && Math.random() < 0.5) pick[SI.cardigan] = -1;
+  };
+  shuffleAll();
+  let stage = 0;
   const vh0 = window.innerHeight, H = Math.round(Math.max(300, Math.min((Math.min(window.innerWidth - 36, 360)) * 1.28, vh0 - 360))), W = Math.round(H / 1.28);
   const el = openSheet(`<div class="sheet-inner" role="dialog" aria-modal="true" aria-label="Dress up">
     <header class="sheet-head"><button class="btn ghost sm" data-m="cancel">Cancel</button><h2>Dress up</h2><button class="btn primary sm" data-m="save">Save</button></header>
@@ -2213,7 +2299,7 @@ function openMix() {
       <p class="dress-hint"></p>
       <div class="dress-strip"></div>
       <div class="btn-row dress-nav"><button class="btn" data-m="back">${ic('back', 18)}Back</button><button class="btn primary" data-m="forward">Next</button></div>
-      <div class="row" style="justify-content:center;gap:8px;margin-top:4px"><button class="btn sm" data-m="worn">${ic('check', 18)}<span>Wore this today</span></button><button class="btn ghost sm" data-m="board">${ic('layers', 18)}Fine-tune on a board</button></div>
+      <div class="row" style="justify-content:center;gap:8px;margin-top:4px;flex-wrap:wrap"><button class="btn sm" data-m="shuffle">${ic('shuffle', 18)}Shuffle</button><button class="btn sm" data-m="worn">${ic('check', 18)}<span>Wore this today</span></button><button class="btn ghost sm" data-m="board">${ic('layers', 18)}Fine-tune on a board</button></div>
     </div></div>`, 'full');
   const canvas = $('.dress-canvas', el), layers = $('.dress-layers', el);
   const cur = i => (DRESS_STAGES[i].multi ? null : (pick[i] >= 0 ? pools[i][pick[i]] : null));
@@ -2222,18 +2308,20 @@ function openMix() {
   let saved = { shirt: pick[SI.shirt], bottom: pick[SI.bottom] };
   const dressChanged = () => { if (hasDress()) { if (pick[SI.shirt] >= 0 || pick[SI.bottom] >= 0) saved = { shirt: pick[SI.shirt], bottom: pick[SI.bottom] }; pick[SI.shirt] = -1; pick[SI.bottom] = -1; } else { if (pick[SI.shirt] < 0) pick[SI.shirt] = saved.shirt; if (pick[SI.bottom] < 0) pick[SI.bottom] = saved.bottom; } };
   const zones = () => {
-    const dress = cur(SI.dress), shirt = cur(SI.shirt), sweater = cur(SI.sweater), z = [];
-    if (dress) z.push({ st: SI.dress, it: dress, box: sweater ? [0.1, 0.05, 0.46, 0.74] : [0.24, 0.03, 0.52, 0.78], z: 2 });
-    else {
-      if (cur(SI.bottom)) z.push({ st: SI.bottom, it: cur(SI.bottom), box: [0.27, 0.37, 0.46, 0.46], z: 1 });
-      if (shirt) z.push({ st: SI.shirt, it: shirt, box: sweater ? [0.06, 0.06, 0.48, 0.34] : [0.22, 0.03, 0.56, 0.40], z: 2 });
-    }
-    if (sweater) z.push({ st: SI.sweater, it: sweater, box: (dress || shirt) ? [0.4, 0.02, 0.56, 0.42] : [0.17, 0.02, 0.66, 0.43], z: 3 });
-    if (cur(SI.shoes)) z.push({ st: SI.shoes, it: cur(SI.shoes), box: [0.3, 0.82, 0.4, 0.16], z: 4 });
+    const dress = cur(SI.dress), shirt = cur(SI.shirt), sweater = cur(SI.sweater), cardi = cur(SI.cardigan), z = [];
+    const base = dress || shirt, layers = [sweater && [SI.sweater, sweater], cardi && [SI.cardigan, cardi]].filter(Boolean), n = (base ? 1 : 0) + layers.length;
+    if (!dress && cur(SI.bottom)) z.push({ st: SI.bottom, it: cur(SI.bottom), box: [0.27, 0.37, 0.46, 0.46], z: 1 });
+    const topBoxes = n === 1 ? [[0.2, 0.02, 0.6, 0.42]] : n === 2 ? [[0.06, 0.06, 0.48, 0.34], [0.4, 0.02, 0.56, 0.42]] : [[0.02, 0.09, 0.4, 0.3], [0.3, 0.04, 0.42, 0.36], [0.56, 0.02, 0.42, 0.4]];
+    let k = 0;
+    if (dress) z.push({ st: SI.dress, it: dress, box: layers.length ? [0.08, 0.05, 0.46, 0.76] : [0.24, 0.03, 0.52, 0.78], z: 2 });
+    else if (shirt) z.push({ st: SI.shirt, it: shirt, box: topBoxes[k++], z: 2 });
+    if (dress) { layers.forEach(([si, it], j) => z.push({ st: si, it, box: layers.length === 1 ? [0.42, 0.02, 0.54, 0.42] : [[0.4, 0.02, 0.5, 0.36], [0.5, 0.3, 0.48, 0.38]][j], z: 3 + j })); }
+    else layers.forEach(([si, it], j) => z.push({ st: si, it, box: topBoxes[k++] || topBoxes[topBoxes.length - 1], z: 3 + j }));
+    if (cur(SI.shoes)) z.push({ st: SI.shoes, it: cur(SI.shoes), box: [0.3, 0.82, 0.4, 0.16], z: 6 });
     const slots = [[0.79, 0.44, 0.2, 0.24], [0.01, 0.30, 0.19, 0.18], [0.81, 0.06, 0.18, 0.16], [0.01, 0.06, 0.18, 0.16], [0.01, 0.56, 0.19, 0.2], [0.8, 0.72, 0.19, 0.18]];
     const isBag = it => /bag|tas|purse|tote|clutch/i.test(itemText(it));
     const ex = [...pick[SI.extras]].map(id => byId(id)).filter(Boolean).sort((x, y) => isBag(y) - isBag(x));
-    ex.slice(0, slots.length).forEach((it, k) => z.push({ st: SI.extras, it, box: slots[k], z: 5 + k }));
+    ex.slice(0, slots.length).forEach((it, k2) => z.push({ st: SI.extras, it, box: slots[k2], z: 7 + k2 }));
     return z;
   };
   const fit = (it, box) => { const [bx, by, bw, bh] = box, a = it.aspect || 0.8; let w = bw * W, h = w / a; if (h > bh * H) { h = bh * H; w = h * a; } return { x: bx * W + (bw * W - w) / 2, y: by * H + (bh * H - h) / 2, w, h }; };
@@ -2244,8 +2332,8 @@ function openMix() {
     $('.dress-hint', el).textContent = skipped(stage) ? `Skipped, the dress covers this. Pick one anyway to swap the dress for separates.` : (pools[stage].length ? st.hint : `No ${st.label.toLowerCase()} pieces in your closet yet.`);
     $$('.dress-arrow', el).forEach(b => { b.hidden = !!st.multi || (pools[stage].length + (st.none ? 1 : 0)) < 2; });
     $$('[data-step]', el).forEach((b, i) => { b.setAttribute('aria-selected', i === stage); b.classList.toggle('done', i < stage); b.classList.toggle('skip', skipped(i)); });
-    const strip = st.multi ? pools[SI.extras].map(it => `<button class="dthumb2${pick[SI.extras].has(it.id) ? ' on' : ''}" data-pick="${it.id}" aria-label="${esc(itemName(it))}"><img ${cutAttrs(it)} alt="" loading="lazy"></button>`).join('')
-      : (st.none ? `<button class="dthumb2 none${pick[stage] < 0 ? ' on' : ''}" data-pick="-1">None</button>` : '') + pools[stage].map((it, k) => `<button class="dthumb2${pick[stage] === k ? ' on' : ''}" data-pick="${k}" aria-label="${esc(itemName(it))}"><img ${cutAttrs(it)} alt="" loading="lazy"></button>`).join('');
+    const strip = st.multi ? pools[SI.extras].map(it => `<button class="dthumb2${pick[SI.extras].has(it.id) ? ' on' : ''}" data-pick="${it.id}" aria-label="${esc(itemName(it))}">${thumbHTML(it)}</button>`).join('')
+      : (st.none ? `<button class="dthumb2 none${pick[stage] < 0 ? ' on' : ''}" data-pick="-1">None</button>` : '') + pools[stage].map((it, k) => `<button class="dthumb2${pick[stage] === k ? ' on' : ''}" data-pick="${k}" aria-label="${esc(itemName(it))}">${thumbHTML(it)}</button>`).join('');
     $('.dress-strip', el).innerHTML = strip;
     const on = $('.dress-strip .on', el); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
     $('[data-m="back"]', el).disabled = stage === 0;
@@ -2271,6 +2359,7 @@ function openMix() {
     if (pb) { const st = DRESS_STAGES[stage]; if (st.multi) { const id = pb.dataset.pick; pick[SI.extras].has(id) ? pick[SI.extras].delete(id) : pick[SI.extras].add(id); draw(0); } else { const v = +pb.dataset.pick, dir = v > pick[stage] ? 1 : -1; pick[stage] = v; afterPick(); draw(dir); } return; }
     const b = e.target.closest('[data-m]'); if (!b) return; const a = b.dataset.m;
     if (a === 'cancel') closeSheet(el);
+    if (a === 'shuffle') { shuffleAll(); draw(1); const wb = $('[data-m="worn"]', el); if (wb) { wb.classList.remove('primary'); wb.lastChild.textContent = 'Wore this today'; } return; }
     if (a === 'prev') step(-1); if (a === 'next') step(1);
     if (a === 'back') goStage(nextStage(stage, -1));
     if (a === 'forward' && stage < DRESS_STAGES.length - 1) { goStage(nextStage(stage, 1)); return; }
@@ -2347,7 +2436,7 @@ function openBoard(outfit = null, seedId = null) {
   const renderTray = () => {
     $('#tray-chips', el).innerHTML = chipRow(trayCat, 'tray', false);
     const list = S.items.filter(i => trayCat === 'all' || inCat(i, trayCat)); const on = new Set(o.pieces.map(p => p.itemId));
-    tray.innerHTML = list.length ? list.map(i => `<button class="${on.has(i.id) ? 'on' : ''}" data-add="${i.id}" aria-label="${esc(itemName(i))}${on.has(i.id) ? ', on board' : ''}"><img ${cutAttrs(i)} alt="" loading="lazy"></button>`).join('') : '<p class="muted tray-empty">No pieces in this category yet.</p>';
+    tray.innerHTML = list.length ? list.map(i => `<button class="${on.has(i.id) ? 'on' : ''}" data-add="${i.id}" aria-label="${esc(itemName(i))}${on.has(i.id) ? ', on board' : ''}">${thumbHTML(i)}</button>`).join('') : '<p class="muted tray-empty">No pieces in this category yet.</p>';
   };
   const styleOf = p => { const n = board.querySelector(`[data-k="${p.k}"]`); if (n) { n.style.left = (p.x * 100) + '%'; n.style.top = (p.y * 100) + '%'; n.style.width = (p.w * 100) + '%'; n.style.zIndex = p.z; } };
   const cur = () => o.pieces.find(p => p.k === sel);
@@ -2450,7 +2539,7 @@ function donutCard(id, title, entries, { ramp, colors, note = 'pieces', scope = 
   const top = entries.find(e => e.label !== 'Not set'), open = S.openChart === id;
   if (!open) return `<section class="panel chart" data-chart="${id}" role="button" tabindex="0" aria-expanded="false" aria-label="${esc(title)}, tap for details"><h2>${esc(title)}</h2>${donutSVG(entries, total, note)}<p class="cap">${top ? `Mostly ${esc(top.label)}, ${Math.round(top.count / total * 100)}%` : ''}</p></section>`;
   const rows = entries.map(e => {
-    const thumbs = e.items.slice(0, 8).map(it => `<button data-thumb="${it.id}" aria-label="${esc(itemName(it))}"><img ${cutAttrs(it)} alt="" loading="lazy"></button>`).join('') + (e.items.length > 8 ? `<span class="more">+${e.items.length - 8}</span>` : '');
+    const thumbs = e.items.slice(0, 8).map(it => `<button data-thumb="${it.id}" aria-label="${esc(itemName(it))}">${thumbHTML(it)}</button>`).join('') + (e.items.length > 8 ? `<span class="more">+${e.items.length - 8}</span>` : '');
     return `<li><button class="row" data-iq="${esc(e.label)}" data-iscope="${scope}" ${e.label === 'Not set' || e.label === 'Other' ? 'disabled' : ''}><span class="sw" style="background:${e._c}"></span><span class="lb">${esc(e.label)}</span><span class="ct">${e.count}</span><span class="pc">${Math.round(e.count / total * 100)}%</span></button><div class="slice-items">${thumbs}</div></li>`;
   }).join('');
   return `<section class="panel chart open" data-chart="${id}" aria-expanded="true"><div class="chart-head"><h2>${esc(title)}</h2><button class="icon-btn" data-chart-close aria-label="Close ${esc(title)}">${ic('x', 20)}</button></div><div class="chart-body">${donutSVG(entries, total, note)}<p class="muted chart-note">Tap a name to see those pieces in your closet, or a photo to open it.</p></div><ul class="legend">${rows}</ul></section>`;
@@ -2503,13 +2592,13 @@ function renderInsights() {
     + `<div class="charts">`
     + donutCard('cat', 'Category', cats, { colors: e => { const c = S.cats.find(x => x.name === e.label); return c ? catColor(c.id) : '#D6D6D6'; }, ramp: PASTEL, scope: 'cat' })
     + donutCard('color', 'Color', colors, { colors: e => avgColor(e.items) || FAMILY[e.label], ramp: PASTEL })
-    + donutCard('season', 'Season', seasons, { colors: e => SEASON_COL[e.label], ramp: PASTEL, note: 'tags' })
-    + donutCard('bought', 'How you got it', bought.sort((x, y) => (x.label === 'Not set') - (y.label === 'Not set') || y.count - x.count), { colors: e => ({ Secondhand: '#8FD0CF', 'Bought new': '#C3A9EC', Gift: '#F4A9B8' })[e.label], ramp: PASTEL })
+    + donutCard('season', 'Season', seasons, { colors: e => getSeason() ? null : SEASON_COL[e.label], ramp: PASTEL, note: 'tags' })
+    + donutCard('bought', 'How you got it', bought.sort((x, y) => (x.label === 'Not set') - (y.label === 'Not set') || y.count - x.count), { colors: e => getSeason() ? null : ({ Secondhand: '#8FD0CF', 'Bought new': '#C3A9EC', Gift: '#F4A9B8' })[e.label], ramp: PASTEL })
     + donutCard('owned', 'How long you have had it', owned.sort((x, y) => ['New (under a year)', '1–2 years', '3–4 years', '5+ years', 'Not set'].indexOf(x.label) - ['New (under a year)', '1–2 years', '3–4 years', '5+ years', 'Not set'].indexOf(y.label)), { ramp: PASTEL })
     + donutCard('brand', 'Brand', brands, { ramp: RAMPS.brand })
     + donutCard('mat', 'Material', mats, { ramp: RAMPS.mat, note: 'tags' })
     + donutCard('occ', 'Occasion', occ, { ramp: RAMPS.occ, note: 'tags' })
-    + donutCard('pockets', 'Pockets', pockets, { colors: e => e.label === 'Pockets' ? '#A8D8A0' : '#F4A9B8', ramp: PASTEL })
+    + donutCard('pockets', 'Pockets', pockets, { colors: e => getSeason() ? null : (e.label === 'Pockets' ? '#A8D8A0' : '#F4A9B8'), ramp: PASTEL })
     + `</div>`;
 }
 document.addEventListener('click', e => {
@@ -2572,11 +2661,11 @@ async function importBackup(file) {
     color: /^#[0-9a-f]{6}$/i.test(i.color || '') ? i.color : '', brand: str(i.brand), price: str(i.price), size: str(i.size).slice(0, 40), notes: str(i.notes),
     seasons: Array.isArray(i.seasons) ? i.seasons.filter(s => SEASONS.includes(s)) : [], occasions: Array.isArray(i.occasions) ? i.occasions.filter(s => OCCASIONS.includes(s)) : [],
     img: IMG_RE.test(i.img || '') ? i.img : '', imgJ: IMG_RE.test(i.imgJ || '') ? i.imgJ : undefined, imgA: IMG_RE.test(i.imgA || '') ? i.imgA : undefined, imgM: IMG_RE.test(i.imgM || '') ? i.imgM : undefined, orig: IMG_RE.test(i.orig || '') ? i.orig : undefined, mask: IMG_RE.test(i.mask || '') ? i.mask : undefined, aspect: +i.aspect || 0.8,
-    hang: (i.hang && [i.hang.cx, i.hang.ty, i.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.hang.type) ? i.hang.type : 'hanger', cx: clamp(i.hang.cx, -1, 2), ty: clamp(i.hang.ty, -1, 2), w: clamp(i.hang.w, 0.05, 3) } : undefined,
-    hanger: ['hanger', 'clip', 'hook', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: !!i.smooth, pop: !!i.pop, adj: i.adj && typeof i.adj === 'object' ? Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+i.adj[k] || 0, -50, 50)])) : undefined,
+    hang: (i.hang && [i.hang.cx, i.hang.ty, i.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook', 'chain'].includes(i.hang.type) ? i.hang.type : 'hanger', cx: clamp(i.hang.cx, -1, 2), ty: clamp(i.hang.ty, -1, 2), w: clamp(i.hang.w, 0.05, 3) } : undefined,
+    hanger: ['hanger', 'clip', 'hook', 'chain', 'card', 'cushion', 'none'].includes(i.hanger) ? i.hanger : undefined, hangerManual: !!i.hangerManual, smooth: !!i.smooth, pop: !!i.pop, adj: i.adj && typeof i.adj === 'object' ? Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+i.adj[k] || 0, -50, 50)])) : undefined,
     materials: Array.isArray(i.materials) ? i.materials.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim().slice(0, 40)) : [], secondhand: typeof i.secondhand === 'boolean' ? i.secondhand : null, gift: !!i.gift, pockets: typeof i.pockets === 'boolean' ? i.pockets : null, acq: /^\d{4}-\d{2}$/.test(i.acq || '') ? i.acq : '', worn: Array.isArray(i.worn) ? i.worn.filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)) : [], letgo: i.letgo && ['sell', 'donate'].includes(i.letgo.mode) ? { mode: i.letgo.mode, price: str(i.letgo.price).slice(0, 40) } : null, care: Array.isArray(i.care) ? i.care.filter(c => CARE.includes(c)) : [],
     color2: /^#[0-9a-f]{6}$/i.test(i.color2 || '') ? i.color2 : '', details: Array.isArray(i.details) ? i.details.filter(d => IMG_RE.test(d || '')).slice(0, 30) : [],
-    back: i.back && (IMG_RE.test(i.back.img || '') || (IMG_RE.test(i.back.imgJ || '') && (IMG_RE.test(i.back.imgA || '') || IMG_RE.test(i.back.imgM || '')))) ? { img: IMG_RE.test(i.back.img || '') ? i.back.img : '', imgJ: IMG_RE.test(i.back.imgJ || '') ? i.back.imgJ : undefined, imgA: IMG_RE.test(i.back.imgA || '') ? i.back.imgA : undefined, imgM: IMG_RE.test(i.back.imgM || '') ? i.back.imgM : undefined, orig: IMG_RE.test(i.back.orig || '') ? i.back.orig : undefined, mask: IMG_RE.test(i.back.mask || '') ? i.back.mask : undefined, aspect: +i.back.aspect || 0.8, fx: i.back.fx && typeof i.back.fx === 'object' ? { adj: Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+(i.back.fx.adj || {})[k] || 0, -50, 50)])), pop: !!i.back.fx.pop } : null, hang: (i.back.hang && [i.back.hang.cx, i.back.hang.ty, i.back.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook'].includes(i.back.hang.type) ? i.back.hang.type : 'hanger', cx: clamp(i.back.hang.cx, -1, 2), ty: clamp(i.back.hang.ty, -1, 2), w: clamp(i.back.hang.w, 0.05, 3) } : undefined } : null
+    back: i.back && (IMG_RE.test(i.back.img || '') || (IMG_RE.test(i.back.imgJ || '') && (IMG_RE.test(i.back.imgA || '') || IMG_RE.test(i.back.imgM || '')))) ? { img: IMG_RE.test(i.back.img || '') ? i.back.img : '', imgJ: IMG_RE.test(i.back.imgJ || '') ? i.back.imgJ : undefined, imgA: IMG_RE.test(i.back.imgA || '') ? i.back.imgA : undefined, imgM: IMG_RE.test(i.back.imgM || '') ? i.back.imgM : undefined, orig: IMG_RE.test(i.back.orig || '') ? i.back.orig : undefined, mask: IMG_RE.test(i.back.mask || '') ? i.back.mask : undefined, aspect: +i.back.aspect || 0.8, fx: i.back.fx && typeof i.back.fx === 'object' ? { adj: Object.fromEntries(['b', 's', 'w', 'c'].map(k => [k, clamp(+(i.back.fx.adj || {})[k] || 0, -50, 50)])), pop: !!i.back.fx.pop } : null, hang: (i.back.hang && [i.back.hang.cx, i.back.hang.ty, i.back.hang.w].every(v => typeof v === 'number' && isFinite(v))) ? { type: ['hanger', 'clip', 'hook', 'chain'].includes(i.back.hang.type) ? i.back.hang.type : 'hanger', cx: clamp(i.back.hang.cx, -1, 2), ty: clamp(i.back.hang.ty, -1, 2), w: clamp(i.back.hang.w, 0.05, 3) } : undefined } : null
   }));
   const cats = (Array.isArray(data.categories) ? data.categories : []).filter(c => c && typeof c.id === 'string' && typeof c.name === 'string').map(c => ({ id: c.id, name: c.name.slice(0, 60), subs: Array.isArray(c.subs) ? c.subs.filter(x => x && typeof x.id === 'string' && typeof x.name === 'string').map(x => ({ id: x.id, name: x.name.slice(0, 40) })) : undefined })).map(seedSubs);
   const outfits = (Array.isArray(data.outfits) ? data.outfits : []).filter(o => o && typeof o.id === 'string' && Array.isArray(o.pieces)).map(o => ({
@@ -2604,6 +2693,7 @@ async function importBackup(file) {
 /* ---------- global events ---------- */
 document.addEventListener('click', async e => {
   if (e.target.closest('#sheets')) return;
+  const lg = e.target.closest('[data-lang]'); if (lg) { setLang(lg.dataset.lang); return; }
   const g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
   const ct = e.target.closest('[data-ctab]'); if (ct) { S.ctab = ct.dataset.ctab; S.folderOpen = null; renderClosetResults(); return; }
   const fo = e.target.closest('[data-fopen]'); if (fo) { S.folderOpen = fo.dataset.fopen; renderClosetResults(); $('#view-closet').scrollTop = 0; return; }
@@ -2650,6 +2740,7 @@ document.addEventListener('click', async e => {
     case 'open-outfit': openBoard(S.outfits.find(o => o.id === a.dataset.id)); break;
     case 'add-cat': { const inp = $('#new-cat'); const name = inp.value.trim(); if (!name) { inp.focus(); return; } S.cats.push({ id: uid(), name: name.slice(0, 60) }); await saveCats(); renderAll(); toast(`Added ${name}`); break; }
     case 'export': exportBackup(); break;
+    case 'noop': break;
     case 'worn': { const it = byId(a.dataset.id); if (!it) break; await toggleWorn(it); const cur = rackItems()[S.rackIndex]; if (cur && cur.id === it.id) renderTag(it); renderInsights(); if (S.view === 'closet') renderClosetResults(); const dw = document.querySelector(`[data-dworn="${it.id}"]`); if (dw) { dw.classList.toggle('primary', wornToday(it)); dw.lastChild.textContent = wornToday(it) ? 'Worn today' : 'Wore it today'; } break; }
     case 'order': pickOrder(); break;
     case 'cols': { const n = gridCols() >= 5 ? 2 : gridCols() + 1; try { localStorage.setItem('closet-cols', String(n)); } catch {} applyCols(); break; }
@@ -2701,6 +2792,262 @@ async function migrate() {
 document.addEventListener('dblclick', e => { if (!e.target.closest('input, textarea')) e.preventDefault(); }, { passive: false });
 document.addEventListener('touchmove', e => { if (e.touches.length > 1 && !e.target.closest('.canvas-wrap, .lightbox, .board')) e.preventDefault(); }, { passive: false });
 window.addEventListener('wheel', e => { if (e.ctrlKey && !e.target.closest('.canvas-wrap, .lightbox')) e.preventDefault(); }, { passive: false });
+
+/* ---------- Dutch: follows the phone's language (or the choice in Settings) ---------- */
+let LANG = LANG_NL() ? 'nl' : 'en';
+const NL = {
+  'My closet': 'Mijn kast', 'Rack': 'Rek', 'Closet': 'Kast', 'Wishlist': 'Verlanglijst', 'Folders': 'Mappen', 'Outfits': 'Outfits', 'Insights': 'Inzichten', 'Settings': 'Instellingen',
+  'piece': 'item', 'pieces': 'items', 'All': 'Alles', 'Item': 'Item', 'Add': 'Toevoegen', 'Add wish': 'Wens toevoegen', 'Add to folder': 'Aan map toevoegen', 'Add pieces': 'Items toevoegen',
+  'Details': 'Details', 'Style it': 'Combineer', 'Wore it': 'Gedragen', 'Worn': 'Gedragen', 'Worn today': 'Vandaag gedragen', 'Wore it today': 'Vandaag gedragen', 'Wore this today': 'Vandaag gedragen',
+  'Edit': 'Bewerken', 'Delete': 'Verwijderen', 'Save': 'Opslaan', 'Cancel': 'Annuleren', 'Close': 'Sluiten', 'Done': 'Klaar', 'Next': 'Volgende', 'Back': 'Achterkant', 'Front': 'Voorkant', 'Change': 'Wijzigen', 'Check': 'Check', 'Keep': 'Houden', 'Remove': 'Weghalen', 'Skip': 'Overslaan',
+  'New piece': 'Nieuw item', 'Edit piece': 'Item bewerken', 'Replace photo': 'Foto vervangen', 'Rotate photo': 'Foto draaien', 'Erase': 'Gum', 'Restore': 'Herstel', 'Hanger': 'Hanger', 'Undo': 'Ongedaan', 'Clips': 'Klemmen', 'Hook': 'Haak', 'No hanger': 'Geen hanger', 'Hanger size': 'Hangergrootte', 'Hook size': 'Haakgrootte',
+  'Brush size': 'Penseelgrootte', 'Delete less': 'Minder weg', 'Delete more': 'Meer weg', 'Tip: tap with two fingers to undo.': 'Tip: tik met twee vingers om ongedaan te maken.',
+  'Smooth out wrinkles a little': 'Kreukels iets gladstrijken', 'Same colors for front and back': 'Zelfde kleuren voor- en achterkant', 'Make colors pop (auto)': 'Kleuren laten knallen (auto)', 'Reset colors': 'Kleuren herstellen',
+  'Darker': 'Donkerder', 'Brighter': 'Lichter', 'Muted': 'Gedempt', 'Vivid': 'Fel', 'Cooler': 'Koeler', 'Warmer': 'Warmer', 'Softer': 'Zachter', 'Crisper': 'Scherper',
+  'Name': 'Naam', 'Categories': 'Categorieën', 'Category': 'Categorie', 'Color': 'Kleur', 'Second color': 'Tweede kleur', 'Pick from photo': 'Kies uit foto', 'Add a second color': 'Tweede kleur toevoegen', 'Material': 'Materiaal', 'Add material': 'Materiaal toevoegen', 'New category': 'Nieuwe categorie',
+  'Care to-do': 'Verzorging', 'Needs washing': 'Moet gewassen', 'Deep clean': 'Grondig reinigen', 'Dry clean': 'Stomerij', 'Needs fixing': 'Moet gerepareerd', 'Letting go': 'Wegdoen', 'Sell': 'Verkopen', 'Donate': 'Weggeven', 'Asking price': 'Vraagprijs',
+  'Pockets': 'Zakken', 'Has pockets': 'Heeft zakken', 'No pockets': 'Geen zakken', 'Had it for': 'In bezit', 'Under a year': 'Minder dan een jaar', '1 year': '1 jaar', '2 years': '2 jaar', '3 years': '3 jaar', '4 years': '4 jaar', '5+ years': '5+ jaar', 'New (under a year)': 'Nieuw (minder dan een jaar)',
+  'How you got it': 'Hoe je het kreeg', 'Bought new': 'Nieuw gekocht', 'Secondhand': 'Tweedehands', 'Gift': 'Cadeau', 'Got it': 'Gekregen via', 'Brand': 'Merk', 'Price': 'Prijs', 'Size': 'Maat', 'Shoe size': 'Schoenmaat', 'Season': 'Seizoen', 'Occasion': 'Gelegenheid', 'Notes': 'Notities', 'Optional': 'Optioneel',
+  'Spring': 'Lente', 'Summer': 'Zomer', 'Fall': 'Herfst', 'Winter': 'Winter', 'Everyday': 'Dagelijks', 'Work': 'Werk', 'Going out': 'Uitgaan', 'Lounge': 'Thuis', 'Active': 'Sport', 'Formal': 'Formeel',
+  'Cotton': 'Katoen', 'Linen': 'Linnen', 'Wool': 'Wol', 'Cashmere': 'Kasjmier', 'Silk': 'Zijde', 'Denim': 'Denim', 'Leather': 'Leer', 'Viscose': 'Viscose', 'Polyester': 'Polyester', 'Nylon': 'Nylon', 'Elastane': 'Elastaan', 'Other': 'Overig',
+  'Tops': 'Tops', 'Bottoms': 'Broeken & rokken', 'Outerwear': 'Jassen', 'Dresses': 'Jurken', 'Shoes': 'Schoenen', 'Bags': 'Tassen', 'Accessories': 'Accessoires',
+  'Black': 'Zwart', 'White': 'Wit', 'Gray': 'Grijs', 'Beige': 'Beige', 'Brown': 'Bruin', 'Red': 'Rood', 'Maroon': 'Bordeaux', 'Plum': 'Pruim', 'Mauve': 'Mauve', 'Pink': 'Roze', 'Orange': 'Oranje', 'Yellow': 'Geel', 'Green': 'Groen', 'Teal': 'Petrol', 'Blue': 'Blauw', 'Navy': 'Marineblauw', 'Purple': 'Paars',
+  'Not set': 'Niet ingevuld', 'None': 'Geen', 'Front and back': 'Voor- en achterkant', 'Side': 'Kant', 'Folders': 'Mappen', 'New folder': 'Nieuwe map', 'Group any pieces you like': 'Groepeer wat je wilt', 'To do': 'Te doen', 'Sell / donate': 'Verkopen / weggeven', 'Forgotten': 'Vergeten',
+  'Washing, cleaning, fixing': 'Wassen, reinigen, repareren', 'Pieces you are letting go': 'Items die je wegdoet', 'Not worn in 6 months': 'Al 6 maanden niet gedragen', 'Sold': 'Verkocht', 'Given away': 'Weggegeven', 'All caught up': 'Alles bijgewerkt',
+  'Search names, brands, notes': 'Zoek op naam, merk, notitie', 'Search your closet': 'Zoek in je kast', 'Tap pieces to add or remove them.': 'Tik op items om ze toe te voegen of weg te halen.', 'Nothing matches.': 'Niets gevonden.',
+  'Dress up': 'Aankleden', 'Board': 'Bord', 'Dress': 'Jurk', 'Shirt': 'Shirt', 'Sweater': 'Trui', 'Bottom': 'Onderkant', 'Extras': 'Extra’s', 'Fine-tune on a board': 'Verfijnen op een bord', 'Save outfit': 'Outfit opslaan',
+  'Start with a dress, or None to build with separates': 'Begin met een jurk, of Geen voor losse items', 'Swipe to pick your base layer, or None': 'Swipe voor je basislaag, of Geen', 'Add a layer on top, or keep it bare': 'Voeg een laag toe, of laat het zo', 'Swipe through your bottoms': 'Swipe door je broeken en rokken', 'Finish the base with shoes': 'Maak het af met schoenen', 'Tap to add as many extras as you like': 'Tik om extra’s toe te voegen',
+  'No outfits yet': 'Nog geen outfits', 'Outfit saved': 'Outfit opgeslagen', 'Outfit saved. Tap it to rename or fine-tune.': 'Outfit opgeslagen. Tik erop om te hernoemen of te verfijnen.', 'Outfit deleted': 'Outfit verwijderd', 'Name this outfit': 'Geef deze outfit een naam', 'Arrange': 'Schikken', 'Image': 'Afbeelding',
+  'Your colors': 'Jouw kleuren', 'Neutrals': 'Neutrale kleuren', 'Check a color': 'Kleur checken', 'Choose your season': 'Kies je seizoen', 'Choose your color season': 'Kies je kleurseizoen', 'Clear my season': 'Seizoen wissen', 'Not sure yet': 'Weet ik nog niet', 'Not sure? You can skip this for now.': 'Twijfel je? Sla dit gerust over.', 'Welcome': 'Welkom',
+  'In your palette': 'In je palet', 'Close to your palette': 'Dicht bij je palet', 'Outside your palette': 'Buiten je palet', 'Fits your colors': 'Past bij je kleuren', 'Close to your colors': 'Dicht bij je kleuren', 'Outside your colors': 'Buiten je kleuren', 'Your palette': 'Jouw palet',
+  'Warm, clear and light': 'Warm, helder en licht', 'Cool, soft and light': 'Koel, zacht en licht', 'Warm, muted and rich': 'Warm, gedempt en rijk', 'Cool, clear and deep': 'Koel, helder en diep', 'Light': 'Licht', 'Bright': 'Helder', 'Cool': 'Koel', 'Soft': 'Zacht', 'Deep': 'Diep',
+  'Worth a look': 'Het bekijken waard', 'Most worn': 'Meest gedragen', 'outfits': 'outfits', 'secondhand': 'tweedehands', 'total spent': 'totaal uitgegeven', 'tags': 'tags', 'How long you have had it': 'Hoe lang je het hebt', '1–2 years': '1–2 jaar', '3–4 years': '3–4 jaar',
+  'Tap a name to see those pieces in your closet, or a photo to open it.': 'Tik op een naam om die items in je kast te zien, of op een foto om hem te openen.',
+  'Storage': 'Opslag', 'Keep original photos for new pieces': 'Originele foto’s bewaren voor nieuwe items', 'Delete original photos': 'Originele foto’s verwijderen', 'Restore that closet': 'Die kast terugzetten', 'Backup': 'Back-up', 'Export backup': 'Back-up exporteren', 'Import backup': 'Back-up importeren', 'Appearance': 'Weergave', 'Auto': 'Auto', 'Dark': 'Donker', 'Start over': 'Opnieuw beginnen', 'Delete everything': 'Alles verwijderen', 'Color season': 'Kleurseizoen', 'Language': 'Taal', 'Your materials': 'Jouw materialen', 'Type': 'Type',
+  'Export backup now': 'Nu back-up maken', 'Remind me in a week': 'Herinner me over een week', 'Time for a backup?': 'Tijd voor een back-up?', 'Add to my closet': 'Aan mijn kast toevoegen', 'Replace my closet': 'Mijn kast vervangen',
+  'Newest first': 'Nieuwste eerst', 'Oldest first': 'Oudste eerst', 'Shuffle': 'Husselen', 'Shuffle again': 'Opnieuw husselen', 'Order': 'Volgorde',
+  'Take a photo': 'Maak een foto', 'Choose from library': 'Kies uit bibliotheek', 'Paste': 'Plakken', 'Add a piece': 'Item toevoegen', 'Your rack is empty': 'Je rek is leeg', 'Start your closet': 'Begin je kast', 'Nothing on your wishlist': 'Niets op je verlanglijst', 'Add a wish': 'Wens toevoegen', 'I bought it': 'Gekocht!', 'Shop': 'Winkel', 'Link': 'Link',
+  'Saving…': 'Opslaan…', 'Loading photo…': 'Foto laden…', 'Cutting out…': 'Uitknippen…', 'Rotating…': 'Draaien…', 'Undone': 'Ongedaan', 'Piece deleted': 'Item verwijderd', 'Wish deleted': 'Wens verwijderd', 'Changes saved': 'Wijzigingen opgeslagen', 'Added to your closet': 'Toegevoegd aan je kast',
+  'Delete this piece?': 'Dit item verwijderen?', 'Discard changes?': 'Wijzigingen weggooien?', 'Discard': 'Weggooien', 'Keep editing': 'Verder bewerken', 'Rename folder': 'Map hernoemen', 'Delete folder': 'Map verwijderen', 'In outfits': 'In outfits', 'Cost per wear': 'Kosten per keer', 'Categories (pick one or more, the first is the main one)': 'Categorieën (kies er één of meer, de eerste is de hoofdcategorie)', 'main': 'hoofd',
+  'Done, and I put the hanger where yours was. Leftover background? Paint it with Remove. A missing strap? Paint it with Keep. Pinch to zoom in for detail.': 'Klaar, en de hanger hangt waar die van jou hing. Nog achtergrond over? Verf met Weghalen. Een bandje kwijt? Verf met Houden. Knijp om in te zoomen.',
+  'Done. Leftover background? Paint it with Remove. A missing strap? Paint it with Keep. Pinch to zoom in for detail.': 'Klaar. Nog achtergrond over? Verf met Weghalen. Een bandje kwijt? Verf met Houden. Knijp om in te zoomen.',
+  'Paint over parts that went missing. The cut-out updates when you lift your finger.': 'Verf over stukjes die ontbreken. De uitsnede werkt bij als je je vinger optilt.', 'Paint over leftover background, like the hanger or a door edge. Updates when you lift.': 'Verf over achtergrond die er nog is, zoals de hanger of een deurrand. Werkt bij als je optilt.',
+  'Erases exactly where you paint. Pinch with two fingers to zoom.': 'Gumt precies waar je verft. Knijp met twee vingers om te zoomen.', 'Paints back exactly where you paint. Removed areas show faintly.': 'Verft precies terug waar je verft. Weggehaalde delen zie je vaag.',
+  'Pick a hanger, then drag it to where the piece hangs from: across the straps or shoulders, clips on the waistband, or a hook through a bag handle. Pinch with two fingers to resize it.': 'Kies een hanger en sleep hem naar waar het item aan hangt: over de bandjes of schouders, klemmen aan de tailleband, of een haak door een hengsel. Knijp met twee vingers om hem groter of kleiner te maken.',
+  'Hang it up?': 'Ophangen?', 'Place the hanger': 'Hanger plaatsen', 'Place the hook': 'Haak plaatsen', 'Place the clips': 'Klemmen plaatsen', 'Drag it to where the piece hangs from and pinch to resize. Or skip, and it shows without a hanger.': 'Sleep hem naar waar het item aan hangt en knijp om de grootte aan te passen. Of sla over, dan wordt het zonder hanger getoond.',
+  'The faint image is the front. Drag the hanger and use the size slider until the back lines up with it; then front and back match when you flip.': 'Het vage silhouet is de voorkant. Sleep de hanger en gebruik de schuif tot de achterkant erop past; dan kloppen voor- en achterkant bij het omdraaien.',
+  'Autumn': 'Herfst', 'Add your first piece': 'Voeg je eerste item toe', 'Take photo': 'Maak een foto', 'Choose from photos': 'Kies uit foto’s', 'Paste a screenshot': 'Plak een screenshot',
+  'Any background works; a darker one helps for white pieces. The app cuts the piece out for you.': 'Elke achtergrond werkt; een donkere helpt bij witte items. De app knipt het item voor je uit.',
+  'Photograph a piece and it\'ll hang here with the background removed.': 'Fotografeer een item en het hangt hier, zonder achtergrond.', 'Pick your color season. Tap one to choose it.': 'Kies je kleurseizoen. Tik op een seizoen om het te kiezen.',
+  'Pick at least one piece.': 'Kies minstens één item.', 'Add a few pieces first.': 'Voeg eerst een paar items toe.', 'Marked as worn today': 'Vandaag gedragen', 'Color season cleared': 'Kleurseizoen gewist', 'Kept in your closet': 'In je kast gehouden', 'Removed. Nice one!': 'Weggehaald. Goed bezig!', 'Closet cleared': 'Kast leeggemaakt', 'Restored. Reopening…': 'Teruggezet. Opnieuw openen…', 'Moved from your wishlist to your closet': 'Van je verlanglijst naar je kast verplaatst',
+  'Photo filters': 'Fotofilters', 'Columns': 'Kolommen', 'Rename or delete folder': 'Map hernoemen of verwijderen', 'Long fine-knit cardigan': 'Lang fijngebreid vest', 'or since year': 'of sinds jaar', '38, 7.5': '38, 7,5', 'M, 38, W28 L32': 'M, 38, W28 L32', 'Search': 'Zoeken', 'Search closet': 'Zoek in kast',
+  'Gold': 'Goud', 'Silver': 'Zilver', 'Rose gold': 'Roségoud', 'Stainless steel': 'Roestvrij staal', 'Gold plated': 'Verguld', 'Sterling silver': 'Sterling zilver', 'Pearl': 'Parel', 'Chain': 'Ketting', 'Card': 'Kaartje', 'Cushion': 'Kussentje', 'Earrings are shown on a little jewelry card. Nothing to place.': 'Oorbellen worden op een sieradenkaartje getoond. Niets te plaatsen.', 'Rings sit in a little velvet cushion. Nothing to place.': 'Ringen zitten in een fluwelen kussentje. Niets te plaatsen.',
+  'Main color: touch the photo, slide to the exact spot, then let go.': 'Hoofdkleur: raak de foto aan, schuif naar de juiste plek en laat los.', 'Second color: touch the photo, slide to the exact spot, then let go.': 'Tweede kleur: raak de foto aan, schuif naar de juiste plek en laat los.', 'Colors': 'Kleuren', 'Main color': 'Hoofdkleur', 'From photo': 'Uit foto',
+  '(pick one or more, the first is the main one)': '(kies er één of meer, de eerste is de hoofdcategorie)',
+  'A photo, or a screenshot from the shop.': 'Een foto, of een screenshot van de winkel.',
+  'A close-up of the print, a label, buttons, the lining…': 'Een close-up van de print, een label, knopen, de voering…',
+  'A save is already waiting for you to confirm.': 'Er wacht al een opslag op je bevestiging.',
+  'Add a detail photo': 'Detailfoto toevoegen',
+  'Add detail photo': 'Detailfoto toevoegen',
+  'Detail photo': 'Detailfoto',
+  'Detail photos': "Detailfoto's",
+  "Add a few pieces and you'll see your closet broken down by category, color, season, material, and more.": 'Voeg een paar items toe en je ziet je kast uitgesplitst naar categorie, kleur, seizoen, materiaal en meer.',
+  'Add a few pieces first, then put them together here.': 'Voeg eerst een paar items toe en combineer ze dan hier.',
+  'Add a name, photo, or link first.': 'Voeg eerst een naam, foto of link toe.',
+  'Add a photo': 'Foto toevoegen',
+  'Add photo': 'Foto toevoegen',
+  'Add a photo first.': 'Voeg eerst een foto toe.',
+  'Add a photo of the back, so you can flip the piece around on the rack.': 'Voeg een foto van de achterkant toe, dan kun je het item op het rek omdraaien.',
+  'Add a photo of the front first.': 'Voeg eerst een foto van de voorkant toe.',
+  'Add a photo or screenshot': 'Foto of screenshot toevoegen',
+  'Add back photo': 'Achterkant toevoegen',
+  'Add a piece first.': 'Voeg eerst een item toe.',
+  'Add a piece to the board first.': 'Zet eerst een item op het bord.',
+  'Add at least one piece to the board.': 'Zet minstens één item op het bord.',
+  'Add to Sell / donate': 'Toevoegen aan Verkopen / weggeven',
+  'Added to your wishlist': 'Toegevoegd aan je verlanglijst',
+  'Background removal, delete less or more': 'Achtergrond weghalen, minder of meer',
+  'Category name': 'Categorienaam',
+  'Choose your color season to see if it suits you': 'Kies je kleurseizoen om te zien of het bij je past',
+  'Closet or wishlist': 'Kast of verlanglijst',
+  "Couldn't delete them.": 'Verwijderen lukte niet.',
+  "Couldn't find the piece. Try a photo with a bit more contrast.": 'Het item is niet gevonden. Probeer een foto met wat meer contrast.',
+  "Couldn't open that image.": 'Die afbeelding kon niet worden geopend.',
+  "Couldn't open that photo.": 'Die foto kon niet worden geopend.',
+  "Couldn't open that photo. Try a JPEG or PNG.": 'Die foto kon niet worden geopend. Probeer een JPEG of PNG.',
+  "Couldn't process that photo.": 'Die foto kon niet worden verwerkt.',
+  "Couldn't restore. Your device may be out of space.": 'Terugzetten lukte niet. Misschien is je apparaat vol.',
+  "Couldn't save that change.": 'Die wijziging kon niet worden opgeslagen.',
+  "Couldn't save the piece. Your device may be out of space.": 'Het item kon niet worden opgeslagen. Misschien is je apparaat vol.',
+  'Create an outfit': 'Maak een outfit',
+  'Cut-out tools': 'Uitknipgereedschap',
+  'Delete category': 'Categorie verwijderen',
+  'Delete everything?': 'Alles verwijderen?',
+  'Delete original photos?': "Originele foto's verwijderen?",
+  'Delete originals': 'Originelen verwijderen',
+  'Delete outfit': 'Outfit verwijderen',
+  'Delete piece': 'Item verwijderen',
+  'Delete this outfit?': 'Deze outfit verwijderen?',
+  'Delete this wish?': 'Deze wens verwijderen?',
+  'Discard this piece?': 'Dit item weggooien?',
+  'Drop pieces onto a board, move and resize them, and save the look.': 'Zet items op een bord, verschuif en vergroot ze, en sla de look op.',
+  'Each piece you add shows up here, sorted by category.': 'Elk item dat je toevoegt verschijnt hier, gesorteerd op categorie.',
+  'Every piece, outfit, and category on this device will be gone. A safety copy is kept so you can undo this once from Settings.': 'Alle items, outfits en categorieën op dit apparaat verdwijnen. Er blijft een veiligheidskopie, zodat je dit één keer kunt terugdraaien via Instellingen.',
+  'Everything lives on this device only. Export a backup now and then so you never lose your closet, or to move it to another device.': 'Alles staat alleen op dit apparaat. Maak af en toe een back-up, zodat je je kast nooit kwijtraakt of naar een ander apparaat kunt verhuizen.',
+  'Fit': 'Passend',
+  "Fit, care, where it's from": 'Pasvorm, verzorging, waar het vandaan komt',
+  'For sale': 'Te koop',
+  'Hanger type': 'Soort hanger',
+  'Import stopped partway. Your device may be out of space.': 'Importeren stopte halverwege. Misschien is je apparaat vol.',
+  'Include original photos, so backgrounds stay editable after importing (bigger file)': "Originele foto's meenemen, zodat achtergronden na importeren bewerkbaar blijven (groter bestand)",
+  'It becomes a type in that category, and its pieces move along.': 'Het wordt een soort in die categorie, en de items gaan mee.',
+  'It will be removed from your closet.': 'Het wordt uit je kast gehaald.',
+  'Leftover background? Paint it with Remove. A missing strap? Paint it with Keep. Pinch to zoom in for detail.': 'Nog achtergrond over? Verf met Weghalen. Een bandje kwijt? Verf met Houden. Knijp om in te zoomen.',
+  'Linen wrap dress': 'Linnen overslagjurk',
+  'Mark a piece as Sell or Donate in its editor and it shows up here.': 'Markeer een item als Verkopen of Weggeven en het verschijnt hier.',
+  'Materials you added yourself. Add new ones while editing a piece.': 'Materialen die je zelf hebt toegevoegd. Nieuwe voeg je toe tijdens het bewerken.',
+  'Move down': 'Omlaag',
+  'Move up': 'Omhoog',
+  'New category name': 'Naam nieuwe categorie',
+  'New category, e.g. Knitwear': 'Nieuwe categorie, bijv. Breigoed',
+  'New material': 'Nieuw materiaal',
+  'New wish': 'Nieuwe wens',
+  'Next option': 'Volgende optie',
+  'Next photo': 'Volgende foto',
+  'Previous option': 'Vorige optie',
+  'Previous photo': 'Vorige foto',
+  'No categories yet.': 'Nog geen categorieën.',
+  'No original photos to delete': "Geen originele foto's om te verwijderen",
+  'No pieces in this category yet.': 'Nog geen items in deze categorie.',
+  'No pieces use it.': 'Geen enkel item gebruikt het.',
+  'None yet.': 'Nog niets.',
+  'Nothing here yet': 'Hier staat nog niets',
+  'Nothing here. Every piece has been worn in the last six months.': 'Niets hier. Alles is in de afgelopen zes maanden gedragen.',
+  'Nothing to count yet': 'Nog niets te tellen',
+  'Nothing to restore.': 'Niets om terug te zetten.',
+  'Outfit board': 'Outfitbord',
+  'Outfit name': 'Naam outfit',
+  'Paste area': 'Plakvak',
+  'Paste image': 'Afbeelding plakken',
+  'Paste the shop link': 'Plak de winkellink',
+  'Permanently delete every piece, outfit, and category on this device.': 'Verwijder alle items, outfits en categorieën op dit apparaat.',
+  'Photo of the back': 'Foto van de achterkant',
+  'Photo of your new piece': 'Foto van je nieuwe item',
+  'Pick your color season and this becomes a little shopping guide: your palette, your neutrals, and a quick check whether a color in the shop suits you.': 'Kies je kleurseizoen en dit wordt een kleine shoppinggids: je palet, je neutrale kleuren en een snelle check of een kleur in de winkel bij je past.',
+  'Pieces, use arrow keys to browse': 'Items, blader met de pijltjestoetsen',
+  'Pinch or double-tap to zoom': 'Knijp of dubbeltik om te zoomen',
+  'Remove back photo': 'Achterkant verwijderen',
+  'Remove from closet': 'Uit kast halen',
+  'Remove from outfit': 'Uit outfit halen',
+  'Remove second color': 'Tweede kleur weghalen',
+  'Remove the back photo?': 'Foto van de achterkant verwijderen?',
+  'Rename, reorder, or remove. Pieces in a removed category move to Uncategorized.': 'Hernoem, verplaats of verwijder. Items in een verwijderde categorie worden Item.',
+  'Restore your earlier closet?': 'Je eerdere kast terugzetten?',
+  "Save pieces you're eyeing, with a link to the shop. They stay out of your closet and charts until you buy them.": 'Bewaar items die je op het oog hebt, met een link naar de winkel. Ze tellen pas mee in je kast en grafieken als je ze koopt.',
+  "Saving files isn't available in this view.": 'Bestanden opslaan kan niet in deze weergave.',
+  'Shoulder bag': 'Schoudertas',
+  "Storage isn't available here, so changes won't be kept after closing.": 'Opslag is hier niet beschikbaar, dus wijzigingen blijven niet bewaard na sluiten.',
+  'Summer trip': 'Zomerreis',
+  'Take a photo of the garment, then tap on its color.': 'Maak een foto van het kledingstuk en tik op de kleur.',
+  'Tank top': 'Topje',
+  'Tap Add pieces to choose clothes for this folder.': 'Tik op Items toevoegen om kleding voor deze map te kiezen.',
+  'Tap and hold here, then choose Paste': 'Houd hier ingedrukt en kies Plakken',
+  'Tap pieces below to drop them here. Drag to move, pinch or use the corner handle to resize.': 'Tik op items hieronder om ze hier neer te zetten. Sleep om te verplaatsen, knijp of gebruik de hoek om de grootte aan te passen.',
+  'That file is too large to save here.': 'Dat bestand is te groot om hier op te slaan.',
+  "That file isn't a closet backup.": 'Dat bestand is geen kast-back-up.',
+  "That isn't an image. Copy a photo first.": 'Dat is geen afbeelding. Kopieer eerst een foto.',
+  'The front stays as it is.': 'De voorkant blijft zoals hij is.',
+  "The photo and details won't be saved.": 'De foto en details worden niet opgeslagen.',
+  'The pieces stay in your closet.': 'De items blijven in je kast.',
+  'To donate': 'Weggeven',
+  'To sell': 'Verkopen',
+  'Untitled outfit': 'Naamloze outfit',
+  'Untitled wish': 'Naamloze wens',
+  'Use Replace photo to swap this photo.': 'Gebruik Foto vervangen om deze foto te wisselen.',
+  'Used for your shopping guide on the Wishlist, the \\"fits your colors\\" check, and to tint the app..': "Gebruikt voor je shoppinggids op de verlanglijst, de check 'past bij je kleuren' en de kleuren van de app.",
+  'Wait a moment for the back to finish cutting out.': 'Even wachten tot de achterkant klaar is met uitknippen.',
+  'Wait a moment for the cut-out to finish.': 'Even wachten tot het uitknippen klaar is.',
+  'What needs doing?': 'Wat moet er gebeuren?',
+  'Wish saved': 'Wens opgeslagen',
+  'Wishlist photo': 'Foto voor verlanglijst',
+  'You have never exported a backup. Everything lives only on this device, so a copy keeps your closet safe.': 'Je hebt nog nooit een back-up gemaakt. Alles staat alleen op dit apparaat, dus een kopie houdt je kast veilig.',
+  'Your pieces stay exactly as they look now. You just can no longer redo their background removal from the original photo; touch-ups with Erase and Restore still work. Detail photos are kept.': "Je items blijven er precies zo uitzien. Je kunt alleen het weghalen van de achtergrond niet meer opnieuw doen vanaf de originele foto; bijwerken met Gum en Herstel kan nog wel. Detailfoto's blijven bewaard.",
+  'Original photos are kept so you can redo a background removal later. You can delete them to save space; your pieces look exactly the same.': "Originele foto's worden bewaard zodat je de achtergrond later opnieuw kunt weghalen. Verwijder ze om ruimte te besparen; je items zien er precies hetzelfde uit.",
+  'Used for your shopping guide on the Wishlist, the "fits your colors" check, and to tint the app.': "Gebruikt voor je shoppinggids op de verlanglijst, de check 'past bij je kleuren' en de kleuren van de app.",
+  'Rename, reorder, or remove. Pieces in a removed category move to Item.': 'Hernoem, verplaats of verwijder. Items in een verwijderde categorie worden Item.',
+  'Shop link': 'Winkellink',
+  'Where to buy': 'Waar te koop',
+  'Photo': 'Foto',
+  'What is it?': 'Wat is het?',
+  'Untitled': 'Naamloos',
+  'Open shop': 'Open winkel',
+  'Bought it': 'Gekocht',
+  'Tap Wore it on the rack when you wear something.': 'Tik op Gedragen op het rek als je iets draagt.',
+  'Theme': 'Thema',
+  'Light mode': 'Licht',
+  'Dark mode': 'Donker',
+  'Categories': 'Categorieën',
+  'Custom materials': 'Eigen materialen',
+  'Reorder': 'Volgorde',
+  'Rename': 'Hernoemen',
+  'Saved': 'Opgeslagen',
+  'Copy link': 'Link kopiëren',
+  'Share': 'Delen',
+  'Everything lives on this device only.': 'Alles staat alleen op dit apparaat.',
+  'Front only': 'Alleen voorkant',
+  'Flip': 'Omdraaien',
+  'Show the back': 'Toon de achterkant',
+  'Show the front': 'Toon de voorkant',
+  'Choose photo': 'Kies foto',
+  'Library': 'Bibliotheek',
+  'Camera': 'Camera',
+  'Add pieces to the board': 'Items op het bord zetten',
+  'Wore it today': 'Vandaag gedragen',
+  'Light Spring': 'Light Spring',
+  'Not worn yet': 'Nog niet gedragen',
+  'Top': 'Top', 'Cardigan': 'Vest', 'Pick your base top, or None': 'Kies je basistop, of Geen', 'Or wear a dress instead of a top and bottom': 'Of draag een jurk in plaats van top en onderkant', 'A sweater over it, or None': 'Een trui eroverheen, of Geen', 'An open layer on top: cardigan, blazer, jacket, or None': 'Een open laag erover: vest, blazer, jas, of Geen', 'No cardigan': 'Geen vest',
+  'Touch the photo and slide to the exact color, then let go.': 'Raak de foto aan, schuif naar de juiste kleur en laat los.', 'Take this along when you shop.': 'Neem dit mee als je gaat shoppen.'
+};
+const NL_RE = [
+  [/^(\d+) pieces?$/, (m, n) => `${n} item${n === '1' ? '' : 's'}`], [/^(\d+) outfits?$/, (m, n) => `${n} outfit${n === '1' ? '' : 's'}`],
+  [/^Size (.+)$/, (m, v) => `Maat ${v}`], [/^Shoe size (.+)$/, (m, v) => `Schoenmaat ${v}`], [/^(\d+) years$/, (m, n) => `${n} jaar`],
+  [/^(\d+) (times?), last (.+)$/, (m, n, t, w) => `${n} keer, laatst ${nlAgo(w)}`], [/^For sale(.*)$/, (m, r) => `Te koop${r}`],
+  [/^No (top|shirt|sweater|cardigan|bottom|shoes|dress|extras yet)$/, (m, w) => ({ cardigan: 'Geen vest', top: 'Geen top', shirt: 'Geen shirt', sweater: 'Geen trui', bottom: 'Geen onderkant', shoes: 'Geen schoenen', dress: 'Geen jurk', 'extras yet': 'Nog geen extra’s' })[w]],
+  [/^Next: (.+)$/, (m, w) => `Volgende: ${NL[w] || w}`], [/^(\d+)\. (.+)$/, (m, n, w) => `${n}. ${NL[w] || w}`], [/^All (.+)$/, (m, w) => `Alle ${NL[w.charAt(0).toUpperCase() + w.slice(1)]?.toLowerCase() || w}`],
+  [/^Add to (.+)$/, (m, w) => `Toevoegen aan ${w}`], [/^(.+), (detected|picked) from the photo$/, (m, c, how) => `${NL[c] || c}, ${how === 'detected' ? 'herkend in' : 'gekozen uit'} de foto`],
+  [/^(.+)\.(?: (\d+) of your (\d+) pieces fit this palette\.)? Take this along when you shop\.$/, (m, sn, a, b) => `${sn}.${a ? ` ${a} van je ${b} items passen bij dit palet.` : ''} Neem dit mee als je gaat shoppen.`], [/^A safety copy from (.+) \(before (.+)\) is kept on this device\.$/, (m, d, r) => `Er staat een veiligheidskopie van ${d} op dit apparaat (van vóór ${r.replace('your last import', 'je laatste import').replace('you deleted everything', 'alles verwijderen')}).`],
+  [/^Using about (.+) on this device\. (\d+) pieces?, (\d+) outfits?\.?$/, (m, a, b, c) => `Gebruikt ongeveer ${a} op dit apparaat. ${b} items, ${c} outfits.`], [/^Your last backup was (.+)\. Everything lives only on this device, so a fresh copy keeps your closet safe\.$/, (m, w) => `Je laatste back-up was ${nlAgo(w)}. Alles staat alleen op dit apparaat, dus een nieuwe kopie houdt je kast veilig.`],
+  [/^(\d+) (?:piece has|pieces have) no wears logged yet\. Tap Wore it on the rack when you wear something\.$/, (m, a) => `${a} ${a === '1' ? 'item heeft' : 'items hebben'} nog geen keer gedragen geregistreerd. Tik op Gedragen op het rek als je iets draagt.`],
+  [/^No pieces in (.+) yet\.$/, (m, w) => `Nog geen items in ${NL[w] || w}.`], [/^Delete (.+)\?$/, (m, w) => `${w} verwijderen?`], [/^Put "(.+)" inside…$/, (m, w) => `"${w}" onderbrengen in…`], [/^(.+) is now a type of (.+)$/, (m, a, b) => `${a} is nu een soort van ${NL[b] || b}`],
+  [/^New type of (.+)$/, (m, w) => `Nieuwe soort ${w}`], [/^(.+): (\d+) pieces?$/, (m, w, n) => `${NL[w] || w}: ${n} ${n === '1' ? 'item' : 'items'}`], [/^Original photos deleted from (\d+) pieces$/, (m, n) => `Originele foto's verwijderd bij ${n} items`],
+  [/^Order: (.+)$/, (m, w) => `Volgorde: ${NL[w] || w}`], [/^Sold: (.+)\?$/, (m, w) => `Verkocht: ${w}?`], [/^Given away: (.+)\?$/, (m, w) => `Weggegeven: ${w}?`], [/^Remove (.+) from this folder$/, (m, w) => `${w} uit deze map halen`], [/^Add pieces to (.+)$/, (m, w) => `Items toevoegen aan ${w}`], [/^(.+) it is$/, (m, w) => `${w} gekozen`],
+  [/^Mostly (.+), (\d+%)$/, (m, w, pc) => `Vooral ${NL[w] || w}, ${pc}`], [/^Nothing yet in (.+)\.$/, (m, l) => `Nog niets in ${l.split(', ').map(x => NL[x] || x).join(', ')}.`],
+  [/^(\d+) of (\d+) pieces aren't in any outfit yet\.$/, (m, a, b) => `${a} van de ${b} items zitten nog in geen enkele outfit.`],
+  [/^(\d+) (?:piece hasn't|pieces haven't) been worn in six months\. See Closet, Folders, Forgotten\.$/, (m, a) => `${a} ${a === '1' ? 'item is' : 'items zijn'} al zes maanden niet gedragen. Zie Kast, Mappen, Vergeten.`],
+  [/^(\d+) pieces?: (.+)\. See Closet, Folders, To do\.$/, (m, a, c) => `${a} ${a === '1' ? 'item' : 'items'}: ${(NL[c.charAt(0).toUpperCase() + c.slice(1)] || c).toLowerCase()}. Zie Kast, Mappen, Te doen.`],
+  [/^Only (\d+) pieces? for (.+)\.$/, (m, a, w) => `Maar ${a} ${a === '1' ? 'item' : 'items'} voor ${NL[w] || w}.`], [/^(\d+)% of your closet is (.+)\.$/, (m, a, w) => `${a}% van je kast is ${(NL[w.charAt(0).toUpperCase() + w.slice(1)] || w).toLowerCase()}.`],
+  [/^To sharpen these charts, fill in (.+)\.$/, (m, l) => `Vul voor scherpere grafieken nog in: ${l.replace(/how you got it/g, 'hoe je het kreeg').replace(/season/g, 'seizoen').replace(/material/g, 'materiaal').replace(/brand/g, 'merk').replace(/occasion/g, 'gelegenheid').replace(/color/g, 'kleur').replace(/category/g, 'categorie').replace(/ and /g, ' en ')}.`], [/^(\d+) of your (\d+) pieces fit this palette\.$/, (m, a, b) => `${a} van je ${b} items passen bij dit palet.`]
+];
+const nlAgo = w => w === 'today' ? 'vandaag' : w === 'yesterday' ? 'gisteren' : w.replace(/(\d+) days ago/, '$1 dagen geleden').replace(/(\d+) months ago/, '$1 maanden geleden').replace(/(\d+) years ago/, '$1 jaar geleden');
+function nlText(t) { const k = t.trim(); if (!k) return null; if (NL[k]) return t.replace(k, NL[k]); for (const [re, f] of NL_RE) { const m = k.match(re); if (m) return t.replace(k, f(...m)); } return null; }
+function translateTree(root) {
+  if (LANG !== 'nl' || !root) return;
+  if (root.nodeType === 3) { const v = nlText(root.nodeValue); if (v != null && v !== root.nodeValue) root.nodeValue = v; return; }
+  if (root.nodeType !== 1 || root.closest?.('input,textarea,[data-user]')) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement?.closest('input,textarea,script,style,.nm,.tag h3,.pp-name,[data-user]') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+  const ns = []; while (w.nextNode()) ns.push(w.currentNode); ns.forEach(n => { const v = nlText(n.nodeValue); if (v != null && v !== n.nodeValue) n.nodeValue = v; });
+  (root.querySelectorAll ? [root, ...root.querySelectorAll('[placeholder],[aria-label],[title]')] : []).forEach(e => ['placeholder', 'aria-label', 'title'].forEach(a => { const v = e.getAttribute?.(a); if (v) { const t = nlText(v); if (t != null && t !== v) e.setAttribute(a, t); } }));
+}
+let nlObs = null;
+function startNL() { LANG = 'nl'; document.documentElement.lang = 'nl'; if (!nlObs) { nlObs = new MutationObserver(ms => ms.forEach(m => { m.addedNodes.forEach(translateTree); if (m.type === 'characterData') translateTree(m.target); })); nlObs.observe(document.documentElement, { childList: true, subtree: true, characterData: true }); } translateTree(document.body); }
+if (LANG === 'nl') startNL();
+async function setLang(v) { // switch right away; also remembered in the app's own storage, which survives where browser settings don't
+  window.__closetLang = v; try { localStorage.setItem('closet-lang', v); } catch {} try { await store.put('meta', { id: 'lang', v }); } catch {}
+  const nl = LANG_NL();
+  if (nl) { startNL(); renderAll(); toast('Nederlands'); }
+  else { try { location.reload(); } catch {} setTimeout(() => { LANG = 'en'; if (nlObs) { nlObs.disconnect(); nlObs = null; } document.documentElement.lang = 'en'; renderAll(); }, 400); }
+}
+
 /* ---------- init ---------- */
 const navIcons = { rack: 'hanger', closet: 'grid', outfits: 'layers', insights: 'pie' };
 $$('.nav [data-go]').forEach(b => { b.innerHTML = ic(navIcons[b.dataset.go], 25); });
@@ -2713,11 +3060,12 @@ applyTheme(getTheme());
     try { await store.put('meta', { id: '_blobtest', b: new Blob(['ok'], { type: 'text/plain' }) }); await store.del('meta', '_blobtest'); } catch { BLOB_IDB = false; }
     const [items, outfits, meta, wish] = await Promise.all([store.all('items'), store.all('outfits'), store.all('meta'), store.all('wish').catch(() => [])]);
     await Promise.all(items.map(it => prepItem(it).catch(() => it))); S.items = items.filter(it => hasCut(it)); S.outfits = outfits; S.wish = wish.sort((a, b) => b.created - a.created); sortItems(); sortOutfits();
+    const lg = meta.find(m => m.id === 'lang'); if (lg && lg.v && lg.v !== langPref()) { window.__closetLang = lg.v; if (LANG_NL() && LANG !== 'nl') startNL(); }
     const fo = meta.find(m => m.id === 'folders'); S.folders = Array.isArray(fo?.list) ? fo.list : [];
     const c = meta.find(m => m.id === 'categories'); S.cats = (c ? c.list : DEFAULT_CATS()).map(seedSubs); if (!c || c.list.some(x => !Array.isArray(x.subs))) await saveCats();
     const mt = meta.find(m => m.id === 'materials'); S.customMats = Array.isArray(mt?.list) ? mt.list.filter(x => typeof x === 'string') : [];
   } catch (e) { console.error(e); S.cats = S.cats.length ? S.cats : DEFAULT_CATS(); }
-  renderAll(); go('rack'); migrate(); ensureStickers();
+  renderAll(); go('rack'); migrate(); ensureStickers(); setTimeout(ensureFocus, 1500);
   setTimeout(() => { let asked = false; try { asked = !!localStorage.getItem('closet-season-asked') || !!getSeason(); } catch {} if (!asked && !$('#sheets .sheet')) openSeasonPicker(true); }, 900);
   setTimeout(async () => { // gentle backup reminder
     let last = 0, snooze = 0; try { last = +localStorage.getItem('closet-lastexport') || 0; snooze = +localStorage.getItem('closet-snooze') || 0; } catch {}
